@@ -1,0 +1,7 @@
+*.o
+*.hi
+nofrac
+ppmjulia
+ppmandel
+*.gif
+*.ppm
