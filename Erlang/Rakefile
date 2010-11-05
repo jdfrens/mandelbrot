@@ -1,0 +1,11 @@
+require 'rake/clean'
+
+CLEAN.include('*.beam')
+ERLS  = FileList['*.erl']
+BEAMS = ERLS.ext('.beam')
+
+rule '.beam' => '.erl' do |t|
+  sh "erlc #{t.source}"
+end
+
+task :default => BEAMS
