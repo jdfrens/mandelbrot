@@ -14,4 +14,6 @@ I've worked on this code more recently to push on the parallelism so that I can 
 
 ## Erlang code
 
-It's coming...
+I'm interested in how concurrent I can make my Haskell algorithm, and Erlang is supposed to be the go-to language for concurrency.
+
+As of November 2010, the Erlang code will generate a Mandelbrot set concurrently.
