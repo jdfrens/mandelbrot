@@ -1,1 +1,4 @@
 *.beam
+*.dump
+*.ppm
+*.gif

@@ -1,6 +1,6 @@
 require 'rake/clean'
 
-CLEAN.include('*.beam')
+CLEAN.include('*.beam', "*.gif", "*.ppm")
 ERLS  = FileList['*.erl']
 BEAMS = ERLS.ext('.beam')
 
@@ -9,3 +9,13 @@ rule '.beam' => '.erl' do |t|
 end
 
 task :default => BEAMS
+
+task :generate => "mandelbrot.gif"
+
+rule '.gif' => '.ppm' do |t|
+  sh "convert #{t.source} #{t.name}"
+end
+
+file "mandelbrot.ppm" => BEAMS do
+  sh "nofrac"
+end
