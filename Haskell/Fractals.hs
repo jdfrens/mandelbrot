@@ -1,8 +1,7 @@
-{- 
-  For GRHUG
-  Version: July 2009
+{-
+  No warranty.  No guarantees of any sort.
   Creative Commons Attribution-Share Alike 3.0 United States License
-  
+
   For more information about the burning ship fractal, see
      http://en.wikipedia.org/wiki/Burning_Ship_fractal
 -}
@@ -10,30 +9,29 @@
 module Fractals
   (Dimension(..), SetMembership(..),
   max_iters,
-  plot,
+  complex_grid,
   mandelbrot, julia, burningShip, newton) where
-  
+
 import List
 import Complex
-import Control.Parallel.Strategies
 
 data Dimension a = Dimension a a
   deriving (Show, Eq)
-  
+
 data SetMembership a b = Inside | Outside a b
   deriving (Show, Eq)
 
 max_size = 4.0
 max_iters = 256
 
-plot f (Dimension width height) (x0 :+ y0) (x1 :+ y1) = 
-  let
-    delta_x = (x1 - x0) / (fromInteger (width - 1))
-    delta_y = (y1 - y0) / (fromInteger (height - 1))
-    ys = [y0, y0 + delta_y..y1]
-    xs = [x0, x0 + delta_x..x1]
-  in
-    parMap rwhnf (\y -> map (\x -> f $ x :+ y) xs) ys
+complex_grid (Dimension width height) (x0 :+ y0) (x1 :+ y1) =
+    let
+      delta_x = (x1 - x0) / (fromInteger (width - 1))
+      delta_y = (y1 - y0) / (fromInteger (height - 1))
+      ys = [y0, y0 + delta_y..y1]
+      xs = [x0, x0 + delta_x..x1]
+    in
+      [[ x :+ y | x <- xs ] | y <- ys]
 
 -----------------------------------------------------------
 -- initial conditions and iterators for fractals

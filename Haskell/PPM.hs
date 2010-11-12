@@ -1,15 +1,14 @@
-{- 
-  For GRHUG
-  Version: July 2009
+{-
+  No warranty.  No guarantees of any sort.
   Creative Commons Attribution-Share Alike 3.0 United States License
 -}
 
-module PPM (ppmPrefix, 
-            blackOnWhite, whiteOnBlack, 
+module PPM (ppmPrefix,
+            blackOnWhite, whiteOnBlack,
             grayScale, redScale, greenScale, blueScale,
             randomColors, randomColorsGenerator)
 where
-  
+
 import System.Random
 import Data.List
 import Complex
@@ -17,7 +16,7 @@ import Complex
 import Fractals
 
 max_color = 255
-  
+
 ppmPrefix (Dimension width height) =
   ["P3", show width, show height, show max_color]
 
@@ -70,9 +69,9 @@ povScale plateau border (Outside _ n)
 -----------------------------------------------------------
 -- random colors
 -----------------------------------------------------------
-randomColors _      Inside        = black  
+randomColors _      Inside        = black
 randomColors colors (Outside _ n) = genericIndex colors n
-    
+
 randomColorsGenerator seed = colorStream $ randomRs (0, max_color) (mkStdGen seed)
   where
     colorStream (r : g : b : rest) = ppmEntry r g b : colorStream rest

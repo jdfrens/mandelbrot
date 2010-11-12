@@ -1,6 +1,5 @@
 {-
-  For GRHUG
-  Version: July 2009
+  No warranty.  No guarantees of any sort.
   Creative Commons Attribution-Share Alike 3.0 United States License
 -}
 
@@ -13,10 +12,10 @@ import Text.Regex
 
 import PPM
 import Fractals
-                       
-data FractalType = Mandelbrot | Julia | BurningShip | Newton                                                
 
-data Options a = Options { 
+data FractalType = Mandelbrot | Julia | BurningShip | Newton
+
+data Options a = Options {
     optFractal  :: FractalType
   , optSize     :: Dimension Integer
   , optColor    :: SetMembership (Complex a) Integer -> String
@@ -70,7 +69,7 @@ options =
     pFunc arg opt = opt { optP = parseComplex arg }
     seedFunc arg opt = opt { optSeed = read arg }
     colorFunc color opt =
-      opt { 
+      opt {
         optColor = case color of
           "bw"     -> blackOnWhite
           "wb"     -> whiteOnBlack
@@ -80,16 +79,16 @@ options =
           "blue"   -> blueScale
           "random" -> randomColors (randomColorsGenerator (optSeed opt))
       }
-      
+
 parseSize str =
   case regexMatch of
     Nothing      -> error $ show str ++ " not a valid size (width x height)"
     Just matches -> let vals = map read matches
                     in Dimension (vals !! 0) (vals !! 1)
     where
-      regexMatch = matchRegex (mkRegex "^([0-9.]+)x([0-9.]+)$") str  
+      regexMatch = matchRegex (mkRegex "^([0-9.]+)x([0-9.]+)$") str
 
-parseComplex str = 
+parseComplex str =
   case regexMatch of
     Nothing      -> error $ show str ++ " not a valid complex number"
     Just matches -> let vals = map read matches
