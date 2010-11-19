@@ -1,6 +1,6 @@
 %% Taken from http://www.trapexit.org/Complex_Numbers and modified.
 %%
-%% Primary copyright remains with origina source.
+%% Primary copyright remains with original source.
 %% Modifications released under Creative Commons Attribution-Share Alike 3.0 United States License.
 %%
 %% Most important change: renamed the module.
@@ -27,6 +27,9 @@ is_complex(Z) -> ?IsComplex(Z).
 make(Real, Imag) when is_integer(Real); is_float(Real),
                       is_integer(Imag); is_float(Imag) -> #complex{r=Real, i=Imag}.
 make(Real) when is_integer(Real); is_float(Real)       -> make(Real, 0);
+make(Str)  when is_list(Str)                           ->
+    [{Real,_}, {Imag,_}] = lists:map(fun string:to_float/1, string:tokens(Str, "+i")),
+    make(Real, Imag);
 make(Real)                                             -> Real.
 
 %% Return the real or imaginary parts of a complex number

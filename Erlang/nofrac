@@ -3,5 +3,9 @@
 
 -export([main/1]).
 -import(fractals_driver, [main/0]).
+-import(yaml).
 
-main(_) -> fractals_driver:main().
+main(_) ->
+    [_, ConfigFilename, OutputFilename] = init:get_plain_arguments(),
+    Config = [{"outputfile", OutputFilename} | yaml:parse_file(ConfigFilename)],
+    fractals_driver:main(Config).

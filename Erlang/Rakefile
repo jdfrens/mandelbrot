@@ -1,21 +1,33 @@
 require 'rake/clean'
 
-CLEAN.include('*.beam', "*.gif", "*.ppm")
 ERLS  = FileList['*.erl']
 BEAMS = ERLS.ext('.beam')
+
+YAMLS = FileList['../yaml/*.yml']
+PPMS = YAMLS.pathmap("images/%f").ext(".ppm")
+GIFS = PPMS.ext(".gif")
 
 rule '.beam' => '.erl' do |t|
   sh "erlc #{t.source}"
 end
 
-task :default => BEAMS
+task :default => :beams
 
-task :generate => "mandelbrot.gif"
+task :generate => GIFS
 
-rule '.gif' => '.ppm' do |t|
-  sh "convert #{t.source} #{t.name}"
+task :beams => BEAMS
+
+GIFS.zip(PPMS).each do |gif, ppm|
+  file gif => ppm do
+    sh "convert #{ppm} #{gif}"
+  end
 end
 
-file "mandelbrot.ppm" => BEAMS do
-  sh "nofrac"
+PPMS.zip(YAMLS).each do |ppm, yml|
+  file ppm => [yml, :beams] do
+    sh "nofrac #{yml} #{ppm}"
+  end
 end
+
+CLEAN.include("*.dump")
+CLEAN.include(BEAMS, PPMS, GIFS)
