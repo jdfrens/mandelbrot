@@ -1,0 +1,6 @@
+type: julia
+c: -0.5+-0.24254i
+color: random
+size: 512x384
+upperleft: -2.0+1.5i
+lowerright: 2.0+-1.5i

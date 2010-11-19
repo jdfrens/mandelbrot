@@ -1,6 +1,6 @@
 -module(nofrac_config).
 
--export([color_function/1, dimensions/1, lower_right/1, output_file/1, upper_left/1]).
+-export([color_function/1, dimensions/1, iterator/1, lower_right/1, output_file/1, upper_left/1]).
 
 upper_left(Config) -> complex_param("upperleft", Config).
 lower_right(Config) -> complex_param("lowerright", Config).
@@ -10,8 +10,11 @@ dimensions(Config) ->
 
 output_file(Config) -> lookup_value("outputfile", Config).
 
-%% **********
-%% helpers...
+iterator(Config) ->
+    case lookup_value("type", Config) of
+        "julia"      -> fractals:julia_iterator(complex_param("c", Config));
+        "mandelbrot" -> fun fractals:mandelbrot/1
+    end.
 
 color_function(Config) ->
     case lookup_value("color", Config) of
@@ -23,6 +26,10 @@ color_function(Config) ->
         "gray"   -> fun ppm:gray_scale/1;
         "random" -> ppm:random_colors()
     end.
+
+
+%% **********
+%% helpers...
 
 complex_param(Name, Config) ->
     complex:make(lookup_value(Name, Config)).

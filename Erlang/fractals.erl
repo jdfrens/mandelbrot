@@ -1,7 +1,7 @@
 %% Creative Commons Attribution-Share Alike 3.0 United States License.
 
 -module(fractals).
--export([complexGrid/3, mandelbrot/1]).
+-export([complexGrid/3, julia_iterator/1, mandelbrot/1]).
 -import(lib_misc, [pmap/2]).
 -import(complex, [real/1, imag/1]).
 
@@ -15,6 +15,7 @@ complexGrid([Width, Height], Z0, Z1) ->
     [[complex:make(X, Y) || X <- Xs] || Y <- Ys].
 
 mandelbrot(C) -> iteratePoint(fun z_squared_plus_c/2, C, complex:make(0.0, 0.0)).
+julia_iterator(C) -> fun(Z) -> iteratePoint(fun z_squared_plus_c/2, C, Z) end.
 
 iteratePoint(Iterator, C, Z0) -> iteratePoint(Iterator, C, Z0, 0).
 iteratePoint(Iterator, C, Z, I) ->
