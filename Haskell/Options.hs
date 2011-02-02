@@ -6,9 +6,11 @@
 module Options
 where
 
+import Control.Monad
 import System.Console.GetOpt
 import Complex
 import Text.Regex
+import Data.Object
 
 import PPM
 import Fractals
@@ -27,19 +29,35 @@ data Options a = Options {
   , optR          :: Complex a
   , optP          :: Complex a
   }
-defaultOptions = Options  { optFractal = Mandelbrot
-                        , optSize    = Dimension 512 384
-                        , optColor   = blackOnWhite
-                        , optSeed    = 666
-                        , optUpperLeft  = (negate 2.0) :+ 1.2
-                        , optLowerRight = 1.2 :+ (negate 1.2)
-                        , optC = 1.0 :+ 0.0
-                        , optZ = 0.0 :+ 0.0
-                        , optR = 0.0 :+ 0.0
-                        , optP = 0.0 :+ 0.0
-                        }
 
-options =
+defaultOptions = Options  { optFractal = Mandelbrot
+                          , optSize    = Dimension 512 384
+                          , optColor   = blackOnWhite
+                          , optSeed    = 666
+                          , optUpperLeft  = (negate 2.0) :+ 1.2
+                          , optLowerRight = 1.2 :+ (negate 1.2)
+                          , optC = 1.0 :+ 0.0
+                          , optZ = 0.0 :+ 0.0
+                          , optR = 0.0 :+ 0.0
+                          , optP = 0.0 :+ 0.0
+                          }
+
+-- YAML parser
+
+parseYamlOptions mapping = foldl parseMapping defaultOptions mapping
+  where
+    parseMapping options (key, Scalar t) = (optionFunc key) t options
+    optionFunc "type"       = typeFunc
+    optionFunc "size"       = sizeFunc
+    optionFunc "seed"       = seedFunc
+    optionFunc "color"      = colorFunc
+    optionFunc "upperleft"  = upperLeftFunc
+    optionFunc "lowerright" = lowerRightFunc
+    optionFunc "c"          = cFunc
+
+-- Command-line arguments parser
+
+commandLineArgs =
   [ Option "t" ["type"] (ReqArg typeFunc "TYPE") "type of fractal"
   , Option "s" ["size"] (ReqArg sizeFunc "WIDTHxHEIGHT") "size of image"
   , Option ""  ["color"] (ReqArg colorFunc "COLOR") "color map"
@@ -51,34 +69,36 @@ options =
   , Option "r" [] (ReqArg rFunc "UPPERLEFT") "constant r"
   , Option "p" [] (ReqArg pFunc "UPPERLEFT") "constant p"
   ]
-  where
-    typeFunc t opt =
-      opt {
-        optFractal = case t of
-          "mandelbrot"  -> Mandelbrot
-          "julia"       -> Julia
-          "burningship" -> BurningShip
-          "newton"      -> Newton
-      }
-    sizeFunc arg opt = opt { optSize = parseSize arg }
-    upperLeftFunc arg opt = opt { optUpperLeft = parseComplex arg }
-    lowerRightFunc arg opt = opt { optLowerRight = parseComplex arg }
-    cFunc arg opt = opt { optC = parseComplex arg }
-    zFunc arg opt = opt { optZ = parseComplex arg }
-    rFunc arg opt = opt { optR = parseComplex arg }
-    pFunc arg opt = opt { optP = parseComplex arg }
-    seedFunc arg opt = opt { optSeed = read arg }
-    colorFunc color opt =
-      opt {
-        optColor = case color of
+
+-- support functions
+
+typeFunc t opt = opt { optFractal = parseFractalType t }
+sizeFunc arg opt = opt { optSize = parseSize arg }
+upperLeftFunc arg opt = opt { optUpperLeft = parseComplex arg }
+lowerRightFunc arg opt = opt { optLowerRight = parseComplex arg }
+cFunc arg opt = opt { optC = parseComplex arg }
+zFunc arg opt = opt { optZ = parseComplex arg }
+rFunc arg opt = opt { optR = parseComplex arg }
+pFunc arg opt = opt { optP = parseComplex arg }
+seedFunc arg opt = opt { optSeed = read arg }
+colorFunc color opt = opt { optColor = parseColor color (optSeed opt) }
+
+parseColor color seed =
+    case color of
           "bw"     -> blackOnWhite
           "wb"     -> whiteOnBlack
           "gray"   -> grayScale
           "red"    -> redScale
           "green"  -> greenScale
           "blue"   -> blueScale
-          "random" -> randomColors (randomColorsGenerator (optSeed opt))
-      }
+          "random" -> randomColors (randomColorsGenerator seed)
+
+parseFractalType :: String -> FractalType
+parseFractalType t = case t of
+          "mandelbrot"  -> Mandelbrot
+          "julia"       -> Julia
+          "burningship" -> BurningShip
+          "newton"      -> Newton
 
 parseSize str =
   case regexMatch of

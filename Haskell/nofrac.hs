@@ -6,9 +6,12 @@
 module Main where
 
 import System
+import System.IO
 import System.Console.GetOpt
 import Control.Monad
 import Control.Parallel.Strategies
+import Data.Object
+import Data.Object.Yaml
 
 import Options
 import PPM
@@ -16,12 +19,24 @@ import Fractals
 
 main :: IO ()
 main = do
-  args <- getArgs
-  let (actions, nonOptions, errors) = getOpt RequireOrder options args
-  let opts = foldl (flip ($)) defaultOptions actions
-  mapM_ putStrLn $ ppmPrefix (optSize opts)
-  let grid = complex_grid (optSize opts) (optUpperLeft opts) (optLowerRight opts)
-  mapM_ (mapM_ putStrLn) $ map2 (optColor opts) $ map2 (plotter opts) grid
+  [inputFile, outputFile] <- getArgs
+
+  yamlOptions <- join $ decodeFile inputFile
+  optionsMapping  <- fromMapping yamlOptions
+  let opts = parseYamlOptions optionsMapping
+
+  let colors = computeFractal opts
+
+  output <- openFile outputFile WriteMode
+  mapM_ (hPutStrLn output) $ ppmPrefix (optSize opts)
+  mapM_ (mapM_ $ hPutStrLn output) $ colors
+  hClose output
+
+computeFractal opts =
+  let
+    grid = complex_grid (optSize opts) (optUpperLeft opts) (optLowerRight opts)
+  in
+    map2 (optColor opts) $ map2 (plotter opts) grid
     where
       plotter opts =
         case (optFractal opts) of
