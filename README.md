@@ -16,4 +16,10 @@ I've worked on this code more recently to push on the parallelism so that I can 
 
 I'm interested in how concurrent I can make my Haskell algorithm, and Erlang is supposed to be the go-to language for concurrency.
 
-As of November 2010, the Erlang code will generate a Mandelbrot set concurrently.
+## Versions
+
+### 2011-02-02
+
+* Both the Haskell and Erlang code read configurations from the same YAML files.
+* Output seems to reasonably the same.
+* Concurrency is for crap, so far.
