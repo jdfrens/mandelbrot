@@ -1,3 +1,6 @@
+% No warranty.  No guarantees of any sort.
+% Creative Commons Attribution-Share Alike 3.0 United States License
+
 -module(ppm).
 -export([black_on_white/1, white_on_black/1, gray_scale/1, red_scale/1, green_scale/1, blue_scale/1, random_colors/0, write_ppm/3]).
 
@@ -19,7 +22,6 @@ green_scale(X) -> pov_scale(fun (C) -> ppm_entry(0, C, 0) end, fun (C) -> ppm_en
 blue_scale(X)  -> pov_scale(fun (C) -> ppm_entry(0, 0, C) end, fun (C) -> ppm_entry(C, C, ?MAX_COLOR) end, X).
 
 random_colors() ->
-    random:seed(),
     Colors = random_colors_array(?MAX_ITERS),
     fun (X) ->
         case X of
@@ -27,6 +29,18 @@ random_colors() ->
             {outside, _, N} -> lists:nth((N rem length(Colors)) + 1, Colors)
         end
     end.
+
+write_ppm(Filename, Colors, [Width, Height]) ->
+    {ok, S} = file:open(Filename, write),
+    io:format(S, "P3~n", []),
+    io:format(S, "~p ~p~n", [Width, Height]),
+    io:format(S, "~p~n", [?MAX_COLOR]),
+    lists:foreach(
+        fun(Row) ->
+            lists:foreach(fun(C) -> io:format(S, "~s~n", [C]) end, Row)
+        end,
+        Colors),
+    file:close(S).
 
 
 %% **********
@@ -43,7 +57,7 @@ black() -> ppm_entry_gray(0).
 ppm_entry(R, G, B) -> string:join([integer_to_list(R), integer_to_list(G), integer_to_list(B)], " ").
 ppm_entry_gray(N) -> ppm_entry(N, N, N).
 
-pov_scale(_, _, {inside}) -> black();
+pov_scale(_,            _, {inside})        -> black();
 pov_scale(Plateau, Border, {outside, _, N}) ->
     HalfIters = ?MAX_ITERS / 2,
     if
@@ -53,17 +67,3 @@ pov_scale(Plateau, Border, {outside, _, N}) ->
 
 scaleIter(I) -> erlang:round(iterRatio(I) * ?MAX_COLOR).
 iterRatio(I) -> (2 * (I-1)) / ?MAX_ITERS.
-
-write_ppm(Filename, Colors, [Width, Height]) ->
-    {ok, S} = file:open(Filename, write),
-    io:format(S, "P3~n", []),
-    io:format(S, "~p ~p~n", [Width, Height]),
-    io:format(S, "~p~n", [?MAX_COLOR]),
-    lists:foreach(
-        fun(Row) ->
-            lists:foreach(fun(C) -> io:format(S, "~s ", [C]) end, Row),
-            io:format(S, "~n", [])
-        end,
-        Colors),
-    file:close(S).
-

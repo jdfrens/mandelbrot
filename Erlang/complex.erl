@@ -109,7 +109,6 @@ pow(Z,N) when ?IsComplex(Z),    is_integer(N); is_float(N) ->
 %% Reciprocal of complex Z
 reciprocal(Z) when ?IsComplex(Z) -> divide(#complex{r=1,i=0},Z).
 
-
 %% ----------------------------------------------------------------------------
 %% Coordinate conversion functions
 %%
@@ -124,8 +123,6 @@ rect(Z) when Z#complex.r == 0 -> #complex{r=0, i=0};
 rect(Z) when Z#complex.i == 0 -> #complex{r=Z#complex.r, i=0};
 rect(Z) when ?IsComplex(Z)    -> #complex{r=Z#complex.r * math:cos(Z#complex.i), i=Z#complex.r * math:sin(Z#complex.i)}.
 
-
-
 %% ----------------------------------------------------------------------------
 %% Trigonometrical functions
 %%
@@ -134,8 +131,6 @@ sin(Z) when ?IsComplex(Z) -> #complex{r=math:sin(Z#complex.r) * math:cosh(Z#comp
 tan(Z) when ?IsComplex(Z) -> divide(sin(Z), cos(Z)).
 cot(Z) when ?IsComplex(Z) -> divide(cos(Z), sin(Z)).
 
-
-
 %% ----------------------------------------------------------------------------
 %% Hyperbolic functions
 %%
@@ -143,10 +138,6 @@ cosh(Z) when ?IsComplex(Z) -> #complex{r=math:cosh(Z#complex.r) * math:cos(Z#com
 sinh(Z) when ?IsComplex(Z) -> #complex{r=math:sinh(Z#complex.r) * math:cos(Z#complex.i), i=math:cosh(Z#complex.r) * math:sin(Z#complex.i)}.
 tanh(Z) when ?IsComplex(Z) -> divide(sinh(Z), cosh(Z)).
 coth(Z) when ?IsComplex(Z) -> divide(cosh(Z), sinh(Z)).
-
-
-
-
 
 %% ----------------------------------------------------------------------------
 %% Utility functions

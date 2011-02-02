@@ -1,3 +1,6 @@
+% No warranty.  No guarantees of any sort.
+% Creative Commons Attribution-Share Alike 3.0 United States License
+
 -module(fractals_driver).
 -export([main/1]).
 

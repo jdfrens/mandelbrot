@@ -1,3 +1,6 @@
+# No warranty.  No guarantees of any sort.
+# Creative Commons Attribution-Share Alike 3.0 United States License
+
 require 'rake/clean'
 
 ERLS  = FileList['*.erl']
@@ -11,11 +14,13 @@ rule '.beam' => '.erl' do |t|
   sh "erlc #{t.source}"
 end
 
-task :default => :beams
+task :default => :compile
 
-task :generate => GIFS
+desc "compiles the code and generates GIFs"
+task :generate => [:compile, *GIFS]
 
-task :beams => BEAMS
+desc "compiles the code"
+task :compile => BEAMS
 
 GIFS.zip(PPMS).each do |gif, ppm|
   file gif => ppm do
@@ -24,7 +29,7 @@ GIFS.zip(PPMS).each do |gif, ppm|
 end
 
 PPMS.zip(YAMLS).each do |ppm, yml|
-  file ppm => [yml, :beams] do
+  file ppm => [yml, :compile] do
     sh "nofrac #{yml} #{ppm}"
   end
 end
