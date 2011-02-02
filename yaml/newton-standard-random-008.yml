@@ -1,0 +1,6 @@
+type: newton
+seed: 8
+color: random
+size: 512x512
+upperleft: -2.0+2.0i
+lowerright: 2.0+-2.0i

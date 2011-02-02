@@ -1,0 +1,5 @@
+type: burningship
+color: blue
+size: 1024x768
+upperleft: -2.5+2.0i
+lowerright: 1.5+-1.0i
