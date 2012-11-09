@@ -11,7 +11,7 @@ decodedData input =
     Nothing       ->  error "WTF?"
 
 tests = let
-  expected = (Options {fractal = "Mandelbrot",
+  expected = (Options {fractal = Mandelbrot,
                        seed    = 12345,
                        upperLeftReal = 2.0
                       })

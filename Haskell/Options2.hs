@@ -21,6 +21,11 @@ import PPM
 import Fractals
 
 data FractalType = Mandelbrot | Julia | BurningShip | Newtow
+  deriving (Eq, Show, Read)
+
+instance FromJSON FractalType where
+  parseJSON (String s) = return $ read $ Data.Text.unpack s
+  parseJSON _          = mzero
 
 -- data Options a = Options {
 --     optFractal  :: FractalType
@@ -36,7 +41,7 @@ data FractalType = Mandelbrot | Julia | BurningShip | Newtow
 --   }
 
 data Options a = Options {
-  fractal :: Text,
+  fractal :: FractalType,
   seed    :: Int,
   upperLeftReal :: Double
   }
