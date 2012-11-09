@@ -8,9 +8,9 @@ where
 
 import Control.Monad
 import System.Console.GetOpt
-import Complex
+import Data.Complex
+import Data.Yaml
 import Text.Regex
-import Data.Object
 
 import PPM
 import Fractals
@@ -46,7 +46,7 @@ defaultOptions = Options  { optFractal = Mandelbrot
 
 parseYamlOptions mapping = foldl parseMapping defaultOptions mapping
   where
-    parseMapping options (key, Scalar t) = (optionFunc key) t options
+    parseMapping options (key, Data.Yaml.Object t) = (optionFunc key) t options
     optionFunc "type"       = typeFunc
     optionFunc "size"       = sizeFunc
     optionFunc "seed"       = seedFunc

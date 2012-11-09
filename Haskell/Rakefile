@@ -21,6 +21,13 @@ task :compile do
   end
 end
 
+task :test do
+  ["Tests.hs"].each do |source|
+    sh "ghc -O2 -threaded --make #{source}"
+  end
+  sh "./Tests"
+end
+
 desc "compiles the code and generates GIFs"
 task :generate => [:default, *GIFS]
 

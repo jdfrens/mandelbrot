@@ -5,13 +5,11 @@
 
 module Main where
 
-import System
 import System.IO
 import System.Console.GetOpt
 import Control.Monad
 import Control.Parallel.Strategies
-import Data.Object
-import Data.Object.Yaml
+import Data.Yaml
 
 import Options
 import PPM

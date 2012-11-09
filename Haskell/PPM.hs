@@ -11,7 +11,7 @@ where
 
 import System.Random
 import Data.List
-import Complex
+import Data.Complex
 
 import Fractals
 

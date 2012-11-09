@@ -3,5 +3,6 @@
 nofrac
 ppmjulia
 ppmandel
+Tests
 *.gif
 *.ppm

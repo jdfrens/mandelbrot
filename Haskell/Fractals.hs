@@ -12,8 +12,8 @@ module Fractals
   complex_grid,
   mandelbrot, julia, burningShip, newton) where
 
-import List
-import Complex
+import Data.List
+import Data.Complex
 
 data Dimension a = Dimension a a
   deriving (Show, Eq)
