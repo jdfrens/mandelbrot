@@ -16,15 +16,12 @@ task :default => :compile
 
 desc "compiles the nofrac executable with GHC"
 task :compile do
-  ["nofrac.hs"].each do |source|
+  ["nofrac.hs", "Tests.hs"].each do |source|
     sh "ghc -O2 -threaded --make #{source}"
   end
 end
 
-task :test do
-  ["Tests.hs"].each do |source|
-    sh "ghc -O2 -threaded --make #{source}"
-  end
+task :test => :compile do
   sh "./Tests"
 end
 
