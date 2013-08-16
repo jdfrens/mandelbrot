@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Options2Test where
+module OptionsTest where
 
 import Test.HUnit
 import Test.HUnit.Tools
@@ -11,7 +11,7 @@ import Control.Monad
 
 import Fractals
 import Fractals.Color
-import Options2
+import Fractals.Options
 
 tests = TestList $ fractalTypeTests ++ colorTests ++ optionsTests
 

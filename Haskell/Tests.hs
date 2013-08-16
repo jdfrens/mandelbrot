@@ -3,7 +3,7 @@ module Main (main) where
 import System.Exit
 
 import Test.HUnit
-import Options2Test
+import OptionsTest
 
 main :: IO ()
 main = do

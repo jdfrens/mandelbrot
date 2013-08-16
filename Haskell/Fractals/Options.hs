@@ -5,7 +5,7 @@
   Creative Commons Attribution-Share Alike 3.0 United States License
 -}
 
-module Options2
+module Fractals.Options
 where
 
 import Control.Applicative
