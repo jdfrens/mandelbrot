@@ -24,6 +24,26 @@ import Debug.Trace
 import Fractals
 import Fractals.Color
 
+decodemf :: (FromJSON a) => String -> Either String a
+decodemf = Y.decodeEither . C.pack
+
+decodeFractalFile :: FilePath -> IO (Either ParseException Options)
+decodeFractalFile = Y.decodeFileEither
+
+data Options = Options {
+  fractal    :: FractalType,
+  size       :: Dimension,
+  color      :: ColorMap,
+  seed       :: Int,
+  upperLeft  :: Complex Double,
+  lowerRight :: Complex Double,
+  c          :: Complex Double,
+  z          :: Complex Double,
+  r          :: Complex Double,
+  p          :: Complex Double
+  }
+  deriving (Eq, Show)
+
 data FractalType = Mandelbrot | Julia | BurningShip | Newton
   deriving (Eq, Show, Read)
 
@@ -67,20 +87,6 @@ instance (Read a) => FromJSON (Complex a) where
   parseJSON (String s) = return $ parseComplex $ T.unpack s
   parseJSON _          = mzero
 
-data Options = Options {
-  fractal    :: FractalType,
-  size       :: Dimension,
-  color      :: ColorMap,
-  seed       :: Int,
-  upperLeft  :: Complex Double,
-  lowerRight :: Complex Double,
-  c          :: Complex Double,
-  z          :: Complex Double,
-  r          :: Complex Double,
-  p          :: Complex Double
-  }
-  deriving (Eq, Show)
-
 instance FromJSON Options where
     parseJSON (Object v) =
         Options <$> v .:  "fractal"
@@ -94,12 +100,6 @@ instance FromJSON Options where
                 <*> v .:? "r"          .!= (0.0 :+ 0.0)
                 <*> v .:? "p"          .!= (0.0 :+ 0.0)
     parseJSON _ = mzero
-
-decodemf :: (FromJSON a) => String -> Either String a
-decodemf = Y.decodeEither . C.pack
-
-decodeFractalFile :: FilePath -> IO (Either ParseException Options)
-decodeFractalFile = Y.decodeFileEither
 
 parseComplex str =
   case regexMatch of

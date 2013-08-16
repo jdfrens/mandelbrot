@@ -20,28 +20,28 @@ main :: IO ()
 main = do
   [inputFile, outputFile] <- getArgs
 
-  yamlOptions <- join $ decodeFile inputFile
-  optionsMapping  <- fromMapping yamlOptions
-  let opts = parseYamlOptions optionsMapping
+  parsedOptions <- decodeFractalFile inputFile
+  case parsedOptions of
+    Right options -> do
+      let colors = computeFractal options
+      output <- openFile outputFile WriteMode
+      mapM_ (hPutStrLn output) $ ppmPrefix (size options)
+      mapM_ (mapM_ $ hPutStrLn output) $ colors
+      hClose output
+    Left error -> hPutStrLn stderr $ show error
 
-  let colors = computeFractal opts
-
-  output <- openFile outputFile WriteMode
-  mapM_ (hPutStrLn output) $ ppmPrefix (optSize opts)
-  mapM_ (mapM_ $ hPutStrLn output) $ colors
-  hClose output
-
-computeFractal opts =
+computeFractal options =
   let
-    grid = complex_grid (optSize opts) (optUpperLeft opts) (optLowerRight opts)
+    grid = complex_grid (size options) (upperLeft options) (lowerRight options)
   in
-    map2 (optColor opts) $ map2 (plotter opts) grid
+    map2 (colorFunction options) $ map2 (plotter options) grid
     where
-      plotter opts =
-        case (optFractal opts) of
+      plotter options =
+        case (fractal options) of
           Mandelbrot  -> mandelbrot
           BurningShip -> burningShip
-          Julia       -> julia (optC opts)
+          Julia       -> julia (c options)
           Newton      -> newton (\z -> z^3 - 1) (\z -> 3.0 * z^2)
+      colorFunction _ = blackOnWhite
 
-map2 f l = parMap rwhnf (map f) l
+map2 f l = parMap rseq (map f) l
