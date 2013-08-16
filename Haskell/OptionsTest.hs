@@ -13,27 +13,29 @@ import Fractals
 import Fractals.Color
 import Fractals.Options
 
-tests = TestList $ fractalTypeTests ++ colorTests ++ optionsTests
+optionsModuleTests = TestList [fractalTypeTests, colorMapTests, optionsTests]
 
 instance Eq ParseException where
   (AesonException msg1) == (AesonException msg2)  =  msg1 == msg2
   _ == _  =  False
 
-fractalTypeTests = [
-  "parse FractalTypes" ~: (Right Mandelbrot)  ~=? (decodemf "Mandelbrot"),
-  "parse FractalTypes" ~: (Right Julia)       ~=? (decodemf "Julia"),
-  "parse FractalTypes" ~: (Right BurningShip) ~=? (decodemf "BurningShip"),
-  "parse FractalTypes" ~: (Right Newton)      ~=? (decodemf "Newton"),
+fractalTypeTests = TestLabel "FractalType tests" $ TestList [
+  "parse Mandelbrot"  ~: (Right Mandelbrot)  ~=? (decodemf "Mandelbrot"),
+  "parse Julia"       ~: (Right Julia)       ~=? (decodemf "Julia"),
+  "parse BurningShip" ~: (Right BurningShip) ~=? (decodemf "BurningShip"),
+  "parse Newton"      ~: (Right Newton)      ~=? (decodemf "Newton"),
   let
     expectedException = AesonException "poop is not a valid fractal type"
     theParse          = evaluate $ parseFractalType "poop"
   in
-   TestCase $ assertRaises "bad FractalTypes parse" expectedException theParse
+   TestCase $ assertRaises "parse failure" expectedException theParse
   ]
 
-colorTests = []
+colorMapTests = TestLabel "ColorMap tests" $ TestList [
 
-optionsTests = [
+                                                      ]
+
+optionsTests = TestLabel "Options tests" $ TestList [
   let
     expected = Options {
       fractal    = Mandelbrot,

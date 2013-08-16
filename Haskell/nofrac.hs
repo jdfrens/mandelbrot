@@ -12,9 +12,9 @@ import Control.Monad
 import Control.Parallel.Strategies
 import Data.Yaml
 
-import Options
-import PPM
 import Fractals
+import Fractals.Options
+import Fractals.Color
 
 main :: IO ()
 main = do

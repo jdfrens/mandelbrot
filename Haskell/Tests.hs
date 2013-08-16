@@ -7,7 +7,7 @@ import OptionsTest
 
 main :: IO ()
 main = do
-    counts2 <- runTestTT tests
+    counts2 <- runTestTT optionsModuleTests
     if (errors counts2 + failures counts2 == 0)
         then exitSuccess
         else exitFailure
