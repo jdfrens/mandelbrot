@@ -32,8 +32,18 @@ fractalTypeTests = TestLabel "FractalType tests" $ TestList [
   ]
 
 colorMapTests = TestLabel "ColorMap tests" $ TestList [
-
-                                                      ]
+  "parse BlackOnWhite" ~: (Right BlackOnWhite) ~=? (decodemf "BlackOnWhite"),
+  "parse WhiteOnBlack" ~: (Right WhiteOnBlack) ~=? (decodemf "WhiteOnBlack"),
+  "parse Red"    ~: (Right Red)    ~=? (decodemf "Red"),
+  "parse Green"  ~: (Right Green)  ~=? (decodemf "Green"),
+  "parse Blue"   ~: (Right Blue)   ~=? (decodemf "Blue"),
+  "parse Random" ~: (Right Random) ~=? (decodemf "Random"),
+  let
+    expectedException = AesonException "poop is not a valid color map"
+    theParse          = evaluate $ parseColorMap "poop"
+  in
+   TestCase $ assertRaises "parse failure" expectedException theParse
+  ]
 
 optionsTests = TestLabel "Options tests" $ TestList [
   let
@@ -52,7 +62,7 @@ optionsTests = TestLabel "Options tests" $ TestList [
     input = yamlInput [
       "fractal: Mandelbrot",
       "size: 720x480",
-      "color: bw",  -- TODO: needs to be different
+      "color: BlackOnWhite",
       "seed: 12345",
       "upperLeft: 0.0+55.2i",
       "lowerRight: 92.3+120.3i",

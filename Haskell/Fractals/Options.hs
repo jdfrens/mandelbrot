@@ -40,10 +40,6 @@ instance FromJSON FractalType where
   parseJSON (String s) = return $ parseFractalType $ T.unpack s
   parseJSON _          = mzero
 
-instance FromJSON ColorMap where
-  -- FIXME: write a real definition
-  parseJSON _ = return BlackOnWhite
-
 parseFractalType :: String -> FractalType
 parseFractalType word =
   case word of
@@ -52,6 +48,20 @@ parseFractalType word =
     "BurningShip" -> BurningShip
     "Newton"      -> Newton
     _             -> throw $ AesonException $ word ++ " is not a valid fractal type"
+
+instance FromJSON ColorMap where
+  parseJSON (String s) = return $ parseColorMap $ T.unpack s
+  parseJSON _          = mzero
+
+parseColorMap word =
+  case word of
+    "BlackOnWhite" -> BlackOnWhite
+    "WhiteOnBlack" -> WhiteOnBlack
+    "Red"          -> Red
+    "Blue"         -> Blue
+    "Green"        -> Green
+    "Random"       -> Random
+    _             -> throw $ AesonException $ word ++ " is not a valid color map"
 
 instance (Read a) => FromJSON (Complex a) where
   parseJSON (String s) = return $ parseComplex $ T.unpack s
