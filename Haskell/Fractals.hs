@@ -15,7 +15,7 @@ module Fractals
 import Data.List
 import Data.Complex
 
-data Dimension a = Dimension a a
+data Dimension = Dimension Integer Integer
   deriving (Show, Eq)
 
 data SetMembership a b = Inside | Outside a b
