@@ -19,29 +19,32 @@ instance Eq ParseException where
   _ == _  =  False
 
 fractalTypeTests = [
-  "parse FractalTypes" ~: (Right Mandelbrot) ~=? (decodemf "Mandelbrot"),
-  "parse FractalTypes" ~: (Right Julia) ~=? (decodemf "Julia"),
+  "parse FractalTypes" ~: (Right Mandelbrot)  ~=? (decodemf "Mandelbrot"),
+  "parse FractalTypes" ~: (Right Julia)       ~=? (decodemf "Julia"),
   "parse FractalTypes" ~: (Right BurningShip) ~=? (decodemf "BurningShip"),
-  "parse FractalTypes" ~: (Right Newton) ~=? (decodemf "Newton"),
-  TestCase $ assertRaises "bad FractalTypes parse" (AesonException "poop is not a valid fractal type") (evaluate $ parseFractalType "poop")
+  "parse FractalTypes" ~: (Right Newton)      ~=? (decodemf "Newton"),
+  let
+    expectedException = AesonException "poop is not a valid fractal type"
+    theParse          = evaluate $ parseFractalType "poop"
+  in
+   TestCase $ assertRaises "bad FractalTypes parse" expectedException theParse
   ]
 
 optionsTests = [
   let
-    message = "parses a full specification"
-    expected = (Options {
-                   fractal    = Mandelbrot,
-                   color      = "bw",
-                   size       = Dimension 720 480,
-                   seed       = 12345,
-                   upperLeft  =  0.0 :+  55.2,
-                   lowerRight = 92.3 :+ 120.3,
-                   c          = 3.14 :+ 4.13,
-                   z          = 4.4  :+ 1.1,
-                   r          = 9.9  :+ 3.3,
-                   p          = 0.3  :+ 0.5
-                   })
-    input = concatMap (\s -> s ++ "\n")  [
+    expected = Options {
+      fractal    = Mandelbrot,
+      color      = "bw",
+      size       = Dimension 720 480,
+      seed       = 12345,
+      upperLeft  =  0.0 :+  55.2,
+      lowerRight = 92.3 :+ 120.3,
+      c          = 3.14 :+ 4.13,
+      z          = 4.4  :+ 1.1,
+      r          = 9.9  :+ 3.3,
+      p          = 0.3  :+ 0.5
+      }
+    input = yamlInput [
       "fractal: Mandelbrot",
       "size: 720x480",
       "color: bw",  -- TODO: needs to be different
@@ -51,12 +54,12 @@ optionsTests = [
       "c: 3.14+4.13i",
       "z: 4.4+1.1i",
       "r: 9.9+3.3i",
-      "p: 0.3+0.5i"]
+      "p: 0.3+0.5i"
+      ]
   in
-   testParse message expected input,
+   testParse "parses a full specification" expected input,
 
   let
-    message = "parses a small specification"
     expected = Options {
       fractal    = Julia,
       size       = Dimension 512 384,
@@ -69,16 +72,15 @@ optionsTests = [
       r          = 0.0 :+ 0.0,
       p          = 0.0 :+ 0.0
       }
-    input = concatMap (\s -> s ++ "\n")  [
+    input = yamlInput [
       "fractal: Julia",
       "upperLeft: 5.0+6.0i",
       "lowerRight: 6.0+5.0i"
       ]
   in
-   testParse message expected input,
+   testParse "parses a small specification" expected input,
 
   let
-    message = "parses a small specification from a file"
     expected = Options {
       fractal    = Mandelbrot,
       size       = Dimension 512 384,
@@ -93,10 +95,7 @@ optionsTests = [
       }
     filename = "../yaml/mandelbrot-black.yml"
   in
-   TestLabel message $ TestCase $ do result <- decodeFractalFile filename
-                                     case result of
-                                       Left  exception -> assertFailure $ show exception
-                                       Right config    -> assertEqual message expected config
+   testFileParse "parses a small specification from a file" expected filename
    ]
 
 testParse message expected input = message ~: expected ~=? (decodedData input)
@@ -104,3 +103,11 @@ testParse message expected input = message ~: expected ~=? (decodedData input)
           case decodemf input of
             Left message  ->  error message
             Right config  ->  config
+
+testFileParse message expected filename = TestLabel message $ TestCase $ parse
+   where parse = do result <- decodeFractalFile filename
+                    case result of
+                      Left  exception -> assertFailure $ show exception
+                      Right config    -> assertEqual message expected config
+
+yamlInput = concatMap (\s -> s ++ "\n")
