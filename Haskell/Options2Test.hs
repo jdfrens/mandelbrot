@@ -10,9 +10,10 @@ import Control.Exception
 import Control.Monad
 
 import Fractals
+import Fractals.Color
 import Options2
 
-tests = TestList $ fractalTypeTests ++ optionsTests
+tests = TestList $ fractalTypeTests ++ colorTests ++ optionsTests
 
 instance Eq ParseException where
   (AesonException msg1) == (AesonException msg2)  =  msg1 == msg2
@@ -30,11 +31,13 @@ fractalTypeTests = [
    TestCase $ assertRaises "bad FractalTypes parse" expectedException theParse
   ]
 
+colorTests = []
+
 optionsTests = [
   let
     expected = Options {
       fractal    = Mandelbrot,
-      color      = "bw",
+      color      = BlackOnWhite,
       size       = Dimension 720 480,
       seed       = 12345,
       upperLeft  =  0.0 :+  55.2,
@@ -63,7 +66,7 @@ optionsTests = [
     expected = Options {
       fractal    = Julia,
       size       = Dimension 512 384,
-      color      = "bw",
+      color      = BlackOnWhite,
       seed       = 666,
       upperLeft  = 5.0 :+ 6.0,
       lowerRight = 6.0 :+ 5.0,
@@ -84,7 +87,7 @@ optionsTests = [
     expected = Options {
       fractal    = Mandelbrot,
       size       = Dimension 512 384,
-      color      = "bw",
+      color      = BlackOnWhite,
       seed       = 666,
       upperLeft  = (negate 2.0) :+ 1.2,
       lowerRight = 1.2 :+ (negate 1.2),

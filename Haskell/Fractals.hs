@@ -7,7 +7,7 @@
 -}
 
 module Fractals
-  (Dimension(..), SetMembership(..),
+  (Dimension(..), FractalMembership(..),
   max_iters,
   complex_grid,
   mandelbrot, julia, burningShip, newton) where
@@ -18,7 +18,7 @@ import Data.Complex
 data Dimension = Dimension Integer Integer
   deriving (Show, Eq)
 
-data SetMembership a b = Inside | Outside a b
+data FractalMembership a b = Inside | Outside a b
   deriving (Show, Eq)
 
 max_size = 4.0

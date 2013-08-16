@@ -21,8 +21,8 @@ import System.IO.Unsafe
 
 import Debug.Trace
 
-import PPM
 import Fractals
+import Fractals.Color
 
 data FractalType = Mandelbrot | Julia | BurningShip | Newton
   deriving (Eq, Show, Read)
@@ -40,6 +40,10 @@ instance FromJSON FractalType where
   parseJSON (String s) = return $ parseFractalType $ T.unpack s
   parseJSON _          = mzero
 
+instance FromJSON ColorMap where
+  -- FIXME: write a real definition
+  parseJSON _ = return BlackOnWhite
+
 parseFractalType :: String -> FractalType
 parseFractalType word =
   case word of
@@ -56,7 +60,7 @@ instance (Read a) => FromJSON (Complex a) where
 data Options = Options {
   fractal    :: FractalType,
   size       :: Dimension,
-  color      :: String,
+  color      :: ColorMap,
   seed       :: Int,
   upperLeft  :: Complex Double,
   lowerRight :: Complex Double,
@@ -71,7 +75,7 @@ instance FromJSON Options where
     parseJSON (Object v) =
         Options <$> v .:  "fractal"
                 <*> v .:? "size"       .!= Dimension 512 384
-                <*> v .:? "color"      .!= "bw"
+                <*> v .:? "color"      .!= BlackOnWhite
                 <*> v .:? "seed"       .!= 666
                 <*> v .:  "upperLeft"
                 <*> v .:  "lowerRight"

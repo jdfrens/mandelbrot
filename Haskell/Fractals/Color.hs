@@ -3,10 +3,10 @@
   Creative Commons Attribution-Share Alike 3.0 United States License
 -}
 
-module PPM (ppmPrefix,
-            blackOnWhite, whiteOnBlack,
-            grayScale, redScale, greenScale, blueScale,
-            randomColors, randomColorsGenerator)
+module Fractals.Color (ppmPrefix, ColorMap(..),
+                       blackOnWhite, whiteOnBlack,
+                       grayScale, redScale, greenScale, blueScale,
+                       randomColors, randomColorsGenerator)
 where
 
 import System.Random
@@ -17,8 +17,14 @@ import Fractals
 
 max_color = 255
 
+-- TODO: this should move somewhere else
 ppmPrefix (Dimension width height) =
   ["P3", show width, show height, show max_color]
+
+data ColorMap = BlackOnWhite | WhiteOnBlack | GrayScale | Red | Green | Blue | Random
+              deriving (Show, Eq)
+
+-- TODO: can I make this less PPM centric?
 
 ppmEntry :: Integer -> Integer -> Integer -> String
 ppmEntry r g b = (show r) ++ " " ++ (show g) ++ " " ++ (show b)
@@ -43,7 +49,7 @@ whiteOnBlack Inside = white
 whiteOnBlack (Outside _ _) = black
 
 grayScale Inside = black
-grayScale (Outside z n) = ppmEntryGray val
+grayScale (Outside _ n) = ppmEntryGray val
   where
     val = round $ fromInteger max_color * (sqrt $ fromInteger n / fromInteger max_iters)^2
 
