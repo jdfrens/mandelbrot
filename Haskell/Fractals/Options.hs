@@ -101,16 +101,6 @@ decodemf = Y.decodeEither . C.pack
 decodeFractalFile :: FilePath -> IO (Either ParseException Options)
 decodeFractalFile = Y.decodeFileEither
 
--- parseColor color seed =
---     case color of
---           "bw"     -> blackOnWhite
---           "wb"     -> whiteOnBlack
---           "gray"   -> grayScale
---           "red"    -> redScale
---           "green"  -> greenScale
---           "blue"   -> blueScale
---           "random" -> randomColors (randomColorsGenerator seed)
-
 parseComplex str =
   case regexMatch of
     Nothing      -> error $ show str ++ " not a valid complex number"
