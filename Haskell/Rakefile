@@ -4,8 +4,8 @@
 require 'rake/clean'
 
 SRC = FileList['*.hs']
-CLEAN.include('*~')
-CLOBBER.include('*.hi', '*.o', "a.out", "nofrac")
+CLEAN.include('**/*~')
+CLOBBER.include('**/*.hi', '**/*.o', "a.out", "nofrac")
 CLOBBER.include("images/*")
 
 YAMLS = FileList['../yaml/*.yml']
