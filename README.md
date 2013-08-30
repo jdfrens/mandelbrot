@@ -18,6 +18,14 @@ I'm interested in how concurrent I can make my Haskell algorithm, and Erlang is 
 
 ## Versions
 
+### 2013-08-30
+
+* Erlang code is horribly out of date and hasn't been touched in years.
+* Haskell code...
+    * Reworked code to read YAML configurations.
+	* Reorganized the code.
+	* GOT PARALLELISM WORKING---this turned out to be picking the right strategy and parallizing at the right level.
+
 ### 2011-02-02
 
 * Both the Haskell and Erlang code read configurations from the same YAML files.
