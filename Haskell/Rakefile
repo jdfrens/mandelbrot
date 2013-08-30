@@ -34,14 +34,15 @@ GIFS.zip(PPMS).each do |gif, ppm|
   end
 end
 
+GENERAL_RTS_FLAGS = "+RTS -N4 -RTS"
 PPMS.zip(YAMLS).each do |ppm, yml|
   file ppm => [yml, "nofrac"] do
-    sh "nofrac #{yml} #{ppm}"
+    sh "nofrac #{GENERAL_RTS_FLAGS} #{yml} #{ppm}"
   end
 end
 
 task :parallel => :compile do
-  [1, 2, 4].each do |procs|
+  [1, 2, 4, 8].each do |procs|
     sh "time ./nofrac +RTS -N#{procs} -RTS ../yaml/burningship-zoom-green.yml images/burningship-p#{procs}.ppm"
   end
 end
