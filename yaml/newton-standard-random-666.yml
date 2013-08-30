@@ -1,6 +1,6 @@
-type: newton
+fractal: Newton
 seed: 666
-color: random
+color: Random
 size: 512x512
-upperleft: -2.0+2.0i
-lowerright: 2.0+-2.0i
+upperLeft: -2.0+2.0i
+lowerRight: 2.0+-2.0i

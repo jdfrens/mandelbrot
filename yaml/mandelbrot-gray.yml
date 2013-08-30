@@ -1,5 +1,5 @@
-type: mandelbrot
-color: gray
+fractal: Mandelbrot
+color: Gray
 size: 512x384
-upperleft: -2.0+1.2i
-lowerright: 1.2+-1.2i
+upperLeft: -2.0+1.2i
+lowerRight: 1.2+-1.2i

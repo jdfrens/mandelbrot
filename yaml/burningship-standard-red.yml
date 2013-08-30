@@ -1,5 +1,5 @@
-type: burningship
-color: red
+fractal: BurningShip
+color: Red
 size: 1024x768
-upperleft: -2.5+2.0i
-lowerright: 1.5+-1.0i
+upperLeft: -2.5+2.0i
+lowerRight: 1.5+-1.0i
