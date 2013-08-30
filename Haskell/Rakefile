@@ -17,7 +17,7 @@ task :default => :compile
 desc "compiles the nofrac executable with GHC"
 task :compile do
   ["nofrac.hs", "Tests.hs"].each do |source|
-    sh "ghc -O2 -threaded --make #{source}"
+    sh "ghc -O2 -threaded -rtsopts --make #{source}"
   end
 end
 
@@ -35,13 +35,13 @@ GIFS.zip(PPMS).each do |gif, ppm|
 end
 
 PPMS.zip(YAMLS).each do |ppm, yml|
-  file ppm => yml do
+  file ppm => [yml, "nofrac"] do
     sh "nofrac #{yml} #{ppm}"
   end
 end
 
-# def parallel
-#   [1, 2, 4].each do |procs|
-#     sh "time ./nofrac +RTS -N#{procs} -RTS --type burningship --color green --size 2048x1536 --upperleft -1.8+0.055i --lowerright -1.7+-0.02i > images/burningship-p#{procs}.ppm"
-#   end
-# end
+task :parallel => :compile do
+  [1, 2, 4].each do |procs|
+    sh "time ./nofrac +RTS -N#{procs} -RTS ../yaml/burningship-zoom-green.yml images/burningship-p#{procs}.ppm"
+  end
+end
