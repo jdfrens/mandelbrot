@@ -21,8 +21,8 @@ import System.IO.Unsafe
 
 import Debug.Trace
 
-import Fractals
-import Fractals.Color
+import Fractals (FractalType(..), Dimension(..))
+import Fractals.Color (ColorMap(..))
 
 decodemf :: (FromJSON a) => String -> Either String a
 decodemf = Y.decodeEither . C.pack
