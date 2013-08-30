@@ -34,14 +34,21 @@ computeFractal options =
   let
     grid = complex_grid (size options) (upperLeft options) (lowerRight options)
   in
-    map2 (colorFunction options) $ map2 (plotter options) grid
+    map2 colorFunction $ map2 plotter grid
     where
-      plotter options =
+      plotter =
         case (fractal options) of
           Mandelbrot  -> mandelbrot
           BurningShip -> burningShip
           Julia       -> julia (c options)
           Newton      -> newton (\z -> z^3 - 1) (\z -> 3.0 * z^2)
-      colorFunction _ = blackOnWhite
+      colorFunction = case (color options) of
+                           BlackOnWhite -> blackOnWhite
+                           WhiteOnBlack -> whiteOnBlack
+                           Gray         -> grayScale
+                           Red          -> redScale
+                           Green        -> greenScale
+                           Blue         -> blueScale
+                           Random       -> randomColors $ randomColorsGenerator $ seed options
 
-map2 f l = parMap rseq (map f) l
+map2 f l = map (parMap rpar f) l
