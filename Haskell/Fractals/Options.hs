@@ -44,8 +44,19 @@ data Options = Options {
   }
   deriving (Eq, Show)
 
-data FractalType = Mandelbrot | Julia | BurningShip | Newton
-  deriving (Eq, Show, Read)
+instance FromJSON Options where
+    parseJSON (Object v) =
+        Options <$> v .:  "fractal"
+                <*> v .:? "size"       .!= Dimension 512 384
+                <*> v .:? "color"      .!= BlackOnWhite
+                <*> v .:? "seed"       .!= 666
+                <*> v .:  "upperLeft"
+                <*> v .:  "lowerRight"
+                <*> v .:? "c"          .!= (1.0 :+ 0.0)
+                <*> v .:? "z"          .!= (0.0 :+ 0.0)
+                <*> v .:? "r"          .!= (0.0 :+ 0.0)
+                <*> v .:? "p"          .!= (0.0 :+ 0.0)
+    parseJSON _ = mzero
 
 instance FromJSON Dimension where
   parseJSON (String s) = return $ parseSize $ T.unpack s
@@ -87,20 +98,6 @@ parseColorMap word =
 instance (Read a) => FromJSON (Complex a) where
   parseJSON (String s) = return $ parseComplex $ T.unpack s
   parseJSON _          = mzero
-
-instance FromJSON Options where
-    parseJSON (Object v) =
-        Options <$> v .:  "fractal"
-                <*> v .:? "size"       .!= Dimension 512 384
-                <*> v .:? "color"      .!= BlackOnWhite
-                <*> v .:? "seed"       .!= 666
-                <*> v .:  "upperLeft"
-                <*> v .:  "lowerRight"
-                <*> v .:? "c"          .!= (1.0 :+ 0.0)
-                <*> v .:? "z"          .!= (0.0 :+ 0.0)
-                <*> v .:? "r"          .!= (0.0 :+ 0.0)
-                <*> v .:? "p"          .!= (0.0 :+ 0.0)
-    parseJSON _ = mzero
 
 parseComplex str =
   case regexMatch of

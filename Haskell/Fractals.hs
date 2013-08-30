@@ -7,13 +7,16 @@
 -}
 
 module Fractals
-  (Dimension(..), FractalMembership(..),
+  (FractalType(..), Dimension(..), FractalMembership(..),
   max_iters,
   complex_grid,
   mandelbrot, julia, burningShip, newton) where
 
 import Data.List
 import Data.Complex
+
+data FractalType = Mandelbrot | Julia | BurningShip | Newton
+  deriving (Eq, Show, Read)
 
 data Dimension = Dimension Integer Integer
   deriving (Show, Eq)
