@@ -14,7 +14,8 @@ import Data.Yaml
 
 import Fractals
 import Fractals.Options
-import Fractals.Color
+import Fractals.Color (makeColorFunction)
+import Fractals.PPM (ppmPrefix)
 
 main :: IO ()
 main = do
@@ -36,19 +37,12 @@ computeFractal options =
   in
     map2 colorFunction $ map2 plotter grid
     where
+      colorFunction = makeColorFunction (color options) (seed options)
       plotter =
         case (fractal options) of
           Mandelbrot  -> mandelbrot
           BurningShip -> burningShip
           Julia       -> julia (c options)
           Newton      -> newton (\z -> z^3 - 1) (\z -> 3.0 * z^2)
-      colorFunction = case (color options) of
-                           BlackOnWhite -> blackOnWhite
-                           WhiteOnBlack -> whiteOnBlack
-                           Gray         -> grayScale
-                           Red          -> redScale
-                           Green        -> greenScale
-                           Blue         -> blueScale
-                           Random       -> randomColors $ randomColorsGenerator $ seed options
 
 map2 f l = map (parMap rpar f) l
