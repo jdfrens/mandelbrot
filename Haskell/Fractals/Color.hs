@@ -21,7 +21,7 @@ max_color = 255
 ppmPrefix (Dimension width height) =
   ["P3", show width, show height, show max_color]
 
-data ColorMap = BlackOnWhite | WhiteOnBlack | GrayScale | Red | Green | Blue | Random
+data ColorMap = BlackOnWhite | WhiteOnBlack | Gray | Red | Green | Blue | Random
               deriving (Show, Eq)
 
 -- TODO: can I make this less PPM centric?

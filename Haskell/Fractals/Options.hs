@@ -77,6 +77,7 @@ parseColorMap word =
   case word of
     "BlackOnWhite" -> BlackOnWhite
     "WhiteOnBlack" -> WhiteOnBlack
+    "Gray"         -> Gray
     "Red"          -> Red
     "Blue"         -> Blue
     "Green"        -> Green

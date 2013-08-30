@@ -34,6 +34,7 @@ fractalTypeTests = TestLabel "FractalType tests" $ TestList [
 colorMapTests = TestLabel "ColorMap tests" $ TestList [
   "parse BlackOnWhite" ~: (Right BlackOnWhite) ~=? (decodemf "BlackOnWhite"),
   "parse WhiteOnBlack" ~: (Right WhiteOnBlack) ~=? (decodemf "WhiteOnBlack"),
+  "parse Gray"   ~: (Right Gray)   ~=? (decodemf "Gray"),
   "parse Red"    ~: (Right Red)    ~=? (decodemf "Red"),
   "parse Green"  ~: (Right Green)  ~=? (decodemf "Green"),
   "parse Blue"   ~: (Right Blue)   ~=? (decodemf "Blue"),
