@@ -10,12 +10,12 @@ module Fractals
   (FractalType(..), Dimension(..), FractalMembership(..),
   max_iters,
   complex_grid,
-  mandelbrot, julia, burningShip, newton) where
+  mandelbrot, julia, burningShip, newton, nova) where
 
 import Data.List
 import Data.Complex
 
-data FractalType = Mandelbrot | Julia | BurningShip | Newton
+data FractalType = Mandelbrot | Julia | BurningShip | Newton | Nova
   deriving (Eq, Show, Read)
 
 data Dimension = Dimension Integer Integer
@@ -39,10 +39,11 @@ complex_grid (Dimension width height) (x0 :+ y0) (x1 :+ y1) =
 -----------------------------------------------------------
 -- initial conditions and iterators for fractals
 -----------------------------------------------------------
-mandelbrot c  = iteratePoint z_squared_plus_c c (0 :+ 0)
-julia c z0    = iteratePoint z_squared_plus_c c z0
-burningShip c = iteratePoint burningship_iterator c (0 :+ 0)
+mandelbrot c   = iteratePoint z_squared_plus_c c (0 :+ 0)
+julia c z0     = iteratePoint z_squared_plus_c c z0
+burningShip c  = iteratePoint burningship_iterator c (0 :+ 0)
 newton p p' z0 = iteratePoint (newtonIterator p p') (0 :+ 0) z0
+nova r p c  z0 = iteratePoint (novaIterator r p) c z0
 
 -----------------------------------------------------------
 -- iterators
@@ -52,6 +53,7 @@ burningship_iterator z c = (burn z)^2 + c
   where
     burn (a :+ b) = (abs a) :+ (negate (abs b))
 newtonIterator p p' z c = z - (p z) / (p' z)
+novaIterator r p z c = z - r * (z ** p - 1) / (p * z ** (p - 1)) + c
 
 -----------------------------------------------------------
 -- iteration

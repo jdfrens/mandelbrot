@@ -11,6 +11,7 @@ import System.Console.GetOpt
 import Control.Monad
 import Control.Parallel.Strategies
 import Data.Yaml
+import Data.Complex
 
 import Fractals
 import Fractals.Options
@@ -44,5 +45,6 @@ computeFractal options =
           BurningShip -> burningShip
           Julia       -> julia (c options)
           Newton      -> newton (\z -> z^3 - 1) (\z -> 3.0 * z^2)
+          Nova        -> nova (r options) (p options) (c options)
 
 map2 f l = map (parMap rpar f) l

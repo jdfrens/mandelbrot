@@ -78,6 +78,7 @@ parseFractalType word =
     "Julia"       -> Julia
     "BurningShip" -> BurningShip
     "Newton"      -> Newton
+    "Nova"        -> Nova
     _             -> throw $ AesonException $ word ++ " is not a valid fractal type"
 
 instance FromJSON ColorMap where

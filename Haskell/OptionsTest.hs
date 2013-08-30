@@ -24,6 +24,7 @@ fractalTypeTests = TestLabel "FractalType tests" $ TestList [
   "parse Julia"       ~: (Right Julia)       ~=? (decodemf "Julia"),
   "parse BurningShip" ~: (Right BurningShip) ~=? (decodemf "BurningShip"),
   "parse Newton"      ~: (Right Newton)      ~=? (decodemf "Newton"),
+  "parse Nova"        ~: (Right Nova)        ~=? (decodemf "Nova"),
   let
     expectedException = AesonException "poop is not a valid fractal type"
     theParse          = evaluate $ parseFractalType "poop"
