@@ -19,7 +19,10 @@ data FractalType = Mandelbrot | Julia | BurningShip | Newton | Nova
   deriving (Eq, Show, Read)
 
 data Dimension = Dimension Integer Integer
-  deriving (Show, Eq)
+  deriving (Eq)
+
+instance Show Dimension where
+  show (Dimension w h) = (show w) ++ "x" ++ (show h)
 
 data FractalMembership a b = Inside | Outside a b
   deriving (Show, Eq)
