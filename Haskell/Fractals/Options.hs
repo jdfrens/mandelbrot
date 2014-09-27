@@ -17,6 +17,7 @@ import Data.Yaml as Y
 import Text.Regex
 import qualified Data.Text as T
 import qualified Data.ByteString.Char8 as C
+import qualified Data.HashMap.Lazy as Map
 import System.IO.Unsafe
 
 import Debug.Trace
@@ -26,6 +27,9 @@ import Fractals.Color (ColorMap(..))
 
 decodemf :: (FromJSON a) => String -> Either String a
 decodemf = Y.decodeEither . C.pack
+
+encodemf :: (ToJSON a) => a -> String
+encodemf = C.unpack . Y.encode
 
 decodeFractalFile :: FilePath -> IO (Either ParseException Options)
 decodeFractalFile = Y.decodeFileEither
@@ -58,6 +62,23 @@ instance FromJSON Options where
                 <*> v .:? "p"          .!= (0.0 :+ 0.0)
     parseJSON _ = mzero
 
+instance ToJSON Options where
+  toJSON = Object . optionsAsHash
+    where optionsAsHash = Map.fromList . optionsAsList
+          optionsAsList opts = [
+            convert ("fractal",    fractal opts),
+            convert ("size",       size opts),
+            convert ("color",      color opts),
+            convert ("seed",       seed opts),
+            convert ("upperLeft",  upperLeft opts),
+            convert ("lowerRight", lowerRight opts),
+            convert ("c",          c opts),
+            convert ("z",          z opts),
+            convert ("r",          r opts),
+            convert ("p",          p opts)
+            ]
+          convert (k, v) = (T.pack k, toJSON v)
+
 instance FromJSON Dimension where
   parseJSON (String s) = return $ parseSize $ T.unpack s
     where parseSize str =
@@ -67,9 +88,15 @@ instance FromJSON Dimension where
                               in Dimension (vals !! 0) (vals !! 1)
           regexMatch = matchRegex (mkRegex "^([0-9.]+)x([0-9.]+)$")
 
+instance ToJSON Dimension where
+  toJSON = String . T.pack . show
+
 instance FromJSON FractalType where
   parseJSON (String s) = return $ parseFractalType $ T.unpack s
   parseJSON _          = mzero
+
+instance ToJSON FractalType where
+  toJSON = String . T.pack . show
 
 parseFractalType :: String -> FractalType
 parseFractalType word =
@@ -84,6 +111,9 @@ parseFractalType word =
 instance FromJSON ColorMap where
   parseJSON (String s) = return $ parseColorMap $ T.unpack s
   parseJSON _          = mzero
+
+instance ToJSON ColorMap where
+  toJSON = String . T.pack . show
 
 parseColorMap word =
   case word of
@@ -100,10 +130,21 @@ instance (Read a) => FromJSON (Complex a) where
   parseJSON (String s) = return $ parseComplex $ T.unpack s
   parseJSON _          = mzero
 
+instance (Show a, RealFloat a) => ToJSON (Complex a) where
+  toJSON z = String $ T.pack $ a ++ "+" ++ b ++ "i"
+            where a = show (realPart z)
+                  b = show (imagPart z)
+
+-- TODO: rewrite with attoparsec?
 parseComplex str =
   case regexMatch of
     Nothing      -> error $ show str ++ " not a valid complex number"
     Just matches -> let vals = map read matches
-                    in (vals !! 0) :+ (vals !! 1)
+                    in (vals !! 0) :+ (vals !! 2)
     where
-      regexMatch = matchRegex (mkRegex "^([-]?[0-9.]+)[+]([-]?[0-9.]+)i$") str
+      pattern = "^" ++
+                "([-]?[0-9.]+(e[-]?[0-9]+)?)" ++
+                "[+]" ++
+                "([-]?[0-9.]+(e[-]?[0-9]+)?)i" ++
+                "$"
+      regexMatch = matchRegex (mkRegex pattern) str
