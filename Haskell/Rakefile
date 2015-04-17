@@ -46,3 +46,9 @@ task :parallel => :compile do
     sh "time ./nofrac +RTS -N#{procs} -RTS ../yaml/burningship-zoom-green.yml images/burningship-p#{procs}.ppm"
   end
 end
+
+task :dependencies do
+  %w{hunit parallel random regex-compat test-framework test-framework-hunit test-framework-quickcheck2 testpack text yaml}.each do |package|
+    sh "cabal install #{package}"
+  end
+end
