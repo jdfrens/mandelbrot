@@ -1,2 +1,3 @@
-%{"poison": {:hex, :poison, "1.4.0"},
+%{"inflex": {:hex, :inflex, "1.0.0"},
+  "poison": {:hex, :poison, "1.4.0"},
   "yamerl": {:hex, :yamerl, "0.3.1-1"}}

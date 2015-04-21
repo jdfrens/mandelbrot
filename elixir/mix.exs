@@ -16,7 +16,8 @@ defmodule Mandelbrot.Mixfile do
 
   defp deps do
     [
-      { :poison, "~> 1.4.0" }
+      { :poison, "~> 1.4.0" },
+      { :inflex, "~> 1.0.0" }
     ]
   end
 end
