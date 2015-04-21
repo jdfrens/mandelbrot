@@ -27,7 +27,7 @@ task :generate => [:default, *GIFS]
 
 GIFS.zip(PPMS).each do |gif, ppm|
   file gif => ppm do
-    # sh "convert #{ppm} #{gif}"
+    sh "convert #{ppm} #{gif}"
   end
 end
 
