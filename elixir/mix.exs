@@ -5,7 +5,8 @@ defmodule Mandelbrot.Mixfile do
     [app: :mandelbrot,
      version: "0.0.1",
      elixir: "~> 1.0",
-     build_embedded: Mix.env == :prod,
+     escript:         escript_config,
+     build_embedded:  Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps]
   end
@@ -19,5 +20,9 @@ defmodule Mandelbrot.Mixfile do
       { :poison, "~> 1.4.0" },
       { :inflex, "~> 1.0.0" }
     ]
+  end
+
+  defp escript_config do
+    [ main_module: Mandelbrot ]
   end
 end
