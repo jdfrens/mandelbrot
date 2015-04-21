@@ -14,10 +14,10 @@ defmodule Mandelbrot.Options do
       seed:        parse_seed(json["seed"]),
       upper_left:  parse_complex(json["upperLeft"]),
       lower_right: parse_complex(json["lowerRight"]),
-      c:           parse_complex(json["c"]),
-      z:           parse_complex(json["z"]),
-      r:           parse_complex(json["r"]),
-      p:           parse_complex(json["p"])
+      c:           parse_complex(json["c"], %Complex{ real: 1.0, imag: 0.0 }),
+      z:           parse_complex(json["z"], %Complex{ real: 0.0, imag: 0.0 }),
+      r:           parse_complex(json["r"], %Complex{ real: 0.0, imag: 0.0 }),
+      p:           parse_complex(json["p"], %Complex{ real: 0.0, imag: 0.0 })
     }
   end
 
@@ -25,19 +25,24 @@ defmodule Mandelbrot.Options do
     String.to_atom(String.downcase(fractal))
   end
 
+  defp parse_size(nil), do: [ width: 512, height: 384 ]
   defp parse_size(size) do
     [_, width, height] = Regex.run(~r/(\d+)x(\d+)/, size)
     [ width: String.to_integer(width), height: String.to_integer(height) ]
   end
 
+  defp parse_color(nil), do: :black_on_white
   defp parse_color(color) do
     String.to_atom(Inflex.underscore(color))
   end
 
+  defp parse_seed(nil), do: 666
   defp parse_seed(seed), do: seed
 
-  defp parse_complex(upper_left) do
-    Complex.parse(upper_left)
+  defp parse_complex(complex), do: parse_complex(complex, nil)
+  defp parse_complex(nil, default), do: default
+  defp parse_complex(complex, _) do
+    Complex.parse(complex)
   end
 
 end

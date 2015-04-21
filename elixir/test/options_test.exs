@@ -33,4 +33,27 @@ defmodule Mandelbrot.Options.Test do
                           }
   end
 
+  test "parse with defaults" do
+    json = """
+    {
+      "fractal":    "Julia",
+      "upperLeft":  "5.0+6.0i",
+      "lowerRight": "6.0+5.0i"
+    }
+    """
+    expected = %Mandelbrot.Options {
+      fractal:     :julia,
+      size:        [ width: 512, height: 384 ],
+      color:       :black_on_white,
+      seed:        666,
+      upper_left:  %Complex{ real: 5.0, imag: 6.0 },
+      lower_right: %Complex{ real: 6.0, imag: 5.0 },
+      c:           %Complex{ real: 1.0, imag: 0.0 },
+      z:           %Complex{ real: 0.0, imag: 0.0 },
+      r:           %Complex{ real: 0.0, imag: 0.0 },
+      p:           %Complex{ real: 0.0, imag: 0.0 }
+      }
+    assert parse(json) == expected
+  end
+
 end
