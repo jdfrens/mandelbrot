@@ -3,7 +3,7 @@ defmodule Mandelbrot.Fractal.Test do
   use ExUnit.Case, async: true
 
   test "generate_header" do
-    options = %Mandelbrot.Options{ size: [ width: 55, height: 99 ] }
+    options = %Mandelbrot.Options{ size: %Mandelbrot.Size{ width: 55, height: 99 } }
     assert ["P3", "55", "99", "255"] == Mandelbrot.Fractal.generate_header(options)
   end
 
