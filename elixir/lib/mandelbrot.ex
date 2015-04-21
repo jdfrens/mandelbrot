@@ -1,0 +1,2 @@
+defmodule Mandelbrot do
+end
