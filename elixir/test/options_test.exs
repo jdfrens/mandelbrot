@@ -21,7 +21,7 @@ defmodule Mandelbrot.Options.Test do
     """
     assert parse(json) == %Mandelbrot.Options{
                             fractal: :mandelbrot,
-                            size:        [ width: 720, height: 480 ],
+                            size:        %Mandelbrot.Size{ width: 720, height: 480 },
                             color:       :black_on_white,
                             seed:        12345,
                             upper_left:  %Complex{ real: 0.0, imag: 55.2 },
@@ -43,7 +43,7 @@ defmodule Mandelbrot.Options.Test do
     """
     expected = %Mandelbrot.Options {
       fractal:     :julia,
-      size:        [ width: 512, height: 384 ],
+      size:        %Mandelbrot.Size{ width: 512, height: 384 },
       color:       :black_on_white,
       seed:        666,
       upper_left:  %Complex{ real: 5.0, imag: 6.0 },

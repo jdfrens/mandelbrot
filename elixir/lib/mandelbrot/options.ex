@@ -25,10 +25,13 @@ defmodule Mandelbrot.Options do
     String.to_atom(String.downcase(fractal))
   end
 
-  defp parse_size(nil), do: [ width: 512, height: 384 ]
+  defp parse_size(nil), do: %Mandelbrot.Size{ width: 512, height: 384 }
   defp parse_size(size) do
     [_, width, height] = Regex.run(~r/(\d+)x(\d+)/, size)
-    [ width: String.to_integer(width), height: String.to_integer(height) ]
+    %Mandelbrot.Size{
+     width: String.to_integer(width),
+     height: String.to_integer(height)
+   }
   end
 
   defp parse_color(nil), do: :black_on_white
