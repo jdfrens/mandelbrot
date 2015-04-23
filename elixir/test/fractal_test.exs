@@ -7,14 +7,21 @@ defmodule Mandelbrot.Fractal.Test do
     assert ["P3", "55", "99", "255"] == Mandelbrot.Fractal.generate_header(options)
   end
 
-  test "generate_image" do
+  test "generate_grid" do
+    import Mandelbrot.Fractal, only: [ generate_grid: 1 ]
+
     options       = %Mandelbrot.Options{
-      size:        %Mandelbrot.Size{ width: 3, height: 4 },
+      size:        %Mandelbrot.Size{ width: 2, height: 3 },
       upper_left:  %Complex{ real: -1.0, imag:  1.0 },
       lower_right: %Complex{ real:  1.0, imag: -1.0 }
     }
-    red_generator = fn (_, _) -> "255 0 0" end
-    assert List.duplicate("255 0 0", 12) == Mandelbrot.Fractal.generate_image(options, red_generator)
+    expected = [
+      { -1.0,  1.0 }, { 1.0,  1.0 },
+      { -1.0,  0.0 }, { 1.0,  0.0 },
+      { -1.0, -1.0 }, { 1.0, -1.0 },
+    ]
+
+    assert expected == generate_grid(options)
   end
 
   test "xs" do
@@ -35,10 +42,36 @@ defmodule Mandelbrot.Fractal.Test do
     assert [1.0, 0.5, 0.0, -0.5, -1.0] == Mandelbrot.Fractal.ys(options)
   end
 
-  test "float_iterate" do
-    assert [-1.0, 0.0, 1.0] == Mandelbrot.Fractal.float_iterate(3, -1.0, 1.0)
-    assert [-2.0, -0.75, 0.5, 1.75, 3.0] == Mandelbrot.Fractal.float_iterate(5, -2.0, 3.0)
-    assert [1.0, 0.0, -1.0] == Mandelbrot.Fractal.float_iterate(3, 1.0, -1.0)
+  test "float_sequence" do
+    assert [-1.0, 0.0, 1.0] == Mandelbrot.Fractal.float_sequence(3, -1.0, 1.0)
+    assert [-2.0, -0.75, 0.5, 1.75, 3.0] == Mandelbrot.Fractal.float_sequence(5, -2.0, 3.0)
+    assert [1.0, 0.0, -1.0] == Mandelbrot.Fractal.float_sequence(3, 1.0, -1.0)
   end
 
+  test "fractal_iterate" do
+    import Mandelbrot.Fractal, only: [ fractal_iterate: 2 ]
+
+    z0 = %Complex{ real: 0.0, imag: 0.0 }
+    c  = %Complex{ real: 1.0, imag: 0.0 }
+    assert { %Complex{ real: 2.0, imag: 0.0 },   3 } == fractal_iterate(z0, c)
+
+    z0 = %Complex{ real: 0.0, imag: 0.0 }
+    c  = %Complex{ real: 0.0, imag: 0.0 }
+    assert { %Complex{ real: 0.0, imag: 0.0 }, 256 } == fractal_iterate(z0, c)
+  end
+
+  test "in_or_out" do
+    import Mandelbrot.Fractal, only: [ in_or_out: 1 ]
+
+    assert { :inside,  :whatever } == in_or_out({ :whatever, 256 })
+    assert { :inside,  :whatever } == in_or_out({ :whatever, 538 })
+    assert { :outside, :whatever } == in_or_out({ :whatever, 255 })
+    assert { :outside, :whatever } == in_or_out({ :whatever,  34 })
+  end
+
+  test "mandelbrot_next" do
+    z = %Complex{ real: 3.0, imag: 2.0 }
+    c = %Complex{ real: 1.0, imag: 1.0 }
+    assert %Complex{ real: 6.0, imag: 13.0 } == Mandelbrot.Fractal.mandelbrot_next(z, c)
+  end
 end
