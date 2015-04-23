@@ -21,74 +21,35 @@ defmodule Mandelbrot.Fractal do
   end
 
   def generate_image(options) do
-    generate_grid(options)
-    |> Enum.map(&build_complex/1)
-    |> Enum.map(fractal_iterator(options))
+    next_func  = Mandelbrot.NextFunction.next_function(options)
+    color_func = Mandelbrot.Color.color_function(options)
+    Mandelbrot.Grid.generate_grid(options)
+    |> Enum.map(fn { r, i } -> %Complex{ real: r, imag: i } end)
+    |> Enum.map(fn (z) -> generate_pixel(z, next_func, color_func) end)
   end
 
-  def fractal_iterator(options) do
-    case options.fractal do
-      :mandelbrot -> &generate_mandelbrot_pixel/1
-    end
+  def generate_pixel(c, next_func, color_func) do
+    fractal_iterate(next_func, %Complex{ real: 0.0, imag: 0.0 }, c)
+    |> in_or_out
+    |> apply_color(color_func)
   end
 
-  def generate_grid(options) do
-    for y <- ys(options), x <- xs(options), do: { x, y }
-  end
-
-  def build_complex({ real, imag }) do
-    %Complex{ real: real, imag: imag }
-  end
-
-  def generate_mandelbrot_pixel(c) do
-     z_n = fractal_iterate(%Complex{ real: 0.0, imag: 0.0 }, c)
-    case in_or_out(z_n) do
-      { :inside,  _ } -> "255 0 0 "
-      { :outside, _ } -> "  0 0 0 "
-    end
+  def apply_color(in_out, color_func) do
+    color_func.(in_out)
   end
 
   def in_or_out({ z, iterations }) do
     status = if iterations >= 256, do: :inside, else: :outside
-    { status, z }
+    { status, z, iterations }
   end
 
-  def fractal_iterate(z, c) do
-    Stream.iterate({ z, 1 }, fn { z, i } -> { mandelbrot_next(z, c), i+1 } end)
+  def fractal_iterate(next, z, c) do
+    Stream.iterate({ z, 1 }, fn { z, i } -> { next.(z, c), i+1 } end)
     |> Stream.take_while(fn { z, _ } -> Complex.magnitude(z) < 4.0 end)
     |> Stream.take(256)
     |> Stream.take(-1)
     |> Enum.to_list()
     |> List.last
-  end
-
-  def xs(options) do
-    %Mandelbrot.Options{
-      size:        %Mandelbrot.Size{ width: width },
-      upper_left:  %Complex{ real: x0 },
-      lower_right: %Complex{ real: x1 }
-    } = options
-    float_sequence(width, x0, x1)
-  end
-
-  def ys(options) do
-    %Mandelbrot.Options{
-      size:        %Mandelbrot.Size{ height: height },
-      upper_left:  %Complex{ imag: y1 },
-      lower_right: %Complex{ imag: y0 }
-    } = options
-    float_sequence(height, y1, y0)
-  end
-
-  def float_sequence(count, first, last) do
-    delta = (last - first) / (count - 1)
-    Stream.iterate(first, &(&1 + delta)) |> Enum.take(count)
-  end
-
-  def mandelbrot_next(z, c) do
-    z
-    |> Complex.square()
-    |> Complex.add(c)
   end
 
 end
