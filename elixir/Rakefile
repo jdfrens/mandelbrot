@@ -4,7 +4,7 @@
 require 'rake/clean'
 
 CLEAN.include('**/*~')
-CLOBBER.include('**/*.hi', '**/*.o', "mandelbrot")
+CLOBBER.include("mandelbrot")
 CLOBBER.include("images/*")
 
 JSONS = FileList['../json/*.json']
@@ -32,7 +32,7 @@ GIFS.zip(PPMS).each do |gif, ppm|
 end
 
 PPMS.zip(JSONS).each do |ppm, json|
-  file ppm => [json, "mandelbrot"] do
+  file ppm => [json, :compile] do
     sh "mandelbrot #{json} #{ppm}"
   end
 end
