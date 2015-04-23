@@ -7,6 +7,21 @@ defmodule Mandelbrot.Fractal.Test do
     assert ["P3", "55", "99", "255"] == Mandelbrot.Fractal.generate_header(options)
   end
 
+  test "generate" do
+    # more of a property test
+    import Mandelbrot.Fractal, only: [ generate: 1 ]
+
+    options       = %Mandelbrot.Options{
+      fractal:     :mandelbrot,
+      size:        %Mandelbrot.Size{ width: 30, height: 20 },
+      upper_left:  %Complex{ real: -2.0, imag:  1.0 },
+      lower_right: %Complex{ real:  1.0, imag: -1.0 }
+    }
+
+    ppm = Mandelbrot.Fractal.generate(options)
+    assert 4 + 30 * 20 = Enum.count(String.split(ppm, "\n"))
+  end
+
   test "generate_grid" do
     import Mandelbrot.Fractal, only: [ generate_grid: 1 ]
 
