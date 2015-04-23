@@ -2,9 +2,11 @@ defmodule Mandelbrot.Fractal do
 
   import Enum, only: [ concat: 2, join: 2 ]
 
+  # FIXME: this builds a list which is joined; it should build a stream
   def generate(options) do
-    generate_header(options)
-    |> concat(generate_image(options, generator(options)))
+    []
+    |> concat(generate_header(options))
+    |> concat(generate_image(options))
     |> join("\n")
   end
 
