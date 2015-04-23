@@ -9,4 +9,20 @@ defmodule Complex do
     }
   end
 
+  def magnitude(z) do
+    :math.sqrt(z.real * z.real + z.imag * z.imag)
+  end
+
+
+  def square(z) do
+    %Complex{
+      real: z.real * z.real - z.imag * z.imag,
+      imag: 2 * z.real * z.imag
+    }
+  end
+
+  def add(z0, z1) do
+    %Complex { real: z0.real + z1.real, imag: z0.imag + z1.imag }
+  end
+
 end
