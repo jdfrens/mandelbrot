@@ -23,7 +23,13 @@ defmodule Mandelbrot.Fractal do
   def generate_image(options) do
     generate_grid(options)
     |> Enum.map(&build_complex/1)
-    |> Enum.map(&generate_mandelbrot_pixel/1)
+    |> Enum.map(fractal_iterator(options))
+  end
+
+  def fractal_iterator(options) do
+    case options.fractal do
+      :mandelbrot -> &generate_mandelbrot_pixel/1
+    end
   end
 
   def generate_grid(options) do
