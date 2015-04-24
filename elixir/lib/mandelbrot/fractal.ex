@@ -21,15 +21,20 @@ defmodule Mandelbrot.Fractal do
   end
 
   def generate_image(options) do
-    next_func  = Mandelbrot.NextFunction.next_function(options)
-    color_func = Mandelbrot.Color.color_function(options)
+    import Mandelbrot.NextFunction, only: [ next_function: 2 ]
+    import Mandelbrot.Color, only: [ color_function: 1 ]
+
+    color_func = color_function(options)
     Mandelbrot.Grid.generate_grid(options)
-    |> Enum.map(fn { r, i } -> %Complex{ real: r, imag: i } end)
-    |> Enum.map(fn (z) -> generate_pixel(z, next_func, color_func) end)
+    |> Enum.map(&build_complex/1)
+    |> Enum.map(fn   grid_point -> { grid_point, next_function(grid_point, options) } end)
+    |> Enum.map(fn { grid_point, next_func } -> generate_pixel(grid_point, next_func, color_func) end)
   end
 
-  def generate_pixel(c, next_func, color_func) do
-    fractal_iterate(next_func, %Complex{ real: 0.0, imag: 0.0 }, c)
+  def build_complex({ r, i }), do: %Complex{ real: r, imag: i }
+
+  def generate_pixel(grid_point, next_func, color_func) do
+    fractal_iterate(next_func, grid_point)
     |> in_or_out
     |> apply_color(color_func)
   end
@@ -43,8 +48,8 @@ defmodule Mandelbrot.Fractal do
     { status, z, iterations }
   end
 
-  def fractal_iterate(next, z, c) do
-    Stream.iterate({ z, 1 }, fn { z, i } -> { next.(z, c), i+1 } end)
+  def fractal_iterate(next, grid_point) do
+    Stream.iterate({ grid_point, 1 }, fn { z, i } -> { next.(z), i+1 } end)
     |> Stream.take_while(fn { z, _ } -> Complex.magnitude(z) < 4.0 end)
     |> Stream.take(256)
     |> Stream.take(-1)
