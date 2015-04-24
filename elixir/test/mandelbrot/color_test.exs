@@ -6,6 +6,29 @@ defmodule Mandelbrot.Color.Test do
     assert "  0   0 255 " == Mandelbrot.Color.ppm(0, 0, 255)
   end
 
+  test "black_on_white" do
+    import Mandelbrot.Color, only: [ black: 0, white: 0, black_on_white: 1 ]
+
+    assert black() == black_on_white({  :inside, :meh, :meh })
+    assert white() == black_on_white({ :outside, :meh, :meh })
+  end
+
+  test "white_on_black" do
+    import Mandelbrot.Color, only: [ black: 0, white: 0, white_on_black: 1 ]
+
+    assert white() == white_on_black({  :inside, :meh, :meh })
+    assert black() == white_on_black({ :outside, :meh, :meh })
+  end
+
+  test "gray" do
+    import Mandelbrot.Color, only: [ black: 0, white: 0, gray: 1, ppm: 3 ]
+
+    assert black() == gray({  :inside, :meh, :meh })
+    assert ppm(  0,   0,   0) == gray({ :outside, :meh,    0 })
+    assert ppm(128, 128, 128) == gray({ :outside, :meh,  128 })
+    assert white() == gray({ :outside, :meh,  256 })
+  end
+
   test "pov_scale" do
     import Mandelbrot.Color, only: [ black: 0, pov_scale: 3 ]
 
@@ -54,9 +77,4 @@ defmodule Mandelbrot.Color.Test do
     assert ppm(255, 255, 255) == scaled_red({ :outside, :meh, 256 })
   end
 
-  test "random" do
-    import Mandelbrot.Color, only: [ white: 0, random_color: 1, ppm: 3 ]
-
-    assert white == random_color({ :insider, :meh, :meh })
-  end
 end

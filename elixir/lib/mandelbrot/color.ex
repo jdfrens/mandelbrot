@@ -5,8 +5,8 @@ defmodule Mandelbrot.Color do
   @max_iterations  256
   @half_iterations 127
 
-  @black :io_lib.format("~3B ~3B ~3B ", [  0,   0,   0])
-  @white :io_lib.format("~3B ~3B ~3B ", [255, 255, 255])
+  @black :erlang.iolist_to_binary(:io_lib.format("~3B ~3B ~3B ", [  0,   0,   0]))
+  @white :erlang.iolist_to_binary(:io_lib.format("~3B ~3B ~3B ", [255, 255, 255]))
   def black, do: @black
   def white, do: @white
 
@@ -17,15 +17,32 @@ defmodule Mandelbrot.Color do
 
   def color_function(options) do
     case options.color do
-      :blue   -> &scaled_blue/1
-      :green  -> &scaled_green/1
-      :red    -> &scaled_red/1
+      :black_on_white -> &black_on_white/1
+      :white_on_black -> &white_on_black/1
+      :gray           -> &gray/1
+      :blue           -> &scaled_blue/1
+      :green          -> &scaled_green/1
+      :red            -> &scaled_red/1
       :random ->
         # FIXME: :random is wrong
         # -- need to figure out how to generate random numbers well in Elixir
         # -- need to memoize the random colors
         &scaled_blue/1
     end
+  end
+
+  def black_on_white({  :inside, _, _ }), do: @black
+  def black_on_white({ :outside, _, _ }), do: @white
+
+  def white_on_black({  :inside, _, _ }), do: @white
+  def white_on_black({ :outside, _, _ }), do: @black
+
+  def gray({ :inside, _, _ }), do: @black
+  # FIXME: what the hell is this actually computing?
+  def gray({ :outside, _, iterations }) do
+    factor = :math.sqrt(iterations / @max_iterations)
+    intensity = round(@max_intensity * factor * factor)
+    ppm(intensity, intensity, intensity)
   end
 
   def scaled_blue(pixel) do
