@@ -31,4 +31,7 @@ defmodule Mandelbrot.NextFunction.Test do
     assert %Complex{ real: 5.0, imag: -3.0 } == burn(%Complex{ real: -5.0, imag: -3.0 })
   end
 
+  test "newton" do
+
+  end
 end

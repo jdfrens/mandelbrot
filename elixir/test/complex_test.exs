@@ -17,6 +17,12 @@ defmodule Complex.Test do
     assert %Complex{ real: 8.0, imag: 14.0 } == Complex.add(z0, z1)
   end
 
+  test "subtract" do
+    z0 = %Complex{ real: 5.0, imag: 12.0 }
+    z1 = %Complex{ real: 3.0, imag:  2.0 }
+    assert %Complex{ real: 2.0, imag: 10.0 } == Complex.subtract(z0, z1)
+  end
+
   test "magnitude" do
     assert 5.0 = Complex.magnitude(%Complex{ real: 3.0, imag: 4.0 })
   end
