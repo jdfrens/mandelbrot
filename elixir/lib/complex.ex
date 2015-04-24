@@ -10,7 +10,11 @@ defmodule Complex do
   end
 
   def magnitude(z) do
-    :math.sqrt(z.real * z.real + z.imag * z.imag)
+    magnitude_squared(z) |> :math.sqrt
+  end
+
+  def magnitude_squared(z) do
+    z.real * z.real + z.imag * z.imag
   end
 
   def add(z0, z1) do

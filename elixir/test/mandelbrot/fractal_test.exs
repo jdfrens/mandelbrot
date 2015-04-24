@@ -31,7 +31,7 @@ defmodule Mandelbrot.Fractal.Test do
     z0   = %Complex{ real: 0.0, imag: 0.0 }
     c    = %Complex{ real: 1.0, imag: 0.0 }
     next = Mandelbrot.NextFunction.mandelbrot_next(c)
-    assert { %Complex{ real: 2.0, imag: 0.0 },   3 } == fractal_iterate(next, z0)
+    assert { %Complex{ real: 1.0, imag: 0.0 },   2 } == fractal_iterate(next, z0)
 
     z0   = %Complex{ real: 0.0, imag: 0.0 }
     c    = %Complex{ real: 0.0, imag: 0.0 }
