@@ -67,7 +67,7 @@ defmodule Mandelbrot.Color do
   def pov_scale({ :inside,  _, _ }, _, _), do: @black
   def pov_scale({ :outside, _, iterations }, plateau, border) do
     if iterations <= @half_iterations do
-      plateau.(actual_pov_scale(iterations))
+      plateau.(actual_pov_scale(max(1, iterations)))
     else
       border.(actual_pov_scale(iterations - @half_iterations))
     end

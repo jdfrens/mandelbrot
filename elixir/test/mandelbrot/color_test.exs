@@ -38,13 +38,14 @@ defmodule Mandelbrot.Color.Test do
     border = &("border #{&1}")
 
     # FIXME: what about 0 iterations?
+    assert "plateau 0" == pov_scale({ :outside, :meh,   0 }, plateau, border)
     assert "plateau 0" == pov_scale({ :outside, :meh,   1 }, plateau, border)
     assert "plateau 2" == pov_scale({ :outside, :meh,   2 }, plateau, border)
 
     assert "plateau 249" == pov_scale({ :outside, :meh, 126 }, plateau, border)
     assert "plateau 251" == pov_scale({ :outside, :meh, 127 }, plateau, border)
-    assert "border 0" == pov_scale({ :outside, :meh, 128 }, plateau, border)
-    assert "border 2" == pov_scale({ :outside, :meh, 129 }, plateau, border)
+    assert "border 0"    == pov_scale({ :outside, :meh, 128 }, plateau, border)
+    assert "border 2"    == pov_scale({ :outside, :meh, 129 }, plateau, border)
 
     assert "border 253" == pov_scale({ :outside, :meh, 255 }, plateau, border)
     assert "border 255" == pov_scale({ :outside, :meh, 256 }, plateau, border)
