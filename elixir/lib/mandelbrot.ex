@@ -5,20 +5,19 @@ defmodule Mandelbrot do
     |> take_action
   end
 
-  def take_action({ _, [ json_filename, ppm_filename ], _ }) do
-    read!(json_filename)
-    |> Mandelbrot.Options.parse()
+  def take_action({ _, [ options_filename, image_filename ], _ }) do
+    {:ok, image_file} = File.open(image_filename, [:write])
+
+    options(options_filename)
     |> Mandelbrot.Fractal.generate()
-    |> write!(ppm_filename)
+    |> Stream.each(fn line -> IO.puts(image_file, line) end)
+    |> Stream.run
+
+    File.close(image_file)
   end
 
-  def read!(filename) do
-    File.read!(filename)
-  end
-
-
-  def write!(ppm, ppm_filename) do
-    File.write!(ppm_filename, ppm)
+  def options(options_filename) do
+    File.read!(options_filename) |> Mandelbrot.Options.parse()
   end
 
 end

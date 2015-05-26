@@ -19,9 +19,9 @@ defmodule Mandelbrot.Fractal.Test do
       lower_right: %Complex{ real:  1.0, imag: -1.0 }
     }
 
-    ppm = Mandelbrot.Fractal.generate(options)
+    ppm = Mandelbrot.Fractal.generate(options) |> Enum.to_list
     # 4 lines of header + 30 columns * 20 rows
-    assert 604 = Enum.count(String.split(ppm, "\n"))
+    assert 604 = Enum.count(ppm)
   end
 
   # FIXME: I don't like how I'm testing this
