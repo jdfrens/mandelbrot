@@ -1,14 +1,15 @@
 defmodule Mandelbrot.Fractal do
 
-  import Stream, only: [ iterate: 2, map: 2, take: 2, take_while: 2 ]
+  import Stream, only: [ concat: 1, iterate: 2, map: 2, take: 2, take_while: 2, with_index: 1 ]
 
   @magnitude_cutoff         2.0
   @magnitude_cutoff_squared 4.0
 
   def generate(options) do
-    []
-    |> Stream.concat(generate_header(options))
-    |> Stream.concat(generate_image(options))
+    concat([
+      generate_header(options),
+      generate_image(options)
+      ])
   end
 
   def generate_header(options) do
