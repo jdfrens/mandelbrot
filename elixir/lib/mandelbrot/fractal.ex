@@ -1,6 +1,6 @@
 defmodule Mandelbrot.Fractal do
 
-  import Stream, only: [ concat: 1, iterate: 2, map: 2, take: 2, take_while: 2, with_index: 1 ]
+  import Stream, only: [ concat: 1, iterate: 2, map: 2, take: 2, take_while: 2 ]
 
   @magnitude_cutoff         2.0
   @magnitude_cutoff_squared 4.0
@@ -38,9 +38,13 @@ defmodule Mandelbrot.Fractal do
   def build_complex({ r, i }), do: %Complex{ real: r, imag: i }
 
   def generate_pixel(grid_point, next_func, color_func) do
-    fractal_iterate(next_func, grid_point)
+    fractal_iterate(next_func, &cutoff/1, grid_point)
     |> in_or_out
     |> apply_color(color_func)
+  end
+
+  def cutoff(z) do
+    Complex.magnitude_squared(z) < @magnitude_cutoff_squared
   end
 
   def apply_color(in_out, color_func) do
@@ -55,12 +59,10 @@ defmodule Mandelbrot.Fractal do
 
   # EXPERIMENT: magnitude v. magnitude_sqaured
   # EXPERIMENT: magnitude = 2.0 or 4.0
-  def fractal_iterate(next, grid_point) do
-    import Complex, only: [ magnitude_squared: 1 ]
-
+  def fractal_iterate(next, cutoff, grid_point) do
     { grid_point, 1 }
     |> iterate(fn { z, i } -> { next.(z), i+1 } end)
-    |> take_while(fn { z, _ } -> magnitude_squared(z) < @magnitude_cutoff_squared end)
+    |> take_while(fn { z, _ } -> cutoff.(z) end)
     |> take(256)
     |> take(-1)
     |> Enum.to_list
