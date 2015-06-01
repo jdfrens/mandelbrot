@@ -24,19 +24,18 @@ defmodule Mandelbrot.Fractal.Test do
     assert 604 = Enum.count(ppm)
   end
 
-  # FIXME: I don't like how I'm testing this
   test "fractal_iterate" do
-    import Mandelbrot.Fractal, only: [ fractal_iterate: 2 ]
+    import Mandelbrot.Fractal, only: [ fractal_iterate: 3 ]
 
-    z0   = %Complex{ real: 0.0, imag: 0.0 }
-    c    = %Complex{ real: 1.0, imag: 0.0 }
-    next = Mandelbrot.NextFunction.mandelbrot_next(c)
-    assert { %Complex{ real: 1.0, imag: 0.0 },   1 } == fractal_iterate(next, z0)
+    next = fn z -> z + 1 end
+    cutoff = fn z -> z < 0 end
+    assert nil == fractal_iterate(next, cutoff, 1)
 
-    z0   = %Complex{ real: 0.0, imag: 0.0 }
-    c    = %Complex{ real: 0.0, imag: 0.0 }
-    next = Mandelbrot.NextFunction.mandelbrot_next(c)
-    assert { %Complex{ real: 0.0, imag: 0.0 }, 255 } == fractal_iterate(next, z0)
+    cutoff = fn z -> z < 128 end
+    assert { 127, 127 } == fractal_iterate(next, cutoff, 1)
+
+    cutoff = fn z -> z < 500 end
+    assert { 256, 256 } == fractal_iterate(next, cutoff, 1)
   end
 
   test "in_or_out" do

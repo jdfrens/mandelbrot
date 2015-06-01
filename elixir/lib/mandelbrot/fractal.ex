@@ -57,8 +57,6 @@ defmodule Mandelbrot.Fractal do
     { status, z, iterations }
   end
 
-  # EXPERIMENT: magnitude v. magnitude_sqaured
-  # EXPERIMENT: magnitude = 2.0 or 4.0
   def fractal_iterate(next, cutoff, grid_point) do
     { grid_point, 1 }
     |> iterate(fn { z, i } -> { next.(z), i+1 } end)
