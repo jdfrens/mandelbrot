@@ -29,21 +29,22 @@ defmodule Mandelbrot.Fractal.Test do
 
     next = fn z -> z + 1 end
     cutoff = fn z -> z < 0 end
-    assert nil == fractal_iterate(next, cutoff, 1)
+    assert { 1, 0 } == fractal_iterate(next, cutoff, 1)
 
     cutoff = fn z -> z < 128 end
     assert { 127, 127 } == fractal_iterate(next, cutoff, 1)
 
     cutoff = fn z -> z < 500 end
-    assert { 256, 256 } == fractal_iterate(next, cutoff, 1)
+    assert { 255, 255 } == fractal_iterate(next, cutoff, 1)
   end
 
   test "in_or_out" do
     import Mandelbrot.Fractal, only: [ in_or_out: 1 ]
 
-    assert { :inside,  :meh, 256 } == in_or_out({ :meh, 256 })
     assert { :inside,  :meh, 538 } == in_or_out({ :meh, 538 })
-    assert { :outside, :meh, 255 } == in_or_out({ :meh, 255 })
+    assert { :inside,  :meh, 256 } == in_or_out({ :meh, 256 })
+    assert { :inside,  :meh, 255 } == in_or_out({ :meh, 255 })
+    assert { :outside, :meh, 254 } == in_or_out({ :meh, 254 })
     assert { :outside, :meh,  34 } == in_or_out({ :meh,  34 })
   end
 

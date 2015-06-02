@@ -1,15 +1,15 @@
 defmodule Mandelbrot.Fractal do
 
-  import Stream, only: [ concat: 1, iterate: 2, map: 2, take: 2, take_while: 2 ]
+  import Stream, only: [ concat: 2, iterate: 2, map: 2, take: 2, take_while: 2 ]
 
   @magnitude_cutoff         2.0
   @magnitude_cutoff_squared 4.0
 
   def generate(options) do
-    concat([
+    concat(
       generate_header(options),
       generate_image(options)
-      ])
+      )
   end
 
   def generate_header(options) do
@@ -51,17 +51,18 @@ defmodule Mandelbrot.Fractal do
     color_func.(in_out)
   end
 
-  def in_or_out(nil), do: { :outside, nil, 0 }
   def in_or_out({ z, iterations }) do
-    status = if iterations >= 256, do: :inside, else: :outside
+    status = if iterations >= 255, do: :inside, else: :outside
     { status, z, iterations }
   end
 
   def fractal_iterate(next, cutoff, grid_point) do
-    { grid_point, 1 }
-    |> iterate(fn { z, i } -> { next.(z), i+1 } end)
-    |> take_while(fn { z, _ } -> cutoff.(z) end)
+    grid_point
+    |> iterate(next)
+    |> take_while(cutoff)
+    |> (&(concat([grid_point], &1))).()
     |> take(256)
+    |> Stream.with_index
     |> take(-1)
     |> Enum.to_list
     |> List.last
