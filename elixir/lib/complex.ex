@@ -13,29 +13,29 @@ defmodule Complex do
     magnitude_squared(z) |> :math.sqrt
   end
 
-  def magnitude_squared(z) do
-    z.real * z.real + z.imag * z.imag
+  def magnitude_squared(%Complex{real: real, imag: imag}) do
+    real * real + imag * imag
   end
 
-  def add(z0, z1) do
-    %Complex { real: z0.real + z1.real, imag: z0.imag + z1.imag }
+  def add(%Complex{real: a, imag: b}, %Complex{real: c, imag: d}) do
+    %Complex { real: a + c, imag: b + d }
   end
 
-  def subtract(z0, z1) do
-    %Complex { real: z0.real - z1.real, imag: z0.imag - z1.imag }
+  def subtract(%Complex{real: a, imag: b}, %Complex{real: c, imag: d}) do
+    %Complex { real: a - c, imag: b - d }
   end
 
-  def multiply(z0, z1) do
+  def multiply(%Complex{real: a, imag: b}, %Complex{real: c, imag: d}) do
     %Complex{
-      real: z0.real * z1.real - z0.imag * z1.imag,
-      imag: z0.real * z1.imag + z0.imag * z1.real
+      real: a * c - b * d,
+      imag: a * d + b * c
     }
   end
 
-  def square(z) do
+  def square(%Complex{real: a, imag: b}) do
     %Complex{
-      real: z.real * z.real - z.imag * z.imag,
-      imag: 2 * z.real * z.imag
+      real: a * a - b * b,
+      imag: 2 * a * b
     }
   end
 
