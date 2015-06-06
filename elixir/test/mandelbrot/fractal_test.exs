@@ -32,10 +32,10 @@ defmodule Mandelbrot.Fractal.Test do
     assert { 1, 0 } == fractal_iterate(next, cutoff, 1)
 
     cutoff = fn z -> z < 128 end
-    assert { 127, 127 } == fractal_iterate(next, cutoff, 1)
+    assert { 128, 127 } == fractal_iterate(next, cutoff, 1)
 
     cutoff = fn z -> z < 500 end
-    assert { 255, 255 } == fractal_iterate(next, cutoff, 1)
+    assert { 256, 255 } == fractal_iterate(next, cutoff, 1)
   end
 
   test "in_or_out" do

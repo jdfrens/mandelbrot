@@ -1,6 +1,6 @@
 defmodule Mandelbrot.Fractal do
 
-  import Stream, only: [ concat: 2, iterate: 2, map: 2, take: 2, take_while: 2 ]
+  import Stream, only: [ concat: 2, iterate: 2, map: 2, take: 2, drop_while: 2, with_index: 1 ]
 
   @magnitude_cutoff         2.0
   @magnitude_cutoff_squared 4.0
@@ -59,13 +59,11 @@ defmodule Mandelbrot.Fractal do
   def fractal_iterate(next, cutoff, grid_point) do
     grid_point
     |> iterate(next)
-    |> take_while(cutoff)
-    |> (&(concat([grid_point], &1))).()
-    |> take(256)
-    |> Stream.with_index
-    |> take(-1)
+    |> with_index
+    |> drop_while(fn { z, i } -> cutoff.(z) && i < 255 end)
+    |> take(1)
     |> Enum.to_list
-    |> List.last
+    |> List.first
   end
 
 end
