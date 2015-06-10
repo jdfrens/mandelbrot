@@ -1,2 +1,4 @@
 %{"inflex": {:hex, :inflex, "1.0.0"},
+  "meck": {:hex, :meck, "0.8.2"},
+  "pavlov": {:hex, :pavlov, "0.2.2"},
   "poison": {:hex, :poison, "1.4.0"}}
