@@ -1,19 +1,11 @@
 defmodule Mandelbrot.Color do
 
+  import PPM
+
   # FIXME: DRY it up!
-  @max_intensity 255
+  @max_intensity   255
   @max_iterations  256
   @half_iterations 127
-
-  @black :erlang.iolist_to_binary(:io_lib.format("~3B ~3B ~3B ", [  0,   0,   0]))
-  @white :erlang.iolist_to_binary(:io_lib.format("~3B ~3B ~3B ", [255, 255, 255]))
-  def black, do: @black
-  def white, do: @white
-
-  # TODO: blog about this
-  def ppm(red, green, blue) do
-    :erlang.iolist_to_binary(:io_lib.format("~3B ~3B ~3B ", [red, green, blue]))
-  end
 
   def color_function(options) do
     case options.color do
@@ -31,13 +23,13 @@ defmodule Mandelbrot.Color do
     end
   end
 
-  def black_on_white({  :inside, _, _ }), do: @black
-  def black_on_white({ :outside, _, _ }), do: @white
+  def black_on_white({  :inside, _, _ }), do: PPM.black
+  def black_on_white({ :outside, _, _ }), do: PPM.white
 
-  def white_on_black({  :inside, _, _ }), do: @white
-  def white_on_black({ :outside, _, _ }), do: @black
+  def white_on_black({  :inside, _, _ }), do: PPM.white
+  def white_on_black({ :outside, _, _ }), do: PPM.black
 
-  def gray({ :inside, _, _ }), do: @black
+  def gray({ :inside, _, _ }), do: PPM.black
   # FIXME: what the hell is this actually computing?
   def gray({ :outside, _, iterations }) do
     factor = :math.sqrt(iterations / @max_iterations)
@@ -64,7 +56,7 @@ defmodule Mandelbrot.Color do
   end
 
   # FIXME: pick a better name
-  def pov_scale({ :inside,  _, _ }, _, _), do: @black
+  def pov_scale({ :inside,  _, _ }, _, _), do: PPM.black
   def pov_scale({ :outside, _, iterations }, plateau, border) do
     if iterations <= @half_iterations do
       plateau.(actual_pov_scale(max(1, iterations)))

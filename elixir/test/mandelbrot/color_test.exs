@@ -1,38 +1,36 @@
 defmodule Mandelbrot.Color.Test do
 
-  use ExUnit.Case, async: true
-
-  test "ppm" do
-    assert "  0   0 255 " == Mandelbrot.Color.ppm(0, 0, 255)
-  end
+  # use ExUnit.Case, async: true
+  use Pavlov.Case, async: true
+  import Pavlov.Syntax.Expect
 
   test "black_on_white" do
-    import Mandelbrot.Color, only: [ black: 0, white: 0, black_on_white: 1 ]
+    import Mandelbrot.Color, only: [ black_on_white: 1 ]
 
-    assert black() == black_on_white({  :inside, :meh, :meh })
-    assert white() == black_on_white({ :outside, :meh, :meh })
+    assert PPM.black == black_on_white({  :inside, :meh, :meh })
+    assert PPM.white == black_on_white({ :outside, :meh, :meh })
   end
 
   test "white_on_black" do
-    import Mandelbrot.Color, only: [ black: 0, white: 0, white_on_black: 1 ]
+    import Mandelbrot.Color, only: [ white_on_black: 1 ]
 
-    assert white() == white_on_black({  :inside, :meh, :meh })
-    assert black() == white_on_black({ :outside, :meh, :meh })
+    assert PPM.white == white_on_black({  :inside, :meh, :meh })
+    assert PPM.black == white_on_black({ :outside, :meh, :meh })
   end
 
   test "gray" do
-    import Mandelbrot.Color, only: [ black: 0, white: 0, gray: 1, ppm: 3 ]
+    import Mandelbrot.Color, only: [ gray: 1 ]
 
-    assert black() == gray({  :inside, :meh, :meh })
-    assert ppm(  0,   0,   0) == gray({ :outside, :meh,    0 })
-    assert ppm(128, 128, 128) == gray({ :outside, :meh,  128 })
-    assert white() == gray({ :outside, :meh,  256 })
+    assert PPM.black() == gray({  :inside, :meh, :meh })
+    assert PPM.ppm(  0,   0,   0) == gray({ :outside, :meh,    0 })
+    assert PPM.ppm(128, 128, 128) == gray({ :outside, :meh,  128 })
+    assert PPM.white() == gray({ :outside, :meh,  256 })
   end
 
   test "pov_scale" do
-    import Mandelbrot.Color, only: [ black: 0, pov_scale: 3 ]
+    import Mandelbrot.Color, only: [ pov_scale: 3 ]
 
-    assert black() == pov_scale({:inside, :meh, :meh}, :meh, :meh)
+    assert PPM.black == pov_scale({:inside, :meh, :meh}, :meh, :meh)
 
     plateau = &("plateau #{&1}")
     border = &("border #{&1}")
@@ -52,7 +50,8 @@ defmodule Mandelbrot.Color.Test do
   end
 
   test "scaled_blue" do
-    import Mandelbrot.Color, only: [ scaled_blue: 1, ppm: 3 ]
+    import Mandelbrot.Color, only: [ scaled_blue: 1 ]
+    import PPM, only: [ ppm: 3 ]
 
     assert ppm(  0,   0,   0) == scaled_blue({ :outside, :meh,   1 })
     assert ppm(  0,   0, 251) == scaled_blue({ :outside, :meh, 127 })
@@ -61,7 +60,8 @@ defmodule Mandelbrot.Color.Test do
   end
 
   test "scaled_green" do
-    import Mandelbrot.Color, only: [ scaled_green: 1, ppm: 3 ]
+    import Mandelbrot.Color, only: [ scaled_green: 1 ]
+    import PPM, only: [ ppm: 3 ]
 
     assert ppm(  0,   0,   0) == scaled_green({ :outside, :meh,   1 })
     assert ppm(  0, 251,   0) == scaled_green({ :outside, :meh, 127 })
@@ -70,7 +70,8 @@ defmodule Mandelbrot.Color.Test do
   end
 
   test "scaled_red" do
-    import Mandelbrot.Color, only: [ scaled_red: 1, ppm: 3 ]
+    import Mandelbrot.Color, only: [ scaled_red: 1 ]
+    import PPM, only: [ ppm: 3 ]
 
     assert ppm(  0,   0,   0) == scaled_red({ :outside, :meh,   1 })
     assert ppm(251,   0,   0) == scaled_red({ :outside, :meh, 127 })
