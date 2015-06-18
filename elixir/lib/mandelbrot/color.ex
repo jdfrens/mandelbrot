@@ -1,7 +1,5 @@
 defmodule Mandelbrot.Color do
 
-  import PPM
-  alias Mandelbrot.Fractal
   alias Mandelbrot.Color.Simple
   alias Mandelbrot.Color.WarpPov
 
