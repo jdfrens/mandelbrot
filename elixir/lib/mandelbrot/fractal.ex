@@ -4,6 +4,9 @@ defmodule Mandelbrot.Fractal do
 
   @magnitude_cutoff         2.0
   @magnitude_cutoff_squared 4.0
+  @max_iterations           256
+
+  def max_iterations, do: @max_iterations
 
   def generate(options) do
     concat(
