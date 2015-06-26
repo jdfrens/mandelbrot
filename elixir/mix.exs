@@ -8,18 +8,25 @@ defmodule Mandelbrot.Mixfile do
      escript:         escript_config,
      build_embedded:  Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps]
+     preferred_cli_env: [espec: :test],
+     deps: deps,
+     aliases: aliases]
   end
 
   def application do
     [applications: [:logger, :poison]]
   end
 
+  defp aliases do
+    [test: ["test", "espec"]]
+  end
+
   defp deps do
     [
       { :poison, "~> 1.4.0" },
       { :inflex, "~> 1.0.0" },
-      { :pavlov, ">= 0.1.0", only: :test}
+      { :pavlov, ">= 0.1.0", only: :test},
+      { :espec, "~> 0.6.3", only: :test }
     ]
   end
 
