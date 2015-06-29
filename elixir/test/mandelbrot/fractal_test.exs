@@ -29,12 +29,12 @@ defmodule Mandelbrot.Fractal.Test do
 		end
   end
 
+	let :next do
+		fn z -> z + 1 end
+	end
+
   describe ".fractal_iterate" do
     import Mandelbrot.Fractal, only: [ fractal_iterate: 3 ]
-
-		let :next do
-			fn z -> z + 1 end
-		end
 
 		it "stops due to cutoff" do
 			cutoff = fn z -> z < 0 end
