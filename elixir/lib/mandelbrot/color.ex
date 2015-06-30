@@ -1,5 +1,6 @@
 defmodule Mandelbrot.Color do
 
+  alias Mandelbrot.Color.Random
   alias Mandelbrot.Color.Simple
   alias Mandelbrot.Color.WarpPov
 
@@ -15,11 +16,7 @@ defmodule Mandelbrot.Color do
       :blue           -> &WarpPov.blue/1
       :green          -> &WarpPov.green/1
       :red            -> &WarpPov.red/1
-      :random ->
-        # FIXME: :random is wrong
-        # -- need to figure out how to generate random numbers well in Elixir
-        # -- need to memoize the random colors
-        &WarpPov.scaled_blue/1
+      :random         -> Random.build_random
     end
   end
 
