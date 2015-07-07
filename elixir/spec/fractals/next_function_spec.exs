@@ -44,6 +44,24 @@ defmodule Fractals.NextFunctionSpec do
   end
 
   describe ".newton" do
+    import Fractals.NextFunction, only: [ newton: 0, p: 1, p_prime: 1 ]
 
+    it "diferentiates" do
+      # apologies for the fragile nature of these specs
+      expect(newton.(z).real).to eq(1.009861932938856)
+      expect(newton.(z).imag).to eq(0.6429980276134122)
+    end
+
+    describe ".p" do
+      it "cubes and subtracts" do
+        expect(p(z)).to eq(%Complex{ real: -8.0, imag: 46.0 })
+      end
+    end
+
+    describe ".p_prime" do
+      it "squares and tripples" do
+        expect(p_prime(z)).to eq(%Complex{ real: 15.0, imag: 36.0 })
+      end
+    end
   end
 end
