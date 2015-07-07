@@ -4,7 +4,7 @@
 require 'rake/clean'
 
 CLEAN.include('**/*~')
-CLOBBER.include("mandelbrot")
+CLOBBER.include("fractals")
 CLOBBER.include("images/*")
 
 JSONS = FileList['../json/*.json']
@@ -13,7 +13,7 @@ GIFS = PPMS.ext(".gif")
 
 task :default => :compile
 
-desc "compiles the mandelbrot executable"
+desc "compiles the executable"
 task :compile do
   sh "MIX_ENV=prod mix escript.build"
 end
@@ -33,7 +33,7 @@ end
 
 PPMS.zip(JSONS).each do |ppm, json|
   file ppm => [json, :compile] do
-    sh "mandelbrot #{json} #{ppm}"
+    sh "fractals #{json} #{ppm}"
   end
 end
 
