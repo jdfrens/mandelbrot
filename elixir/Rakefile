@@ -15,7 +15,7 @@ task :default => :compile
 
 desc "compiles the mandelbrot executable"
 task :compile do
-  sh "mix escript.build"
+  sh "MIX_ENV=prod mix escript.build"
 end
 
 task :test do
