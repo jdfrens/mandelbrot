@@ -3,6 +3,8 @@ defmodule Fractals.GeneratorTest do
   use Pavlov.Case, async: true
 	import Pavlov.Syntax.Expect
 
+  import Complex, only: :macros
+
   describe ".generate_header" do
 		it "spits out a PPM header including width and height" do
 			options = %Fractals.Options{ size: %Fractals.Size{ width: 55, height: 99 } }
@@ -19,8 +21,8 @@ defmodule Fractals.GeneratorTest do
 				fractal:     :mandelbrot,
 				color:       :blue,
 				size:        %Fractals.Size{ width: 30, height: 20 },
-				upper_left:  %Complex{ real: -2.0, imag:  1.0 },
-				lower_right: %Complex{ real:  1.0, imag: -1.0 }
+				upper_left:  cmplx(-2.0,  1.0),
+				lower_right: cmplx( 1.0, -1.0)
 																 }
 
 			ppm = generate(options) |> Enum.to_list

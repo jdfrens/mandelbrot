@@ -4,6 +4,12 @@ defmodule Complex do
 
   @type t :: %Complex{ real: float, imag: float }
 
+  defmacro cmplx(real, imag) do
+    quote do
+      %Complex{ real: unquote(real), imag: unquote(imag) }
+    end
+  end
+
   @spec parse(String.t) :: Complex.t
   def parse(str) do
     [_, real, imag] = Regex.run(~r/([-]?\d+\.\d+)\+([-]?\d+\.\d+)i/, str)

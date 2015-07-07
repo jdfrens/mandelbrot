@@ -2,11 +2,13 @@ defmodule Fractals.GridSpec do
 
   use ESpec
 
+  import Complex, only: :macros
+
   let :options do
     %Fractals.Options{
       size:        %Fractals.Size{ width: 2, height: 3 },
-      upper_left:  %Complex{ real: -1.0, imag:  1.0 },
-      lower_right: %Complex{ real:  1.0, imag: -1.0 }
+      upper_left:  cmplx(-1.0,  1.0),
+      lower_right: cmplx( 1.0, -1.0)
     }
   end
 

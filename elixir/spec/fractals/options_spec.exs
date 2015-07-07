@@ -3,6 +3,7 @@ defmodule Fractals.OptionsSpec do
   use ESpec
 
   import Fractals.Options, only: [ parse: 1 ]
+  import Complex, only: :macros
 
   describe ".parse" do
     let :full_json do
@@ -36,22 +37,22 @@ defmodule Fractals.OptionsSpec do
         expect(parse(full_json).seed).to eq(12345)
       end
       it "parses the upper-left corner" do
-        expect(parse(full_json).upper_left).to eq(%Complex{ real: 0.0, imag: 55.2 })
+        expect(parse(full_json).upper_left).to eq(cmplx(0.0, 55.2))
       end
       it "parses the lower-right corder" do
-        expect(parse(full_json).lower_right).to eq(%Complex{ real: 92.3, imag: 120.3 })
+        expect(parse(full_json).lower_right).to eq(cmplx(92.3, 120.3))
       end
       it "parses the c parameter" do
-        expect(parse(full_json).c).to eq(%Complex{ real: 3.14, imag: 4.13 })
+        expect(parse(full_json).c).to eq(cmplx(3.14, 4.13))
       end
       it "parses the z parameter" do
-        expect(parse(full_json).z).to eq(%Complex{ real: 4.4,  imag: 1.1 })
+        expect(parse(full_json).z).to eq(cmplx(4.4,  1.1))
       end
       it "parses the r parameter" do
-        expect(parse(full_json).r).to eq(%Complex{ real: 9.9,  imag: 3.3 })
+        expect(parse(full_json).r).to eq(cmplx(9.9,  3.3))
       end
       it "parses the p parameter" do
-        expect(parse(full_json).p).to eq(%Complex{ real: 0.3,  imag: 0.5 })
+        expect(parse(full_json).p).to eq(cmplx(0.3,  0.5))
       end
     end
 
@@ -79,22 +80,22 @@ defmodule Fractals.OptionsSpec do
         expect(parse(default_json).seed).to eq(666)
       end
       it "still parses the upper-left corner" do
-        expect(parse(default_json).upper_left).to eq(%Complex{ real: 5.0, imag: 6.0 })
+        expect(parse(default_json).upper_left).to eq(cmplx(5.0, 6.0))
       end
       it "still parses the lower-right corder" do
-        expect(parse(default_json).lower_right).to eq(%Complex{ real: 6.0, imag: 5.0 })
+        expect(parse(default_json).lower_right).to eq(cmplx(6.0, 5.0))
       end
       it "defaults the c parameter" do
-        expect(parse(default_json).c).to eq(%Complex{ real: 1.0, imag: 0.0 })
+        expect(parse(default_json).c).to eq(cmplx(1.0, 0.0))
       end
       it "defaults the z parameter" do
-        expect(parse(default_json).z).to eq(%Complex{ real: 0.0, imag: 0.0 })
+        expect(parse(default_json).z).to eq(cmplx(0.0, 0.0))
       end
       it "defaults the r parameter" do
-        expect(parse(default_json).r).to eq(%Complex{ real: 0.0, imag: 0.0 })
+        expect(parse(default_json).r).to eq(cmplx(0.0, 0.0))
       end
       it "defaults the p parameter" do
-        expect(parse(default_json).p).to eq(%Complex{ real: 0.0, imag: 0.0 })
+        expect(parse(default_json).p).to eq(cmplx(0.0, 0.0))
       end
     end
   end
