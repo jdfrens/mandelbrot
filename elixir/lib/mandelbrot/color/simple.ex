@@ -1,6 +1,6 @@
 defmodule Mandelbrot.Color.Simple do
 
-  alias Mandelbrot.Fractal
+  alias Mandelbrot.Generator
   alias Mandelbrot.Color
 
   def black_on_white({  :inside, _, _ }), do: PPM.black
@@ -12,7 +12,7 @@ defmodule Mandelbrot.Color.Simple do
   def gray({ :inside, _, _ }), do: PPM.black
   # FIXME: what the hell is this actually computing?
   def gray({ :outside, _, iterations }) do
-    factor = :math.sqrt(iterations / Fractal.max_iterations)
+    factor = :math.sqrt(iterations / Generator.max_iterations)
     intensity = round(Color.max_intensity * factor * factor)
     PPM.ppm(intensity, intensity, intensity)
   end

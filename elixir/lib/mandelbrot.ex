@@ -9,7 +9,7 @@ defmodule Mandelbrot do
     {:ok, image_file} = File.open(image_filename, [:write])
 
     options(options_filename)
-    |> Mandelbrot.Fractal.generate
+    |> Mandelbrot.Generator.generate
     |> Stream.each(fn line -> IO.puts(image_file, line) end)
     |> Stream.run
 

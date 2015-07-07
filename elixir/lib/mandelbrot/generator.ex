@@ -1,4 +1,4 @@
-defmodule Mandelbrot.Fractal do
+defmodule Mandelbrot.Generator do
 
   import Stream, only: [ concat: 2, iterate: 2, map: 2, take: 2, drop_while: 2, with_index: 1 ]
 
