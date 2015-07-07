@@ -1,9 +1,9 @@
 # Scale taken from http://warp.povusers.org/Mandelbrot/
-defmodule Mandelbrot.Color.WarpPov do
+defmodule Fractals.Color.WarpPov do
 
   import PPM, only: [ ppm: 3 ]
-  import Mandelbrot.Color, only: [ max_intensity: 0 ]
-  import Mandelbrot.Generator, only: [ max_iterations: 0 ]
+  import Fractals.Color, only: [ max_intensity: 0 ]
+  import Fractals.Generator, only: [ max_iterations: 0 ]
 
   def red(pixel) do
     permute_red(hues(pixel))

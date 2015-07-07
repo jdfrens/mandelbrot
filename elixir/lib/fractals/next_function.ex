@@ -1,4 +1,4 @@
-defmodule Mandelbrot.NextFunction do
+defmodule Fractals.NextFunction do
 
   def next_function(grid_point, options) do
     case options.fractal do

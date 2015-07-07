@@ -1,4 +1,4 @@
-defmodule Mandelbrot do
+defmodule Fractals do
   def main(argv) do
     argv
     |> OptionParser.parse()
@@ -9,7 +9,7 @@ defmodule Mandelbrot do
     {:ok, image_file} = File.open(image_filename, [:write])
 
     options(options_filename)
-    |> Mandelbrot.Generator.generate
+    |> Fractals.Generator.generate
     |> Stream.each(fn line -> IO.puts(image_file, line) end)
     |> Stream.run
 
@@ -17,7 +17,7 @@ defmodule Mandelbrot do
   end
 
   def options(options_filename) do
-    File.read!(options_filename) |> Mandelbrot.Options.parse()
+    File.read!(options_filename) |> Fractals.Options.parse()
   end
 
 end

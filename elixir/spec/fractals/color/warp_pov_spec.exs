@@ -1,8 +1,8 @@
-defmodule Mandelbrot.Color.WarpPovSpec do
+defmodule Fractals.Color.WarpPovSpec do
 
   use ESpec
 
-  import Mandelbrot.Color.WarpPov
+  import Fractals.Color.WarpPov
   import PPM, only: [ ppm: 3 ]
 
   describe ".red" do

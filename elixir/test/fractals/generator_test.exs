@@ -1,24 +1,24 @@
-defmodule Mandelbrot.GeneratorTest do
+defmodule Fractals.GeneratorTest do
 
   use Pavlov.Case, async: true
 	import Pavlov.Syntax.Expect
 
   describe ".generate_header" do
 		it "spits out a PPM header including width and height" do
-			options = %Mandelbrot.Options{ size: %Mandelbrot.Size{ width: 55, height: 99 } }
-			expect Mandelbrot.Generator.generate_header(options) |> to_eq ["P3", "55", "99", "255"]
+			options = %Fractals.Options{ size: %Fractals.Size{ width: 55, height: 99 } }
+			expect Fractals.Generator.generate_header(options) |> to_eq ["P3", "55", "99", "255"]
 		end
   end
 
   describe ".generate" do
     # more of a property test
-    import Mandelbrot.Generator, only: [ generate: 1 ]
+    import Fractals.Generator, only: [ generate: 1 ]
 
 		it "generates an image" do
-			options       = %Mandelbrot.Options{
+			options       = %Fractals.Options{
 				fractal:     :mandelbrot,
 				color:       :blue,
-				size:        %Mandelbrot.Size{ width: 30, height: 20 },
+				size:        %Fractals.Size{ width: 30, height: 20 },
 				upper_left:  %Complex{ real: -2.0, imag:  1.0 },
 				lower_right: %Complex{ real:  1.0, imag: -1.0 }
 																 }
@@ -34,7 +34,7 @@ defmodule Mandelbrot.GeneratorTest do
 	end
 
   describe ".fractal_iterate" do
-    import Mandelbrot.Generator, only: [ fractal_iterate: 3 ]
+    import Fractals.Generator, only: [ fractal_iterate: 3 ]
 
 		it "stops due to cutoff" do
 			cutoff = fn z -> z < 0 end
@@ -53,7 +53,7 @@ defmodule Mandelbrot.GeneratorTest do
   end
 
   describe ".in_or_out" do
-    import Mandelbrot.Generator, only: [ in_or_out: 1 ]
+    import Fractals.Generator, only: [ in_or_out: 1 ]
 
 		it "is inside when iterations are greater than or equal to 255" do
 			expect in_or_out({ :meh, 538 }) |> to_eq { :inside,  :meh, 538 }

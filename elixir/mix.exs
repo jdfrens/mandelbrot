@@ -1,8 +1,8 @@
-defmodule Mandelbrot.Mixfile do
+defmodule Fractals.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :mandelbrot,
+    [app: :fractals,
      version: "0.0.1",
      elixir: "~> 1.0",
      escript:         escript_config,
@@ -31,6 +31,6 @@ defmodule Mandelbrot.Mixfile do
   end
 
   defp escript_config do
-    [ main_module: Mandelbrot ]
+    [ main_module: Fractals ]
   end
 end

@@ -1,4 +1,4 @@
-defmodule Mandelbrot.Options do
+defmodule Fractals.Options do
   defstruct [
     :fractal, :size, :color, :seed,
     :upper_left, :lower_right,
@@ -7,7 +7,7 @@ defmodule Mandelbrot.Options do
 
   def parse(json_str) do
     json = Poison.Parser.parse!(json_str)
-    %Mandelbrot.Options{
+    %Fractals.Options{
       fractal:     parse_fractal(json["fractal"]),
       size:        parse_size(json["size"]),
       color:       parse_color(json["color"]),
@@ -25,10 +25,10 @@ defmodule Mandelbrot.Options do
     String.to_atom(String.downcase(fractal))
   end
 
-  defp parse_size(nil), do: %Mandelbrot.Size{ width: 512, height: 384 }
+  defp parse_size(nil), do: %Fractals.Size{ width: 512, height: 384 }
   defp parse_size(size) do
     [_, width, height] = Regex.run(~r/(\d+)x(\d+)/, size)
-    %Mandelbrot.Size{
+    %Fractals.Size{
      width: String.to_integer(width),
      height: String.to_integer(height)
    }

@@ -1,9 +1,9 @@
-defmodule Mandelbrot.Color.SimpleTest do
+defmodule Fractals.Color.SimpleTest do
 
   use Pavlov.Case, async: true
   import Pavlov.Syntax.Expect
 
-  import Mandelbrot.Color.Simple
+  import Fractals.Color.Simple
 
   describe ".black_on_white" do
     it "is black on the inside" do

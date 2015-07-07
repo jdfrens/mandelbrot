@@ -1,8 +1,8 @@
-defmodule Mandelbrot.Color.RandomSpec do
+defmodule Fractals.Color.RandomSpec do
 
   use ESpec
 
-  alias Mandelbrot.Color.Random
+  alias Fractals.Color.Random
 
   let :ppm_regex do
     ~r/^\s*\d{1,3}\s+\d{1,3}\s+\d{1,3}\s*$/

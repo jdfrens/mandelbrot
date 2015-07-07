@@ -1,4 +1,4 @@
-defmodule Mandelbrot.Color.Random do
+defmodule Fractals.Color.Random do
   def build_random do
     colors = Enum.map(0..255, random_color)
     fn

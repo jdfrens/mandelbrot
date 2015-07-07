@@ -1,9 +1,9 @@
-defmodule Mandelbrot.Color.WarpPovTest do
+defmodule Fractals.Color.WarpPovTest do
 
   use Pavlov.Case, async: true
   import Pavlov.Syntax.Expect
 
-  import Mandelbrot.Color.WarpPov
+  import Fractals.Color.WarpPov
   import PPM, only: [ ppm: 3 ]
 
   describe ".red" do

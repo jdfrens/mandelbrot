@@ -1,8 +1,8 @@
-defmodule Mandelbrot.Color.SimpleSpec do
+defmodule Fractals.Color.SimpleSpec do
 
   use ESpec
 
-  import Mandelbrot.Color.Simple
+  import Fractals.Color.Simple
 
   describe ".black_on_white" do
     it "is black on the inside" do

@@ -1,10 +1,10 @@
-defmodule Mandelbrot.NextFunction.Test do
+defmodule Fractals.NextFunctionTest do
 
   use Pavlov.Case, async: true
 	import Pavlov.Syntax.Expect
 
   describe ".mandelbrot_next" do
-		import Mandelbrot.NextFunction, only: [ mandelbrot_next: 1 ]
+		import Fractals.NextFunction, only: [ mandelbrot_next: 1 ]
 
 		it "squares and adds" do
 			z = %Complex{ real: 3.0, imag: 2.0 }
@@ -14,7 +14,7 @@ defmodule Mandelbrot.NextFunction.Test do
   end
 
   describe ".julia_next" do
-		import Mandelbrot.NextFunction, only: [ julia_next: 1 ]
+		import Fractals.NextFunction, only: [ julia_next: 1 ]
 
 		it "squares and adds" do
 			z = %Complex{ real: 3.0, imag: 2.0 }
@@ -24,7 +24,7 @@ defmodule Mandelbrot.NextFunction.Test do
   end
 
   describe ".burning_ship_next" do
-		import Mandelbrot.NextFunction, only: [ burning_ship_next: 1 ]
+		import Fractals.NextFunction, only: [ burning_ship_next: 1 ]
 
 		it "burns and squares and adds" do
 			z = %Complex{ real: 3.0, imag: 2.0 }
@@ -33,7 +33,7 @@ defmodule Mandelbrot.NextFunction.Test do
 		end
 
 		describe ".burn" do
-			import Mandelbrot.NextFunction, only: [ burn: 1 ]
+			import Fractals.NextFunction, only: [ burn: 1 ]
 
 			it "negates the imaginary component" do
 				expect burn(%Complex{ real:  5.0, imag:  3.0 })

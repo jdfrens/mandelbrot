@@ -1,11 +1,11 @@
-defmodule Mandelbrot.Grid do
+defmodule Fractals.Grid do
   def generate_grid(options) do
     for y <- ys(options), x <- xs(options), do: { x, y }
   end
 
   def xs(options) do
-    %Mandelbrot.Options{
-      size:        %Mandelbrot.Size{ width: width },
+    %Fractals.Options{
+      size:        %Fractals.Size{ width: width },
       upper_left:  %Complex{ real: x0 },
       lower_right: %Complex{ real: x1 }
     } = options
@@ -13,8 +13,8 @@ defmodule Mandelbrot.Grid do
   end
 
   def ys(options) do
-    %Mandelbrot.Options{
-      size:        %Mandelbrot.Size{ height: height },
+    %Fractals.Options{
+      size:        %Fractals.Size{ height: height },
       upper_left:  %Complex{ imag: y1 },
       lower_right: %Complex{ imag: y0 }
     } = options

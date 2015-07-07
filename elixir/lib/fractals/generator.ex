@@ -1,4 +1,4 @@
-defmodule Mandelbrot.Generator do
+defmodule Fractals.Generator do
 
   import Stream, only: [ concat: 2, iterate: 2, map: 2, take: 2, drop_while: 2, with_index: 1 ]
 
@@ -16,7 +16,7 @@ defmodule Mandelbrot.Generator do
   end
 
   def generate_header(options) do
-    %Mandelbrot.Size{ width: width, height: height } = options.size
+    %Fractals.Size{ width: width, height: height } = options.size
     [
       "P3",
       Integer.to_string(width),
@@ -26,9 +26,9 @@ defmodule Mandelbrot.Generator do
   end
 
   def generate_image(options) do
-    import Mandelbrot.NextFunction, only: [ next_function: 2 ]
-    import Mandelbrot.Color, only: [ color_function: 1 ]
-    import Mandelbrot.Grid, only: [ generate_grid: 1]
+    import Fractals.NextFunction, only: [ next_function: 2 ]
+    import Fractals.Color, only: [ color_function: 1 ]
+    import Fractals.Grid, only: [ generate_grid: 1]
 
     color_func = color_function(options)
     options

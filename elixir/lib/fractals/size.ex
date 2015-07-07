@@ -1,4 +1,4 @@
-defmodule Mandelbrot.Size do
+defmodule Fractals.Size do
 
   defstruct [ :width, :height ]
 

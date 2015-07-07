@@ -1,7 +1,7 @@
-defmodule Mandelbrot.Color.Simple do
+defmodule Fractals.Color.Simple do
 
-  alias Mandelbrot.Generator
-  alias Mandelbrot.Color
+  alias Fractals.Generator
+  alias Fractals.Color
 
   def black_on_white({  :inside, _, _ }), do: PPM.black
   def black_on_white({ :outside, _, _ }), do: PPM.white

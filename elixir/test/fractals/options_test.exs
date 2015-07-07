@@ -1,9 +1,9 @@
-defmodule Mandelbrot.Options.Test do
+defmodule Fractals.OptionsTest do
 
   use Pavlov.Case, async: true
 	import Pavlov.Syntax.Expect
 
-  import Mandelbrot.Options, only: [ parse: 1 ]
+  import Fractals.Options, only: [ parse: 1 ]
 
 	let :full_json do
 		"""
@@ -38,7 +38,7 @@ defmodule Mandelbrot.Options.Test do
 				expect parse(full_json).fractal |> to_eq :mandelbrot
 			end
 			it "parses the image size" do
-				expect parse(full_json).size |> to_eq %Mandelbrot.Size{ width: 720, height: 480 }
+				expect parse(full_json).size |> to_eq %Fractals.Size{ width: 720, height: 480 }
 			end
 			it "parses the color scheme" do
 				expect parse(full_json).color |> to_eq :blue
@@ -72,7 +72,7 @@ defmodule Mandelbrot.Options.Test do
 			end
 			it "defaults the image size" do
 				expect parse(default_json).size
-				|> to_eq %Mandelbrot.Size{ width: 512, height: 384 }
+				|> to_eq %Fractals.Size{ width: 512, height: 384 }
 			end
 			it "defaults the color scheme" do
 				expect parse(default_json).color |> to_eq :black_on_white

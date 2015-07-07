@@ -1,8 +1,8 @@
-defmodule Mandelbrot.OptionsSpec do
+defmodule Fractals.OptionsSpec do
 
   use ESpec
 
-  import Mandelbrot.Options, only: [ parse: 1 ]
+  import Fractals.Options, only: [ parse: 1 ]
 
   describe ".parse" do
     let :full_json do
@@ -27,7 +27,7 @@ defmodule Mandelbrot.OptionsSpec do
         expect(parse(full_json).fractal).to eq(:mandelbrot)
       end
       it "parses the image size" do
-        expect(parse(full_json).size).to eq(%Mandelbrot.Size{ width: 720, height: 480 })
+        expect(parse(full_json).size).to eq(%Fractals.Size{ width: 720, height: 480 })
       end
       it "parses the color scheme" do
         expect(parse(full_json).color).to eq(:blue)
@@ -70,7 +70,7 @@ defmodule Mandelbrot.OptionsSpec do
         expect(parse(default_json).fractal).to eq(:julia)
       end
       it "defaults the image size" do
-        expect(parse(default_json).size).to eq(%Mandelbrot.Size{ width: 512, height: 384 })
+        expect(parse(default_json).size).to eq(%Fractals.Size{ width: 512, height: 384 })
       end
       it "defaults the color scheme" do
         expect(parse(default_json).color).to eq(:black_on_white)

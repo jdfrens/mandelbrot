@@ -1,8 +1,8 @@
-defmodule Mandelbrot.Color do
+defmodule Fractals.Color do
 
-  alias Mandelbrot.Color.Random
-  alias Mandelbrot.Color.Simple
-  alias Mandelbrot.Color.WarpPov
+  alias Fractals.Color.Random
+  alias Fractals.Color.Simple
+  alias Fractals.Color.WarpPov
 
   # FIXME: or is this better in PPM?
   @max_intensity 255
