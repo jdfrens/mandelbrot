@@ -5,10 +5,10 @@ defmodule Fractals.GeneratorTest do
 
   import Complex, only: :macros
 
-  describe ".generate_header" do
+  describe ".header" do
 		it "spits out a PPM header including width and height" do
 			options = %Fractals.Options{ size: %Fractals.Size{ width: 55, height: 99 } }
-			expect Fractals.Generator.generate_header(options) |> to_eq ["P3", "55", "99", "255"]
+			expect Fractals.Generator.header(options) |> to_eq ["P3", "55", "99", "255"]
 		end
   end
 
@@ -35,22 +35,22 @@ defmodule Fractals.GeneratorTest do
 		fn z -> z + 1 end
 	end
 
-  describe ".fractal_iterate" do
-    import Fractals.Generator, only: [ fractal_iterate: 3 ]
+  describe ".iterate" do
+    import Fractals.Generator, only: [ iterate: 3 ]
 
 		it "stops due to cutoff" do
 			cutoff = fn z -> z < 0 end
-			expect fractal_iterate(next, cutoff, 1) |> to_eq { 1, 0 }
+			expect iterate(next, cutoff, 1) |> to_eq { 1, 0 }
 		end
 
 		it "stops later because of cutoff" do
 			cutoff = fn z -> z < 128 end
-			expect fractal_iterate(next, cutoff, 1) |> to_eq { 128, 127 }
+			expect iterate(next, cutoff, 1) |> to_eq { 128, 127 }
 		end
 
 		it "stops because of the number of iterations" do
 			cutoff = fn z -> z < 500 end
-			expect fractal_iterate(next, cutoff, 1) |> to_eq { 256, 255 }
+			expect iterate(next, cutoff, 1) |> to_eq { 256, 255 }
 		end
   end
 

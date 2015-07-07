@@ -9,13 +9,10 @@ defmodule Fractals.Generator do
   def max_iterations, do: @max_iterations
 
   def generate(options) do
-    concat(
-      generate_header(options),
-      generate_image(options)
-      )
+    concat(header(options), image(options))
   end
 
-  def generate_header(options) do
+  def header(options) do
     %Fractals.Size{ width: width, height: height } = options.size
     [
       "P3",
@@ -25,7 +22,7 @@ defmodule Fractals.Generator do
     ]
   end
 
-  def generate_image(options) do
+  def image(options) do
     import Fractals.NextFunction, only: [ next_function: 2 ]
     import Fractals.Color, only: [ color_function: 1 ]
     import Fractals.Grid, only: [ generate_grid: 1]
@@ -35,22 +32,22 @@ defmodule Fractals.Generator do
     |> generate_grid
     |> map(&build_complex/1)
     |> map(fn   grid_point -> { grid_point, next_function(grid_point, options) } end)
-    |> map(fn { grid_point, next_func } -> generate_pixel(grid_point, next_func, color_func) end)
+    |> map(fn { grid_point, next_func } -> pixel(grid_point, next_func, color_func) end)
   end
 
   def build_complex({ r, i }), do: %Complex{ real: r, imag: i }
 
-  def generate_pixel(grid_point, next_func, color_func) do
-    fractal_iterate(next_func, &cutoff/1, grid_point)
+  def pixel(grid_point, next_func, color_func) do
+    iterate(next_func, &cutoff/1, grid_point)
     |> in_or_out
-    |> apply_color(color_func)
+    |> color(color_func)
   end
 
   def cutoff(z) do
     Complex.magnitude_squared(z) < @magnitude_cutoff_squared
   end
 
-  def apply_color(in_out, color_func) do
+  def color(in_out, color_func) do
     color_func.(in_out)
   end
 
@@ -59,7 +56,7 @@ defmodule Fractals.Generator do
     { status, z, iterations }
   end
 
-  def fractal_iterate(next, cutoff, grid_point) do
+  def iterate(next, cutoff, grid_point) do
     grid_point
     |> iterate(next)
     |> with_index
