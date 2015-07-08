@@ -1,8 +1,8 @@
 defmodule Fractals.GridSpec do
 
-  use ESpec
+  use ESpec, async: true
 
-  import Complex, only: :macros
+  import Complex, warn: false
 
   let :options do
     %Fractals.Options{

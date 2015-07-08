@@ -1,8 +1,8 @@
 defmodule Fractals.Color.RandomSpec do
 
-  use ESpec
+  use ESpec, async: true
 
-  alias Fractals.Color.Random
+  alias Fractals.Color.Random, warn: false
 
   let :ppm_regex do
     ~r/^\s*\d{1,3}\s+\d{1,3}\s+\d{1,3}\s*$/

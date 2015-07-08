@@ -1,6 +1,7 @@
 defmodule Fractals.Generator do
 
   import Stream, only: [ concat: 2, iterate: 2, map: 2, take: 2, drop_while: 2, with_index: 1 ]
+  import Complex, only: :macros
 
   @magnitude_cutoff         2.0
   @magnitude_cutoff_squared 4.0
@@ -18,19 +19,18 @@ defmodule Fractals.Generator do
   end
 
   def image(options) do
-    import Fractals.NextFunction, only: [ next_function: 2 ]
-    import Fractals.Color, only: [ color_function: 1 ]
-    import Fractals.Grid, only: [ generate_grid: 1]
+    import Fractals.Iterators
+    import Fractals.Color
+    import Fractals.Grid
 
     color_func = color_function(options)
     options
     |> generate_grid
     |> map(&build_complex/1)
-    |> map(fn   grid_point -> { grid_point, next_function(grid_point, options) } end)
-    |> map(fn { grid_point, next_func } -> pixel(grid_point, next_func, color_func) end)
+    |> map(fn grid_point -> pixel(grid_point, build_iterator(grid_point, options), color_func) end)
   end
 
-  def build_complex({ r, i }), do: %Complex{ real: r, imag: i }
+  def build_complex({ r, i }), do: cmplx(r, i)
 
   def pixel(grid_point, next_func, color_func) do
     iterate(next_func, &cutoff/1, grid_point)
