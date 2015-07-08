@@ -18,7 +18,7 @@ defmodule Fractals.Mixfile do
   end
 
   defp aliases do
-    [test: ["test", "espec"]]
+    [test: ["espec"]]
   end
 
   defp deps do
