@@ -14,12 +14,7 @@ defmodule Fractals.Generator do
 
   def header(options) do
     %Fractals.Size{ width: width, height: height } = options.size
-    [
-      "P3",
-      Integer.to_string(width),
-      Integer.to_string(height),
-      "255"
-    ]
+    PPM.p3_header(width, height)
   end
 
   def image(options) do
