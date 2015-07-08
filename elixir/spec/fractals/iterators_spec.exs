@@ -15,31 +15,31 @@ defmodule Fractals.IteratorsSpec do
 
 
   describe ".build_iterator" do
-    import Fractals.Iterators, only: [ build_iterator: 2 ]
+    import Fractals.Iterators, only: [ build: 2 ]
 
     it "works for a Mandelbrot set" do
       options = %{ options | fractal: :mandelbrot }
-      expect(build_iterator(grid_point, options)).to be_function
+      expect(build(grid_point, options)).to be_function
     end
 
     it "works for a Julia set" do
       options = %{ options | fractal: :julia }
-      expect(build_iterator(grid_point, options)).to be_function
+      expect(build(grid_point, options)).to be_function
     end
 
     it "works for a Burning Ship" do
       options = %{ options | fractal: :burningship }
-      expect(build_iterator(grid_point, options)).to be_function
+      expect(build(grid_point, options)).to be_function
     end
 
     it "works for the Netwon method" do
       options = %{ options | fractal: :newton }
-      expect(build_iterator(grid_point, options)).to be_function
+      expect(build(grid_point, options)).to be_function
     end
 
     it "works for the nova fractal" do
       options = %{ options | fractal: :nova }
-      expect(build_iterator(grid_point, options)).to be_function
+      expect(build(grid_point, options)).to be_function
     end
 
   end
