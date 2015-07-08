@@ -35,10 +35,12 @@ defmodule Fractals.Generator do
 
   def build_complex({ r, i }), do: cmplx(r, i)
 
-  def pixel(grid_point, next_func, color_func) do
-    iterate(next_func, &cutoff/1, grid_point)
-    |> in_or_out
-    |> color(color_func)
+  def pixel(grid_point, iterator, color_func) do
+    Task.async(
+      fn -> iterate(iterator, &cutoff/1, grid_point)
+            |> in_or_out
+            |> color(color_func)
+      end)
   end
 
   def cutoff(z) do
