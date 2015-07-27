@@ -28,6 +28,43 @@ defmodule Fractals.FractalSpec do
     end
   end
 
+  describe ".image (and variants)" do
+    let :options do
+      %Fractals.Options{
+        fractal:     :mandelbrot,
+        color:       :blue,
+        size:        %Fractals.Size{ width: 30, height: 20 },
+        upper_left:  %Complex{ real: -2.0, imag:  1.0 },
+        lower_right: %Complex{ real:  1.0, imag: -1.0 }
+      }
+    end
+    let :color_func, do: fn _ -> PPM.black end
+
+    describe ".taskless_image" do
+      it "generates an image without tasks" do
+        ppm = Fractals.Generator.taskless_image(color_func, options) |> Enum.to_list
+        # 30 columns * 20 rows
+        expect(Enum.count(ppm)).to eq(600)
+      end
+    end
+
+    describe ".tasked_image" do
+      it "generates an image without tasks" do
+        ppm = Fractals.Generator.tasked_image(color_func, options) |> Enum.to_list
+        # 30 columns * 20 rows
+        expect(Enum.count(ppm)).to eq(600)
+      end
+    end
+
+    describe ".tasked_image2" do
+      it "generates an image without tasks" do
+        ppm = Fractals.Generator.tasked_image2(color_func, options) |> Enum.to_list
+        # 30 columns * 20 rows
+        expect(Enum.count(ppm)).to eq(600)
+      end
+    end
+  end
+
   describe ".iterate" do
     import Fractals.Generator, only: [ iterate: 3 ]
 

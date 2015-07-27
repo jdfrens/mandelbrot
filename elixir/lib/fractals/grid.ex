@@ -1,7 +1,7 @@
 defmodule Fractals.Grid do
 
-  def generate_grid(options) do
-    for y <- ys(options), x <- xs(options), do: { x, y }
+  def generate(options, func \\ fn(x, y) -> {x, y} end) do
+    for y <- ys(options), x <- xs(options), do: func.(x, y)
   end
 
   def xs(options) do
