@@ -1,3 +1,5 @@
+# cf. http://erlangcentral.org/wiki/index.php/Complex_Numbers
+
 defmodule Complex do
 
   defstruct [ :real, :imag ]
