@@ -26,7 +26,8 @@ defmodule Fractals.Mixfile do
       { :poison, "~> 1.4.0" },
       { :inflex, "~> 1.0.0" },
       { :pavlov, ">= 0.1.0", only: :test},
-      { :espec, "~> 0.6.3", only: :test }
+      { :espec, "~> 0.6.3", only: :test },
+      { :benchfella, "~> 0.2.0" }
     ]
   end
 

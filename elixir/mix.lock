@@ -1,4 +1,5 @@
-%{"espec": {:hex, :espec, "0.6.3"},
+%{"benchfella": {:hex, :benchfella, "0.2.1"},
+  "espec": {:hex, :espec, "0.6.3"},
   "inflex": {:hex, :inflex, "1.0.0"},
   "meck": {:hex, :meck, "0.8.2"},
   "pavlov": {:hex, :pavlov, "0.2.2"},
