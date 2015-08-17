@@ -3,20 +3,23 @@ defmodule ImageGenerationBench do
   use Benchfella
 
   alias Fractals.Generator
+  alias Fractals.Generator.Taskless
+  alias Fractals.Generator.OriginalTasked
+  alias Fractals.Generator.LongerTasked
 
   def options do
     Fractals.options("../json/burningship-line-blue.json")
   end
 
   bench "without tasks" do
-    Generator.image(options, &Generator.taskless_image/2)
+    Generator.image(options, &Taskless.generate/2)
   end
 
-  bench "with tasks" do
-    Generator.image(options, &Generator.tasked_image/2)
+  bench "original tasked" do
+    Generator.image(options, &OriginalTasked.generate/2)
   end
 
-  bench "with (longer) tasks" do
-    Generator.image(options, &Generator.tasked_image2/2)
+  bench "longer tasked" do
+    Generator.image(options, &LongerTasked.generate/2)
   end
 end

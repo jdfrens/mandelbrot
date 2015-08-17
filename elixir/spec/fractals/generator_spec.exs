@@ -28,7 +28,7 @@ defmodule Fractals.FractalSpec do
     end
   end
 
-  describe ".image (and variants)" do
+  describe ".generate (of different concurrencies)" do
     let :options do
       %Fractals.Options{
         fractal:     :mandelbrot,
@@ -40,27 +40,27 @@ defmodule Fractals.FractalSpec do
     end
     let :color_func, do: fn _ -> PPM.black end
 
-    describe ".taskless_image" do
+    # 30 columns * 20 rows
+    let :expected_size, do: 600
+
+    describe "Taskless.generate" do
       it "generates an image without tasks" do
-        ppm = Fractals.Generator.taskless_image(color_func, options) |> Enum.to_list
-        # 30 columns * 20 rows
-        expect(Enum.count(ppm)).to eq(600)
+        ppm = Fractals.Generator.Taskless.generate(color_func, options) |> Enum.to_list
+        expect(Enum.count(ppm)).to eq(expected_size)
       end
     end
 
-    describe ".tasked_image" do
+    describe "OriginalTasked.generate" do
       it "generates an image without tasks" do
-        ppm = Fractals.Generator.tasked_image(color_func, options) |> Enum.to_list
-        # 30 columns * 20 rows
-        expect(Enum.count(ppm)).to eq(600)
+        ppm = Fractals.Generator.OriginalTasked.generate(color_func, options) |> Enum.to_list
+        expect(Enum.count(ppm)).to eq(expected_size)
       end
     end
 
-    describe ".tasked_image2" do
+    describe "LongerTasked.generate" do
       it "generates an image without tasks" do
-        ppm = Fractals.Generator.tasked_image2(color_func, options) |> Enum.to_list
-        # 30 columns * 20 rows
-        expect(Enum.count(ppm)).to eq(600)
+        ppm = Fractals.Generator.LongerTasked.generate(color_func, options) |> Enum.to_list
+        expect(Enum.count(ppm)).to eq(expected_size)
       end
     end
   end

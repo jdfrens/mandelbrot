@@ -22,42 +22,8 @@ defmodule Fractals.Generator do
     PPM.p3_header(width, height)
   end
 
-  def image(options, func \\ &tasked_image2/2) do
+  def image(options, func \\ &Fractals.Generator.LongerTasked.generate/2) do
     func.(Color.color_function(options), options)
-  end
-
-  def taskless_image(color_func, options) do
-    options
-    |> Grid.generate(&build_complex/2)
-    |> Enum.map(fn grid_point ->
-      pixel(grid_point, Iterators.build(grid_point, options), color_func)
-    end)
-  end
-
-  def tasked_image(color_func, options) do
-    options
-    |> Grid.generate(&build_complex/2)
-    |> Enum.map(fn grid_point ->
-      async_pixel(grid_point, Iterators.build(grid_point, options), color_func)
-    end)
-    |> Enum.map(&Task.await/1)
-  end
-
-  def async_pixel(grid_point, iterator, color_func) do
-    Task.async(fn -> pixel(grid_point, iterator, color_func) end)
-  end
-
-  def tasked_image2(color_func, options) do
-    options
-    |> Grid.generate(&async_lifecycle(&1, &2, color_func, options))
-    |> Enum.map(&Task.await/1)
-  end
-
-  def async_lifecycle(x, y, color_func, options) do
-    Task.async(fn ->
-      grid_point = cmplx(x, y)
-      pixel(grid_point, Iterators.build(grid_point, options), color_func)
-    end)
   end
 
   def build_complex(r, i), do: cmplx(r, i)
