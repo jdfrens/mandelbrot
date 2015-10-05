@@ -1,5 +1,13 @@
-# Scale taken from http://warp.povusers.org/Mandelbrot/
 defmodule Fractals.Color.WarpPov do
+  @moduledoc """
+  Provides color functions for each of the primary colors (red, green,
+  and blue) which uses the brighted hue at the edge of a fractal, quickly
+  tapering off to black as you get farther away.
+
+  It's a cool effect, but not the most colorful.
+
+  Taken from http://warp.povusers.org/Mandelbrot/
+  """
 
   import PPM, only: [ ppm: 3 ]
   import Fractals.Color, only: [ max_intensity: 0 ]

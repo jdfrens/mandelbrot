@@ -1,6 +1,10 @@
 defmodule Fractals.Generator do
+  @moduledoc """
+  The primary module for generating a fractal.
+  """
 
-  import Stream, only: [ concat: 2, iterate: 2, map: 2, take: 2, drop_while: 2, with_index: 1 ]
+  import Stream, only: [ concat: 2, iterate: 2, map: 2, take: 2,
+                         drop_while: 2, with_index: 1 ]
   import Complex, only: :macros
 
   alias Fractals.Iterators
@@ -22,20 +26,26 @@ defmodule Fractals.Generator do
     PPM.p3_header(width, height)
   end
 
-  def image(options, func \\ &Fractals.Generator.LongerTasked.generate/2) do
+  def image(options, func \\ &default_generate/2) do
     func.(Color.color_function(options), options)
   end
+
+  def default_generate(color_func, options) do
+    Fractals.Generator.LongerTasked.generate(color_func, options)
+  end
+
 
   def build_complex(r, i), do: cmplx(r, i)
 
   def pixel(grid_point, iterator, color_func) do
-    iterate(iterator, &cutoff/1, grid_point)
+    iterator
+    |> fractal_iterate(&escaped?/1, grid_point)
     |> in_or_out
     |> color(color_func)
   end
 
-  def cutoff(z) do
-    Complex.magnitude_squared(z) < @magnitude_cutoff_squared
+  def escaped?(z) do
+    Complex.magnitude_squared(z) >= @magnitude_cutoff_squared
   end
 
   def color(in_out, color_func) do
@@ -47,11 +57,11 @@ defmodule Fractals.Generator do
     { status, z, iterations }
   end
 
-  def iterate(iterator, cutoff, grid_point) do
+  def fractal_iterate(iterator, escaped?, grid_point) do
     grid_point
     |> iterate(iterator)
     |> with_index
-    |> drop_while(fn { z, i } -> cutoff.(z) && i < 255 end)
+    |> drop_while(fn { z, i } -> !escaped?.(z) && i < 255 end)
     |> take(1)
     |> Enum.to_list
     |> List.first

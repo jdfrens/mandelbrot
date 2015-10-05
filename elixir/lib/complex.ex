@@ -1,6 +1,9 @@
-# cf. http://erlangcentral.org/wiki/index.php/Complex_Numbers
-
 defmodule Complex do
+  @moduledoc """
+  Module for complex numbers.
+
+  cf. http://erlangcentral.org/wiki/index.php/Complex_Numbers
+  """
 
   defstruct [ :real, :imag ]
 
@@ -23,7 +26,7 @@ defmodule Complex do
 
   @spec magnitude(Complex.t) :: float
   def magnitude(z) do
-    magnitude_squared(z) |> :math.sqrt
+    z |> magnitude_squared |> :math.sqrt
   end
 
   @spec magnitude_squared(Complex.t) :: float

@@ -1,4 +1,8 @@
 defmodule Fractals.Grid do
+  @moduledoc """
+  Generates a grid of x and y values which can be turned into
+  complex numbers.
+  """
 
   def generate(options, func \\ fn(x, y) -> {x, y} end) do
     for y <- ys(options), x <- xs(options), do: func.(x, y)
@@ -24,7 +28,7 @@ defmodule Fractals.Grid do
 
   def float_sequence(count, first, last) do
     delta = (last - first) / (count - 1)
-    Stream.iterate(first, &(&1 + delta)) |> Enum.take(count)
+    first |> Stream.iterate(&(&1 + delta)) |> Enum.take(count)
   end
 
 end

@@ -1,9 +1,12 @@
 defmodule Fractals.Iterators.BurningShip do
+  @moduledoc """
+  Kind of an awesome fractal.  It looks a bit like a burning ship.
+  """
 
   import Complex
 
   def iterator(c) do
-    fn (z) -> burn(z) |> square() |> add(c) end
+    fn (z) -> z |> burn |> square |> add(c) end
   end
 
   def burn(%Complex{ real: real, imag: imag }) do

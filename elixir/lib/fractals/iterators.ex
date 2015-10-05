@@ -1,4 +1,7 @@
 defmodule Fractals.Iterators do
+  @moduledoc """
+  Picks the right function for generating a requested fractal.
+  """
 
   def build(grid_point, options) do
     case options.fractal do

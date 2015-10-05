@@ -3,9 +3,11 @@ defmodule Fractals.FractalSpec do
   use ESpec
 
   describe ".header" do
+    let :size, do: %Fractals.Size{ width: 55, height: 99 }
+    let :options, do: %Fractals.Options{ size: size }
     it "spits out a PPM header including width and height" do
-      options = %Fractals.Options{ size: %Fractals.Size{ width: 55, height: 99 } }
-      expect(Fractals.Generator.header(options)).to eq(["P3", "55", "99", "255"])
+      expect(Fractals.Generator.header(options))
+      .to eq(["P3", "55", "99", "255"])
     end
   end
 
@@ -22,7 +24,7 @@ defmodule Fractals.FractalSpec do
     end
 
     it "generates an image" do
-      ppm = Fractals.Generator.generate(options) |> Enum.to_list
+      ppm = options |> Fractals.Generator.generate |> Enum.to_list
       # 4 lines of header + 30 columns * 20 rows
       expect(Enum.count(ppm)).to eq(604)
     end
@@ -42,49 +44,54 @@ defmodule Fractals.FractalSpec do
 
     # 30 columns * 20 rows
     let :expected_size, do: 600
+    let :ppm do
+      color_func
+      |> generate.(options)
+      |> Enum.to_list
+    end
 
     describe "Taskless.generate" do
+      let :generate, do: &Fractals.Generator.Taskless.generate/2
       it "generates an image without tasks" do
-        ppm = Fractals.Generator.Taskless.generate(color_func, options) |> Enum.to_list
         expect(Enum.count(ppm)).to eq(expected_size)
       end
     end
 
     describe "OriginalTasked.generate" do
+      let :generate, do: &Fractals.Generator.OriginalTasked.generate/2
       it "generates an image without tasks" do
-        ppm = Fractals.Generator.OriginalTasked.generate(color_func, options) |> Enum.to_list
         expect(Enum.count(ppm)).to eq(expected_size)
       end
     end
 
     describe "LongerTasked.generate" do
+      let :generate, do: &Fractals.Generator.LongerTasked.generate/2
       it "generates an image without tasks" do
-        ppm = Fractals.Generator.LongerTasked.generate(color_func, options) |> Enum.to_list
         expect(Enum.count(ppm)).to eq(expected_size)
       end
     end
   end
 
-  describe ".iterate" do
-    import Fractals.Generator, only: [ iterate: 3 ]
+  describe ".fractal_iterate" do
+    import Fractals.Generator, only: [ fractal_iterate: 3 ]
 
     let :next do
       fn z -> z + 1 end
     end
 
     it "stops due to cutoff" do
-      cutoff = fn z -> z < 0 end
-      expect(iterate(next, cutoff, 1)).to eq({ 1, 0 })
+      cutoff = fn z -> z >= 0 end
+      expect(fractal_iterate(next, cutoff, 1)).to eq({ 1, 0 })
     end
 
     it "stops later because of cutoff" do
-      cutoff = fn z -> z < 128 end
-      expect(iterate(next, cutoff, 1)).to eq({ 128, 127 })
+      cutoff = fn z -> z >= 128 end
+      expect(fractal_iterate(next, cutoff, 1)).to eq({ 128, 127 })
     end
 
     it "stops because of the number of iterations" do
-      cutoff = fn z -> z < 500 end
-      expect(iterate(next, cutoff, 1)).to eq({ 256, 255 })
+      cutoff = fn z -> z >= 500 end
+      expect(fractal_iterate(next, cutoff, 1)).to eq({ 256, 255 })
     end
   end
 

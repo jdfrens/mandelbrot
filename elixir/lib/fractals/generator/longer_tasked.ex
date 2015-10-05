@@ -1,4 +1,12 @@
 defmodule Fractals.Generator.LongerTasked do
+  @moduledoc """
+  This module's `generate` tries to do more in each async task.
+
+  And it runs SLOWER.
+
+  Really?
+  """
+
   import Fractals.Generator
 
   import Complex

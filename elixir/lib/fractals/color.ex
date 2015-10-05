@@ -1,4 +1,8 @@
 defmodule Fractals.Color do
+  @moduledoc """
+  The color_function returns a function to generate colors
+  for a fractal.
+  """
 
   alias Fractals.Color.Random
   alias Fractals.Color.Simple

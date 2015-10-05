@@ -41,7 +41,8 @@ defmodule Fractals.GridSpec do
       expect(Grid.float_sequence(3, -1.0, 1.0)).to eq([-1.0, 0.0, 1.0])
     end
     it "generates the number of requested elements" do
-      expect(Grid.float_sequence(5, -2.0, 3.0)).to eq([-2.0, -0.75, 0.5, 1.75, 3.0])
+      expect(Grid.float_sequence(5, -2.0, 3.0))
+      .to eq([-2.0, -0.75, 0.5, 1.75, 3.0])
     end
     it "sequences down" do
       expect(Grid.float_sequence(3, 1.0, -1.0)).to eq([1.0, 0.0, -1.0])

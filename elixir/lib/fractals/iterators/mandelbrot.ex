@@ -1,4 +1,7 @@
 defmodule Fractals.Iterators.Mandelbrot do
+  @moduledoc """
+  Generates a Mandelbrot set.
+  """
 
   import Complex
 

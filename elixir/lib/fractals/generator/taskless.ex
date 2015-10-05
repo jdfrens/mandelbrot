@@ -1,4 +1,8 @@
 defmodule Fractals.Generator.Taskless do
+  @moduledoc """
+  Generates the pixels of the fractal.
+  """
+
   import Fractals.Generator
 
   alias Fractals.Grid

@@ -1,4 +1,7 @@
 defmodule Fractals.Iterators.Julia do
+  @moduledoc """
+  Generates a Julia set.
+  """
 
   import Complex
 

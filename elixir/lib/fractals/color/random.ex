@@ -1,4 +1,8 @@
 defmodule Fractals.Color.Random do
+  @moduledoc """
+  Creates an array of 256 random colors.
+  """
+
   def build_random do
     colors = Enum.map(0..255, random_color)
     fn
@@ -8,6 +12,10 @@ defmodule Fractals.Color.Random do
   end
 
   def random_color do
-    fn _ -> PPM.ppm(:random.uniform(255), :random.uniform(255), :random.uniform(255)) end
+    fn _ -> PPM.ppm(random_hue, random_hue, random_hue) end
+  end
+
+  def random_hue do
+    :random.uniform(255)
   end
 end

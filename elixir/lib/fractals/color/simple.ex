@@ -1,4 +1,8 @@
 defmodule Fractals.Color.Simple do
+  @moduledoc """
+  Provides very simple colors like black-on-white, white-on-black,
+  and grayscale.
+  """
 
   alias Fractals.Generator
   alias Fractals.Color
