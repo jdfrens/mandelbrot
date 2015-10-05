@@ -1,5 +1,5 @@
 %{"benchfella": {:hex, :benchfella, "0.2.1"},
-  "dogma": {:git, "https://github.com/lpil/dogma.git", "5a8eb42845bcc649659710d5d27942fa9a3c6421", []},
+  "dogma": {:git, "https://github.com/lpil/dogma.git", "cbb13191676367db173115d0868add2096ce0841", []},
   "espec": {:hex, :espec, "0.8.1"},
   "inflex": {:hex, :inflex, "1.5.0"},
   "meck": {:hex, :meck, "0.8.3"},
