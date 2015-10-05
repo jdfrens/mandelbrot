@@ -1,4 +1,10 @@
 defmodule PPM do
+  @moduledoc """
+  Helper functions for generating a PPM file---ASCII text to describe
+  an image file.  Very verbose, of course, but easy to write and read.
+
+  cf. https://en.wikipedia.org/wiki/Netpbm_format
+  """
 
   @format "~3B ~3B ~3B "
 
@@ -18,5 +24,4 @@ defmodule PPM do
   def ppm(red, green, blue) do
     :erlang.iolist_to_binary(:io_lib.format(@format, [red, green, blue]))
   end
-
 end

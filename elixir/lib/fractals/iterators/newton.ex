@@ -1,4 +1,8 @@
 defmodule Fractals.Iterators.Newton do
+  @moduledoc """
+  Computes a fractal based on Newton's method of iteratively computing
+  cube roots.
+  """
 
   import Complex
 

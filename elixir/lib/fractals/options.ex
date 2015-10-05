@@ -1,4 +1,10 @@
 defmodule Fractals.Options do
+  @moduledoc """
+  Structure for options when generating fractals.
+
+  `parse` will parse a JSON string.
+  """
+
   defstruct [
     :fractal, :size, :color, :seed,
     :upper_left, :lower_right,
