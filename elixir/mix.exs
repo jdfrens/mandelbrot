@@ -23,11 +23,12 @@ defmodule Fractals.Mixfile do
 
   defp deps do
     [
-      { :poison, "~> 1.4.0" },
-      { :inflex, "~> 1.0.0" },
-      { :pavlov, ">= 0.1.0", only: :test},
-      { :espec, "~> 0.6.3", only: :test },
-      { :benchfella, "~> 0.2.0" }
+      { :poison, "~> 1.5.0" },
+      { :inflex, "~> 1.5.0" },
+      { :pavlov, "~> 0.2.3", only: :test},
+      { :espec, "~> 0.8.0", only: :test },
+      { :benchfella, "~> 0.2.0" },
+      { :dogma, github: "lpil/dogma", only: :dev },
     ]
   end
 
