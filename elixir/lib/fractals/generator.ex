@@ -7,10 +7,6 @@ defmodule Fractals.Generator do
                          drop_while: 2, with_index: 1 ]
   import Complex, only: :macros
 
-  alias Fractals.Iterators
-  alias Fractals.Color
-  alias Fractals.Grid
-
   @magnitude_cutoff         2.0
   @magnitude_cutoff_squared 4.0
   @max_iterations           256
@@ -27,13 +23,12 @@ defmodule Fractals.Generator do
   end
 
   def image(options, func \\ &default_generate/2) do
-    func.(Color.color_function(options), options)
+    func.(Fractals.Color.color_function(options), options)
   end
 
   def default_generate(color_func, options) do
     Fractals.Generator.LongerTasked.generate(color_func, options)
   end
-
 
   def build_complex(r, i), do: cmplx(r, i)
 
