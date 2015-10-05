@@ -20,10 +20,10 @@ defmodule Fractals.Options do
       seed:        parse_seed(json["seed"]),
       upper_left:  parse_complex(json["upperLeft"]),
       lower_right: parse_complex(json["lowerRight"]),
-      c:           parse_complex(json["c"], %Complex{ real: 1.0, imag: 0.0 }),
-      z:           parse_complex(json["z"], %Complex{ real: 0.0, imag: 0.0 }),
-      r:           parse_complex(json["r"], %Complex{ real: 0.0, imag: 0.0 }),
-      p:           parse_complex(json["p"], %Complex{ real: 0.0, imag: 0.0 })
+      c:           parse_complex(json["c"], %Complex{real: 1.0, imag: 0.0}),
+      z:           parse_complex(json["z"], %Complex{real: 0.0, imag: 0.0}),
+      r:           parse_complex(json["r"], %Complex{real: 0.0, imag: 0.0}),
+      p:           parse_complex(json["p"], %Complex{real: 0.0, imag: 0.0})
     }
   end
 
@@ -31,11 +31,11 @@ defmodule Fractals.Options do
     String.to_atom(String.downcase(fractal))
   end
 
-  defp parse_size(nil), do: %Fractals.Size{ width: 512, height: 384 }
+  defp parse_size(nil), do: %Fractals.Size{width: 512, height: 384}
   defp parse_size(size) do
     [_, width, height] = Regex.run(~r/(\d+)x(\d+)/, size)
     %Fractals.Size{
-     width: String.to_integer(width),
+     width:  String.to_integer(width),
      height: String.to_integer(height)
    }
   end
@@ -53,5 +53,4 @@ defmodule Fractals.Options do
   defp parse_complex(complex, _) do
     Complex.parse(complex)
   end
-
 end

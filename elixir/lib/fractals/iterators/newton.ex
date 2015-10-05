@@ -11,11 +11,10 @@ defmodule Fractals.Iterators.Newton do
   end
 
   def p(z) do
-    z |> cube() |> subtract(%Complex{ real: -1, imag: 0 })
+    z |> cube() |> subtract(%Complex{real: -1, imag: 0})
   end
 
   def p_prime(z) do
-    z |> square() |> multiply(%Complex{ real: 3.0, imag: 0.0 })
+    z |> square() |> multiply(%Complex{real: 3.0, imag: 0.0})
   end
-
 end

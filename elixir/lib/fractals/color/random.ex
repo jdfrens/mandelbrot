@@ -6,8 +6,8 @@ defmodule Fractals.Color.Random do
   def build_random do
     colors = Enum.map(0..255, random_color)
     fn
-      { :inside, _, _ } -> PPM.black
-      { :outside, _, iterations } -> Enum.at(colors, iterations)
+      {:inside, _,           _} -> PPM.black
+      {:outside, _, iterations} -> Enum.at(colors, iterations)
     end
   end
 

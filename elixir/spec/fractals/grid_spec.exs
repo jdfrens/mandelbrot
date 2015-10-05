@@ -8,7 +8,7 @@ defmodule Fractals.GridSpec do
 
   let :options do
     %Fractals.Options{
-      size:        %Fractals.Size{ width: 2, height: 3 },
+      size:        %Fractals.Size{width: 2, height: 3},
       upper_left:  cmplx(-1.0,  1.0),
       lower_right: cmplx( 1.0, -1.0)
     }
@@ -17,9 +17,9 @@ defmodule Fractals.GridSpec do
   describe ".generate" do
     it "generates a grid" do
       expect(Grid.generate(options)).to eq([
-        { -1.0,  1.0 }, { 1.0,  1.0 },
-        { -1.0,  0.0 }, { 1.0,  0.0 },
-        { -1.0, -1.0 }, { 1.0, -1.0 },
+        {-1.0,  1.0}, {1.0,  1.0},
+        {-1.0,  0.0}, {1.0,  0.0},
+        {-1.0, -1.0}, {1.0, -1.0},
       ])
     end
   end

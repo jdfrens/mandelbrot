@@ -5,13 +5,13 @@ defmodule Complex do
   cf. http://erlangcentral.org/wiki/index.php/Complex_Numbers
   """
 
-  defstruct [ :real, :imag ]
+  defstruct [:real, :imag]
 
-  @type t :: %Complex{ real: float, imag: float }
+  @type t :: %Complex{real: float, imag: float}
 
   defmacro cmplx(real, imag) do
     quote do
-      %Complex{ real: unquote(real), imag: unquote(imag) }
+      %Complex{real: unquote(real), imag: unquote(imag)}
     end
   end
 
@@ -36,12 +36,12 @@ defmodule Complex do
 
   @spec add(Complex.t, Complex.t) :: Complex.t
   def add(%Complex{real: a, imag: b}, %Complex{real: c, imag: d}) do
-    %Complex { real: a + c, imag: b + d }
+    %Complex{real: a + c, imag: b + d}
   end
 
   @spec subtract(Complex.t, Complex.t) :: Complex.t
   def subtract(%Complex{real: a, imag: b}, %Complex{real: c, imag: d}) do
-    %Complex { real: a - c, imag: b - d }
+    %Complex{real: a - c, imag: b - d}
   end
 
   @spec multiply(Complex.t, Complex.t) :: Complex.t
@@ -73,5 +73,4 @@ defmodule Complex do
       imag: (z0.imag * z1.real - z0.real * z1.imag) / denominator
     }
   end
-
 end

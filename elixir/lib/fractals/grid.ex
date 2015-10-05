@@ -10,18 +10,18 @@ defmodule Fractals.Grid do
 
   def xs(options) do
     %Fractals.Options{
-      size:        %Fractals.Size{ width: width },
-      upper_left:  %Complex{ real: x0 },
-      lower_right: %Complex{ real: x1 }
+      size:        %Fractals.Size{width: width},
+      upper_left:  %Complex{real: x0},
+      lower_right: %Complex{real: x1}
     } = options
     float_sequence(width, x0, x1)
   end
 
   def ys(options) do
     %Fractals.Options{
-      size:        %Fractals.Size{ height: height },
-      upper_left:  %Complex{ imag: y1 },
-      lower_right: %Complex{ imag: y0 }
+      size:        %Fractals.Size{height: height},
+      upper_left:  %Complex{imag: y1},
+      lower_right: %Complex{imag: y0}
     } = options
     float_sequence(height, y1, y0)
   end
@@ -30,5 +30,4 @@ defmodule Fractals.Grid do
     delta = (last - first) / (count - 1)
     first |> Stream.iterate(&(&1 + delta)) |> Enum.take(count)
   end
-
 end

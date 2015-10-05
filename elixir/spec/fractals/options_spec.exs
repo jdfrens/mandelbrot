@@ -29,7 +29,7 @@ defmodule Fractals.OptionsSpec do
       end
       it "parses the image size" do
         expect(parse(full_json).size)
-        .to eq(%Fractals.Size{ width: 720, height: 480 })
+        .to eq(%Fractals.Size{width: 720, height: 480})
       end
       it "parses the color scheme" do
         expect(parse(full_json).color).to eq(:blue)
@@ -73,7 +73,7 @@ defmodule Fractals.OptionsSpec do
       end
       it "defaults the image size" do
         expect(parse(default_json).size)
-        .to eq(%Fractals.Size{ width: 512, height: 384 })
+        .to eq(%Fractals.Size{width: 512, height: 384})
       end
       it "defaults the color scheme" do
         expect(parse(default_json).color).to eq(:black_on_white)

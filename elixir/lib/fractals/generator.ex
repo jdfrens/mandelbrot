@@ -18,7 +18,7 @@ defmodule Fractals.Generator do
   end
 
   def header(options) do
-    %Fractals.Size{ width: width, height: height } = options.size
+    %Fractals.Size{width: width, height: height} = options.size
     PPM.p3_header(width, height)
   end
 
@@ -47,19 +47,18 @@ defmodule Fractals.Generator do
     color_func.(in_out)
   end
 
-  def in_or_out({ z, iterations }) do
+  def in_or_out({z, iterations}) do
     status = if iterations >= 255, do: :inside, else: :outside
-    { status, z, iterations }
+    {status, z, iterations}
   end
 
   def fractal_iterate(iterator, escaped?, grid_point) do
     grid_point
     |> iterate(iterator)
     |> with_index
-    |> drop_while(fn { z, i } -> !escaped?.(z) && i < 255 end)
+    |> drop_while(fn {z, i} -> !escaped?.(z) && i < 255 end)
     |> take(1)
     |> Enum.to_list
     |> List.first
   end
-
 end

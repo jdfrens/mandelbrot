@@ -9,7 +9,7 @@ defmodule Fractals do
     |> take_action
   end
 
-  def take_action({ _, [ options_filename, image_filename ], _ }) do
+  def take_action({_, [ options_filename, image_filename ], _}) do
     {:ok, image_file} = File.open(image_filename, [:write])
 
     options_filename
@@ -24,5 +24,4 @@ defmodule Fractals do
   def options(options_filename) do
     options_filename |> File.read! |> Fractals.Options.parse()
   end
-
 end

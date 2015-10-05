@@ -9,9 +9,8 @@ defmodule Fractals.Iterators.BurningShip do
     fn (z) -> z |> burn |> square |> add(c) end
   end
 
-  def burn(%Complex{ real: real, imag: imag }) do
+  def burn(%Complex{real: real, imag: imag}) do
     # FIXME: not sure why I need to negate imag since Wikipedia doesn't
-    %Complex{ real: abs(real), imag: -1 * abs(imag) }
+    %Complex{real: abs(real), imag: -1 * abs(imag)}
   end
-
 end

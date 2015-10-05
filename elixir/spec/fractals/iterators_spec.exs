@@ -7,7 +7,7 @@ defmodule Fractals.IteratorsSpec do
   let :grid_point, do: cmplx(3.0, 2.0)
   let :options do
     %Fractals.Options{
-      size:        %Fractals.Size{ width: 2, height: 3 },
+      size:        %Fractals.Size{width: 2, height: 3},
       upper_left:  cmplx(-1.0,  1.0),
       lower_right: cmplx( 1.0, -1.0)
     }
@@ -18,27 +18,27 @@ defmodule Fractals.IteratorsSpec do
     import Fractals.Iterators, only: [ build: 2 ]
 
     it "works for a Mandelbrot set" do
-      options = %{ options | fractal: :mandelbrot }
+      options = %{options | fractal: :mandelbrot}
       expect(build(grid_point, options)).to be_function
     end
 
     it "works for a Julia set" do
-      options = %{ options | fractal: :julia }
+      options = %{options | fractal: :julia}
       expect(build(grid_point, options)).to be_function
     end
 
     it "works for a Burning Ship" do
-      options = %{ options | fractal: :burningship }
+      options = %{options | fractal: :burningship}
       expect(build(grid_point, options)).to be_function
     end
 
     it "works for the Netwon method" do
-      options = %{ options | fractal: :newton }
+      options = %{options | fractal: :newton}
       expect(build(grid_point, options)).to be_function
     end
 
     it "works for the nova fractal" do
-      options = %{ options | fractal: :nova }
+      options = %{options | fractal: :nova}
       expect(build(grid_point, options)).to be_function
     end
 
