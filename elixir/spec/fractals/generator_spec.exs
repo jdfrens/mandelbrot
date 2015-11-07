@@ -1,12 +1,10 @@
-defmodule Fractals.FractalSpec do
-
+defmodule Fractals.GeneratorSpec do
   use ESpec
 
   describe ".header" do
     let :size, do: %Fractals.Size{width: 55, height: 99}
-    let :options, do: %Fractals.Options{size: size}
     it "spits out a PPM header including width and height" do
-      expect(Fractals.Generator.header(options))
+      expect(Fractals.Generator.header(size))
       .to eq(["P3", "55", "99", "255"])
     end
   end
@@ -19,12 +17,14 @@ defmodule Fractals.FractalSpec do
         color:       :blue,
         size:        %Fractals.Size{width: 30, height: 20},
         upper_left:  %Complex{real: -2.0, imag:  1.0},
-        lower_right: %Complex{real:  1.0, imag: -1.0}
+        lower_right: %Complex{real:  1.0, imag: -1.0},
+        color_func:  fn _ -> PPM.black end,
+        iterator_builder: fn _ -> &(&1) end
       }
     end
 
     it "generates an image" do
-      ppm = options |> Fractals.Generator.generate |> Enum.to_list
+      ppm = Fractals.Generator.generate(options) |> Enum.to_list
       # 4 lines of header + 30 columns * 20 rows
       expect(Enum.count(ppm)).to eq(604)
     end
@@ -37,35 +37,34 @@ defmodule Fractals.FractalSpec do
         color:       :blue,
         size:        %Fractals.Size{width: 30, height: 20},
         upper_left:  %Complex{real: -2.0, imag:  1.0},
-        lower_right: %Complex{real:  1.0, imag: -1.0}
+        lower_right: %Complex{real:  1.0, imag: -1.0},
+        color_func:  fn _ -> PPM.black end,
+        iterator_builder: fn _ -> &(&1) end
       }
     end
-    let :color_func, do: fn _ -> PPM.black end
 
     # 30 columns * 20 rows
     let :expected_size, do: 600
     let :ppm do
-      color_func
-      |> generate.(options)
-      |> Enum.to_list
+      generate.(options) |> Enum.to_list
     end
 
     describe "Taskless.generate" do
-      let :generate, do: &Fractals.Generator.Taskless.generate/2
+      let :generate, do: &Fractals.Generator.Taskless.generate/1
       it "generates an image without tasks" do
         expect(Enum.count(ppm)).to eq(expected_size)
       end
     end
 
     describe "OriginalTasked.generate" do
-      let :generate, do: &Fractals.Generator.OriginalTasked.generate/2
+      let :generate, do: &Fractals.Generator.OriginalTasked.generate/1
       it "generates an image without tasks" do
         expect(Enum.count(ppm)).to eq(expected_size)
       end
     end
 
     describe "LongerTasked.generate" do
-      let :generate, do: &Fractals.Generator.LongerTasked.generate/2
+      let :generate, do: &Fractals.Generator.LongerTasked.generate/1
       it "generates an image without tasks" do
         expect(Enum.count(ppm)).to eq(expected_size)
       end
@@ -109,5 +108,4 @@ defmodule Fractals.FractalSpec do
       expect(in_or_out({:meh,  34})).to eq({:outside, :meh,  34})
     end
   end
-
 end

@@ -3,14 +3,19 @@ defmodule Fractals.Iterators do
   Picks the right function for generating a requested fractal.
   """
 
-  def build(grid_point, options) do
-    case options.fractal do
-      :burningship -> Fractals.Iterators.BurningShip.iterator(grid_point)
-      :mandelbrot  -> Fractals.Iterators.Mandelbrot.iterator(grid_point)
-      :julia       -> Fractals.Iterators.Julia.iterator(options.c)
-      :newton      -> Fractals.Iterators.Newton.iterator()
-      :nova        -> Fractals.Iterators.Nova.iterator(grid_point)
+  alias Fractals.Iterators.BurningShip
+  alias Fractals.Iterators.Mandelbrot
+  alias Fractals.Iterators.Julia
+  alias Fractals.Iterators.Newton
+
+  def build(options) do
+    fn grid_point ->
+      case options.fractal do
+        :burningship -> BurningShip.iterator(grid_point)
+        :mandelbrot  -> Mandelbrot.iterator(grid_point)
+        :julia       -> Julia.iterator(options.c)
+        :newton      -> Newton.iterator
+      end
     end
   end
-
 end

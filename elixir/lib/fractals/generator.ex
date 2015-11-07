@@ -3,8 +3,6 @@ defmodule Fractals.Generator do
   The primary module for generating a fractal.
   """
 
-  import Stream, only: [ concat: 2, iterate: 2, map: 2, take: 2,
-                         drop_while: 2, with_index: 1 ]
   import Complex, only: :macros
 
   @magnitude_cutoff         2.0
@@ -13,24 +11,49 @@ defmodule Fractals.Generator do
 
   def max_iterations, do: @max_iterations
 
-  def generate(options) do
-    concat(header(options), image(options))
+  def do_it(options) do
+    File.open(options[:image_filename], [:write],
+      fn(image_file) ->
+        generate(options[:size], concurrency_function(options))
+        |> Stream.each(fn line -> IO.puts(image_file, line) end)
+        |> Stream.run
+      end)
   end
 
-  def header(options) do
-    %Fractals.Size{width: width, height: height} = options.size
+  def concurrency_function(options) do
+    case options[:concurrency] do
+      "none"     -> &Fractals.Generator.Taskless.generate/2
+      "chunked"  -> &Fractals.Generator.TasklessChunked.generate/2
+      "original" -> &Fractals.Generator.OriginalTasked.generate/2
+      "crunchy"  -> &Fractals.Generator.LongerTasked.generate/2
+      "smooth"   -> &Fractals.Generator.PooledProcesses.generate/2
+    end
+  end
+
+  def generate(options, concurrency \\ &default_generate/1) do
+    Stream.concat(header(options.size), image(options, concurrency))
+  end
+
+  def header(%Fractals.Size{width: width, height: height}) do
     PPM.p3_header(width, height)
   end
 
-  def image(options, func \\ &default_generate/2) do
-    func.(Fractals.Color.color_function(options), options)
+  def image(options, generator \\ &default_generate/1) do
+    generator.(options)
   end
 
-  def default_generate(color_func, options) do
-    Fractals.Generator.LongerTasked.generate(color_func, options)
+  def default_generate(color_func) do
+    Fractals.Generator.LongerTasked.generate(color_func)
   end
 
   def build_complex(r, i), do: cmplx(r, i)
+
+  def pixels(grid_points, options) do
+    grid_points
+    |> Enum.map(fn gp ->
+      pixel(gp, options.iterator_builder.(gp), options.color_func)
+    end)
+  end
 
   def pixel(grid_point, iterator, color_func) do
     iterator
@@ -54,10 +77,10 @@ defmodule Fractals.Generator do
 
   def fractal_iterate(iterator, escaped?, grid_point) do
     grid_point
-    |> iterate(iterator)
-    |> with_index
-    |> drop_while(fn {z, i} -> !escaped?.(z) && i < 255 end)
-    |> take(1)
+    |> Stream.iterate(iterator)
+    |> Stream.with_index
+    |> Stream.drop_while(fn {z, i} -> !escaped?.(z) && i < 255 end)
+    |> Stream.take(1)
     |> Enum.to_list
     |> List.first
   end
