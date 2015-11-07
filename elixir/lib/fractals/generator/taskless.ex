@@ -6,13 +6,12 @@ defmodule Fractals.Generator.Taskless do
   import Fractals.Generator
 
   alias Fractals.Grid
-  alias Fractals.Iterators
 
-  def generate(color_func, options) do
+  def generate(options) do
     options
     |> Grid.generate(&build_complex/2)
     |> Enum.map(fn grid_point ->
-      pixel(grid_point, Iterators.build(grid_point, options), color_func)
+      pixel(grid_point, options.iterator_builder.(grid_point), options.color_func)
     end)
   end
 end

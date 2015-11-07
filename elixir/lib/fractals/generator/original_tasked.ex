@@ -7,20 +7,19 @@ defmodule Fractals.Generator.OriginalTasked do
   import Fractals.Generator
 
   alias Fractals.Grid
-  alias Fractals.Iterators
 
-  def generate(color_func, options) do
+  def generate(options) do
     options
     |> Grid.generate(&build_complex/2)
-    |> Enum.map(fn grid_point ->
-      async_pixel(grid_point, options, color_func)
-    end)
+    |> Enum.map(&async_pixel(&1, options))
     |> Enum.map(&Task.await/1)
   end
 
-  def async_pixel(grid_point, options, color_func) do
+  def async_pixel(grid_point,
+                  %Fractals.Options{color_func: color_func,
+                                    iterator_builder: iterator_builder}) do
     Task.async(fn ->
-      pixel(grid_point, Iterators.build(grid_point, options), color_func)
+      pixel(grid_point, iterator_builder.(grid_point), color_func)
     end)
   end
 end

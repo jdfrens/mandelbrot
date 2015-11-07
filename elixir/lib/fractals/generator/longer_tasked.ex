@@ -12,18 +12,19 @@ defmodule Fractals.Generator.LongerTasked do
   import Complex
 
   alias Fractals.Grid
-  alias Fractals.Iterators
 
-  def generate(color_func, options) do
+  def generate(options) do
     options
-    |> Grid.generate(&async_pixel(&1, &2, color_func, options))
+    |> Grid.generate(&async_pixel(&1, &2, options))
     |> Enum.map(&Task.await/1)
   end
 
-  def async_pixel(x, y, color_func, options) do
+  def async_pixel(x, y,
+                  %Fractals.Options{color_func: color_func,
+                                    iterator_builder: iterator_builder}) do
     Task.async(fn ->
       grid_point = cmplx(x, y)
-      pixel(grid_point, Iterators.build(grid_point, options), color_func)
+      pixel(grid_point, iterator_builder.(grid_point), color_func)
     end)
   end
 end
