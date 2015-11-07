@@ -32,8 +32,11 @@ GIFS.zip(PPMS).each do |gif, ppm|
 end
 
 PPMS.zip(JSONS).each do |ppm, json|
+  concurrency = ENV['CONCURRENCY'] || 'none'
+  chunk_size  = ENV['CHUNK_SIZE'] || '1000'
+  processes   = ENV['PROCESSES'] || '4'
   file ppm => [json, :compile] do
-    sh "fractals #{json} #{ppm}"
+    sh "fractals #{json} #{ppm} --concurrency #{concurrency} --chunk_size #{chunk_size} --processes #{processes}"
   end
 end
 

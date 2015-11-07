@@ -6,14 +6,45 @@ defmodule Fractals.Options do
   """
 
   defstruct [
+    # from input file
     :fractal, :size, :color, :seed,
     :upper_left, :lower_right,
-    :c, :z, :r, :p
+    :c, :z, :r, :p,
+    # output
+    :output_filename,
+    # cached stuff
+    :color_func,
+    :iterator_builder,
+    # from flags
+    :concurrency,
+    :processes,
+    :chunk_size
   ]
 
-  def parse(json_str) do
-    json = Poison.Parser.parse!(json_str)
-    %Fractals.Options{
+  @default_flags [concurrency: "none", processes: 4, chunk_size: 1000]
+
+  # FIXME: the flow for this is so terrible
+  def parse(flags, options_filename, image_filename) do
+    %Fractals.Options{output_filename: image_filename}
+    |> parse_file(options_filename)
+    |> parse_flags(flags)
+    |> cache
+  end
+
+  def cache(options) do
+    %{options |
+      color_func:       Fractals.Color.color_function(options),
+      iterator_builder: Fractals.Iterators.build(options)
+     }
+  end
+
+  def parse_file(options, filename) do
+    json = filename |> File.read! |> Poison.Parser.parse!
+    build_from_json(options, json)
+  end
+
+  def build_from_json(options, json) do
+    %{options |
       fractal:     parse_fractal(json["fractal"]),
       size:        parse_size(json["size"]),
       color:       parse_color(json["color"]),
@@ -23,8 +54,17 @@ defmodule Fractals.Options do
       c:           parse_complex(json["c"], %Complex{real: 1.0, imag: 0.0}),
       z:           parse_complex(json["z"], %Complex{real: 0.0, imag: 0.0}),
       r:           parse_complex(json["r"], %Complex{real: 0.0, imag: 0.0}),
-      p:           parse_complex(json["p"], %Complex{real: 0.0, imag: 0.0})
+      p:           parse_complex(json["p"], %Complex{real: 0.0, imag: 0.0}),
     }
+  end
+
+  def parse_flags(options, user_flags) do
+    flags = Keyword.merge(@default_flags, user_flags)
+    %{options |
+      concurrency: Keyword.fetch(flags, :concurrency),
+      processes:   Keyword.fetch(flags, :processes),
+      chunk_size:  Keyword.fetch(flags, :chunk_size)
+      }
   end
 
   defp parse_fractal(fractal) do
