@@ -74,3 +74,10 @@ defmodule Complex do
     }
   end
 end
+
+defimpl String.Chars, for: Complex do
+  def to_string(complex) do
+    sign = if complex.imag < 0, do: "", else: "+"
+    "#{complex.real}#{sign}#{complex.imag}i"
+  end
+end

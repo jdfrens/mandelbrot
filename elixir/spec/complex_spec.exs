@@ -52,4 +52,13 @@ defmodule ComplexSpec do
     end
   end
 
+  describe ".to_string" do
+    it "uses a+bi format" do
+      expect(String.Chars.to_string(cmplx(3.2, 9.8))).to eq("3.2+9.8i")
+    end
+
+    it "handles negative numbers" do
+      expect(String.Chars.to_string(cmplx(-3.2, -9.8))).to eq("-3.2-9.8i")
+    end
+end
 end
