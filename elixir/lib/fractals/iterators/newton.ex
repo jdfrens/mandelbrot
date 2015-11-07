@@ -7,7 +7,7 @@ defmodule Fractals.Iterators.Newton do
   import Complex
 
   def iterator do
-    fn (z) -> divide(p(z), p_prime(z)) end
+    fn z -> divide(p(z), p_prime(z)) end
   end
 
   def p(z) do

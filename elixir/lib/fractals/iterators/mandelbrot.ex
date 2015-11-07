@@ -8,5 +8,4 @@ defmodule Fractals.Iterators.Mandelbrot do
   def iterator(c) do
     fn (z) -> z |> square() |> add(c) end
   end
-
 end
