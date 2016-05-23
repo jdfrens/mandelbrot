@@ -1,5 +1,4 @@
 defmodule Fractals.OptionsSpec do
-
   use ESpec
 
   import Fractals.Options, only: [ build_from_json: 2 ]

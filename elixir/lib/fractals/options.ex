@@ -28,15 +28,6 @@ defmodule Fractals.Options do
     %Fractals.Options{output_filename: image_filename}
     |> parse_file(options_filename)
     |> parse_flags(flags)
-    |> cache
-  end
-
-  # FIXME: this may not be necessary with pipelined processes
-  def cache(options) do
-    %{options |
-      color_func:       Fractals.Color.color_function(options),
-      iterator_builder: Fractals.Iterators.build(options)
-     }
   end
 
   def parse_file(options, filename) do
