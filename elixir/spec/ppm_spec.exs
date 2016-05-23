@@ -1,6 +1,11 @@
 defmodule PPMSpec do
-
   use ESpec
+
+  describe ".p3_header" do
+    it "has the right values" do
+      expect PPM.p3_header(726, 28) |> to(eq(["P3", "726", "28", "255"]))
+    end
+  end
 
   describe ".ppm" do
     it "emits a string with RGB components" do
