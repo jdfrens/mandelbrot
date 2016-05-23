@@ -10,8 +10,29 @@ defmodule Fractals.OutputSpec do
     pid
   end
 
-  it "works" do
-    Fractals.Output.out(subject, "x")
-    expect(StringIO.contents(io)) |> to(eq({"", "x"}))
+  it "writes a chunk" do
+    Fractals.Output.write(subject, {0, :options, ["a", "b", "c"]})
+    :timer.sleep(100)
+
+    expect(StringIO.contents(io))
+    |> to(eq({"", "a\nb\nc\n"}))
+  end
+
+  it "writes multiple chunks" do
+    Fractals.Output.write(subject, {0, :options, ["a", "b", "c"]})
+    Fractals.Output.write(subject, {1, :options, ["x", "y", "z"]})
+    :timer.sleep(100)
+
+    expect(StringIO.contents(io))
+    |> to(eq({"", "a\nb\nc\nx\ny\nz\n"}))
+  end
+
+  it "writes multiple chunks received out of order" do
+    Fractals.Output.write(subject, {1, :options, ["x", "y", "z"]})
+    Fractals.Output.write(subject, {0, :options, ["a", "b", "c"]})
+    :timer.sleep(100)
+
+    expect(StringIO.contents(io))
+    |> to(eq({"", "a\nb\nc\nx\ny\nz\n"}))
   end
 end

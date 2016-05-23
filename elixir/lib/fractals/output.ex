@@ -1,16 +1,17 @@
 defmodule Fractals.Output do
-  use GenServer
-
-  def start_link(%{io: _io}=default) do
-    GenServer.start_link(__MODULE__, default)
+  def start_link(%{io: io}) do
+    {:ok, spawn_link(__MODULE__, :server, [io, 0])}
   end
 
-  def out(pid, string) do
-    GenServer.cast(pid, {:out, string})
+  def write(pid, chunk) do
+    send pid, {:write, chunk}
   end
 
-  def handle_cast({:out, string}, %{io: io}=state) do
-    IO.write(io, string)
-    {:noreply, state}
+  def server(io, chunk_number) do
+    receive do
+      {:write, {^chunk_number, _options, data}} ->
+        Enum.each(data, &(IO.puts(io,&1)))
+        server(io, chunk_number+1)
+    end
   end
 end
