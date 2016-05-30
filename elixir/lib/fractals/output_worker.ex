@@ -1,4 +1,4 @@
-defmodule Fractals.Output do
+defmodule Fractals.OutputWorker do
   def start_link(options) do
     state = Map.put(options, :chunk_number, 0)
     {:ok, spawn_link(__MODULE__, :server, [state])}
