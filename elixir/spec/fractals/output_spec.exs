@@ -1,5 +1,5 @@
 defmodule Fractals.OutputSpec do
-  use ESpec
+  use ESpec, aysnc: true
 
   let :io do
     {:ok, pid} = StringIO.open("")

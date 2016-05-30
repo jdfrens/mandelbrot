@@ -1,5 +1,5 @@
 defmodule Fractals.OptionsSpec do
-  use ESpec
+  use ESpec, async: true
 
   import Fractals.Options, only: [ build_from_json: 2 ]
   import Complex, only: :macros

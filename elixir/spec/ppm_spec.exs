@@ -1,5 +1,5 @@
 defmodule PPMSpec do
-  use ESpec
+  use ESpec, async: true
 
   describe ".p3_header" do
     it "has the right values" do

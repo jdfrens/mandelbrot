@@ -1,6 +1,5 @@
 defmodule ComplexSpec do
-
-  use ESpec
+  use ESpec, async: true
 
   import Complex, only: :macros
 
