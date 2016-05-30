@@ -5,34 +5,47 @@ defmodule Fractals.OutputSpec do
     {:ok, pid} = StringIO.open("")
     pid
   end
+  let :args do
+    %{io: io, next_pid: self, chunk_count: chunk_count}
+  end
   let :subject do
-    {:ok, pid} = Fractals.Output.start_link(%{io: io})
+    {:ok, pid} = Fractals.Output.start_link(args)
     pid
   end
 
-  it "writes a chunk" do
-    Fractals.Output.write(subject, {0, :options, ["a", "b", "c"]})
-    :timer.sleep(100)
-
-    expect(StringIO.contents(io))
-    |> to(eq({"", "a\nb\nc\n"}))
+  context "when sending one chunk" do
+    let :chunk_count, do: 1
+    it "writes a chunk" do
+      Fractals.Output.write(subject, {0, :options, ["a", "b", "c"]})
+      expect_output(subject, io, "a\nb\nc\n")
+    end
   end
 
-  it "writes multiple chunks" do
-    Fractals.Output.write(subject, {0, :options, ["a", "b", "c"]})
-    Fractals.Output.write(subject, {1, :options, ["x", "y", "z"]})
-    :timer.sleep(100)
+  context "when sending multiple chunks" do
+    let :chunk_count, do: 3
 
-    expect(StringIO.contents(io))
-    |> to(eq({"", "a\nb\nc\nx\ny\nz\n"}))
+    it "writes multiple chunks" do
+      Fractals.Output.write(subject, {0, :options, ["a", "b", "c"]})
+      Fractals.Output.write(subject, {1, :options, ["m", "n", "o"]})
+      Fractals.Output.write(subject, {2, :options, ["x", "y", "z"]})
+      expect_output(subject, io, "a\nb\nc\nm\nn\no\nx\ny\nz\n")
+    end
+
+    it "writes multiple chunks received out of order" do
+      Fractals.Output.write(subject, {1, :options, ["m", "n", "o"]})
+      Fractals.Output.write(subject, {2, :options, ["x", "y", "z"]})
+      Fractals.Output.write(subject, {0, :options, ["a", "b", "c"]})
+      expect_output(subject, io, "a\nb\nc\nm\nn\no\nx\ny\nz\n")
+    end
   end
 
-  it "writes multiple chunks received out of order" do
-    Fractals.Output.write(subject, {1, :options, ["x", "y", "z"]})
-    Fractals.Output.write(subject, {0, :options, ["a", "b", "c"]})
-    :timer.sleep(100)
-
-    expect(StringIO.contents(io))
-    |> to(eq({"", "a\nb\nc\nx\ny\nz\n"}))
+  defp expect_output(subject, io, output) do
+    receive do
+      {:done, ^subject} ->
+        expect(StringIO.contents(io)) |> to(eq({"", output}))
+    after
+      1000 ->
+        ExUnit.Assertions.flunk "spec received no output-done message"
+    end
   end
 end
