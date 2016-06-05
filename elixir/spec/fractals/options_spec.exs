@@ -4,6 +4,8 @@ defmodule Fractals.OptionsSpec do
   import Fractals.Options, only: [ build_from_json: 2 ]
   import Complex, only: :macros
 
+  alias Fractals.{Options, Size}
+
   describe ".build_from_json" do
     let :options, do: %Fractals.Options{}
 
@@ -31,7 +33,7 @@ defmodule Fractals.OptionsSpec do
       end
       it "parses the image size" do
         expect(build_from_json(options, full_json).size)
-        .to eq(%Fractals.Size{width: 720, height: 480})
+        .to eq(%Size{width: 720, height: 480})
       end
       it "parses the color scheme" do
         expect(build_from_json(options, full_json).color).to eq(:blue)
@@ -76,7 +78,7 @@ defmodule Fractals.OptionsSpec do
       end
       it "defaults the image size" do
         expect(build_from_json(options, default_json).size)
-        .to eq(%Fractals.Size{width: 512, height: 384})
+        .to eq(%Size{width: 512, height: 384})
       end
       it "defaults the color scheme" do
         expect(build_from_json(options, default_json).color).to eq(:black_on_white)
@@ -105,4 +107,19 @@ defmodule Fractals.OptionsSpec do
     end
   end
 
+  describe ".compute_chunk_count" do
+    it "divides evenly" do
+      options = %Options{
+        size: %Size{width: 10, height: 2},
+        chunk_size: 5}
+      expect(Options.compute_chunk_count(options)) |> to(eq(4))
+    end
+
+    it "adds one for a remainder" do
+      options = %Options{
+        size: %Size{width: 10, height: 2},
+        chunk_size: 3}
+      expect(Options.compute_chunk_count(options)) |> to(eq(7))
+    end
+  end
 end

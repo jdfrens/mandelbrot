@@ -5,6 +5,8 @@ defmodule Fractals.Options do
   `parse` will parse a JSON string.
   """
 
+  alias Fractals.{Options, Size}
+
   defstruct [
     # from input file
     :fractal, :size, :color, :seed,
@@ -12,22 +14,48 @@ defmodule Fractals.Options do
     :c, :z, :r, :p,
     # output
     :output_filename,
-    # cached stuff
-    :color_func,
-    :iterator_builder,
-    # from flags
-    :concurrency,
-    :processes,
-    :chunk_size
+    :output_pid,
+    # chunking
+    :chunk_count,
+    :chunk_size,
+    # pid to send updates
+    :next_pid,
   ]
 
   @default_flags [concurrency: "none", processes: 4, chunk_size: 1000]
 
-  # FIXME: the flow for this is so terrible
   def parse(flags, options_filename, image_filename) do
-    %Fractals.Options{output_filename: image_filename}
+    %Options{output_filename: image_filename}
     |> parse_file(options_filename)
     |> parse_flags(flags)
+    |> precompute
+  end
+
+  def open_output_file(options) do
+    Map.put(options, :output_pid, File.open!(options.output_filename, [:write]))
+  end
+
+  def close_output_file(options) do
+    File.close(options.output_pid)
+    options
+  end
+
+  def set_next_pid(options, pid) do
+    Map.put(options, :next_pid, pid)
+  end
+
+  def precompute(options) do
+    options
+    |> Map.put(:chunk_count, compute_chunk_count(options))
+  end
+
+  def compute_chunk_count(%Options{size: %Size{width: width, height: height}, chunk_size: chunk_size}) do
+    pixel_count = width * height
+    if rem(pixel_count, chunk_size) == 0 do
+      div(pixel_count, chunk_size)
+    else
+      div(pixel_count, chunk_size) + 1
+    end
   end
 
   def parse_file(options, filename) do
@@ -53,9 +81,7 @@ defmodule Fractals.Options do
   def parse_flags(options, user_flags) do
     flags = Keyword.merge(@default_flags, user_flags)
     %{options |
-      concurrency: Keyword.fetch(flags, :concurrency),
-      processes:   Keyword.fetch(flags, :processes),
-      chunk_size:  Keyword.fetch(flags, :chunk_size)
+      chunk_size:  Keyword.fetch!(flags, :chunk_size)
       }
   end
 
@@ -63,10 +89,10 @@ defmodule Fractals.Options do
     String.to_atom(String.downcase(fractal))
   end
 
-  defp parse_size(nil), do: %Fractals.Size{width: 512, height: 384}
+  defp parse_size(nil), do: %Size{width: 512, height: 384}
   defp parse_size(size) do
     [_, width, height] = Regex.run(~r/(\d+)x(\d+)/, size)
-    %Fractals.Size{
+    %Size{
      width:  String.to_integer(width),
      height: String.to_integer(height)
    }
