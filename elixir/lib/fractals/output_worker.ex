@@ -20,7 +20,7 @@ defmodule Fractals.OutputWorker do
     server(1, options)
   end
   def server(number, %Options{chunk_count: count} = options) when number == count+1 do
-    notify_next_pid(options, {:done, self})
+    done(options)
     # YUCK: keeps server running so supervisor doesn't restart
     # IDEA: could use :transient strategy, but not simple replacement
     server(number + 1, options)
@@ -33,14 +33,24 @@ defmodule Fractals.OutputWorker do
     end
   end
 
-  def write_header(options) do
-    PPM.p3_header(options.size.width, options.size.height)
-    |> Enum.each(&(IO.puts(options.output_pid, &1)))
+  # helpers
+
+  def done(options) do
+    notify_next_pid(options, {:done, self})
+  end
+
+  def write_header(%Options{size: size} = options) do
+    PPM.p3_header(size.width, size.height)
+    |> lines_to_file(options)
   end
 
   def write_chunk(chunk_number, data, options) do
     notify_next_pid(options, {:writing, chunk_number})
-    Enum.each(data, &(IO.puts(options.output_pid, &1)))
+    lines_to_file(data, options)
+  end
+
+  def lines_to_file(lines, options) do
+    Enum.each(lines, &(IO.puts(options.output_pid, &1)))
   end
 
   def notify_next_pid(options, message) do
