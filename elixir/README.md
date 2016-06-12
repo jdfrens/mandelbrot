@@ -1,20 +1,34 @@
 # Fractals
 
-**TODO: Add description**
+Generates escape-time fractals.
+
+I'm blogging about this project at [Programming During Recess](http://www.programming-during-recess.net/).
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
+```
+$ git clone https://github.com/jdfrens/mandelbrot.git
+$ cd mandlebrot/elixir
+```
 
-  1. Add fractals to your list of dependencies in `mix.exs`:
+Checkout a tag to along with my blog post for that week:
 
-        def deps do
-          [{:fractals, "~> 0.0.1"}]
-        end
+```
+$ git checkout tags/blog_2016_06_12 -b whatever_you_want
+```
 
-  2. Ensure fractals is started before your application:
+You can run the tests and compile the executable:
 
-        def application do
-          [applications: [:fractals]]
-        end
+```elixir
+$ mix deps.get
+$ mix spec
+$ mix escript.build
+```
 
+You can run the executable, although you'll probably want to convert the [PPM file](https://en.wikipedia.org/wiki/Netpbm_format#PPM_example) into a more common image format with [ImageMagick](http://www.imagemagick.org/).
+
+```
+$ fractals ../json/burningship-line-blue.json blb.ppm
+$ convert blb.ppm blb.png   # from ImageMagick
+$ open blb.png
+```

@@ -8,6 +8,7 @@ defmodule Fractals.Job do
   def init(options) do
     children = [
       supervisor(Fractals.GridSupervisor, [options]),
+      supervisor(Fractals.ColorizerSupervisor, [options]),
       supervisor(Fractals.OutputSupervisor, [options])
     ]
     supervise(children, strategy: :one_for_one)

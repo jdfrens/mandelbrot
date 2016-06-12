@@ -1,0 +1,6 @@
+{
+  "fractal":    "Mandelbrot",
+  "size":       "2x3",
+  "upperLeft":  "-1.67+0.013i",
+  "lowerRight": "-1.65+-0.002i"
+}
