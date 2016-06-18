@@ -1,4 +1,4 @@
-%{"espec": {:hex, :espec, "0.8.20", "7869953a835b3c13c1cceee2b7d1fd85b33eac6cdb0a93ccd013b64fc4db18f6", [:mix], [{:meck, "~> 0.8.4", [hex: :meck, optional: false]}]},
+%{"espec": {:hex, :espec, "0.8.21", "c3fe5f1317fcc56837fca088d86b725ab1a50ca13e6c290f79f8aa386a86d952", [:mix], [{:meck, "~> 0.8.4", [hex: :meck, optional: false]}]},
   "inflex": {:hex, :inflex, "1.5.0", "e4ff5d900280b2011b24d1ac1c4590986ee5add2ea644c9894e72213cf93ff0b", [:mix], []},
   "meck": {:hex, :meck, "0.8.4", "59ca1cd971372aa223138efcf9b29475bde299e1953046a0c727184790ab1520", [:rebar, :make], []},
   "poison": {:hex, :poison, "2.1.0", "f583218ced822675e484648fa26c933d621373f01c6c76bd00005d7bd4b82e27", [:mix], []}}
