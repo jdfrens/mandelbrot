@@ -2,7 +2,7 @@ defmodule Fractals.GridWorker do
   use GenServer
 
   alias Fractals.Grid
-  alias Fractals.ColorizerWorker
+  alias Fractals.EscapeTimeWorker
 
   # Client
 
@@ -31,6 +31,6 @@ defmodule Fractals.GridWorker do
   end
 
   def send_chunk(chunk) do
-    ColorizerWorker.color(Fractals.ColorizerWorker, chunk)
+    EscapeTimeWorker.escape_time(EscapeTimeWorker, chunk)
   end
 end

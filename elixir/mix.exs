@@ -21,6 +21,8 @@ defmodule Fractals.Mixfile do
     [
       {:inflex, "~> 1.5.0"},
       {:poison, "~> 2.0"},
+      {:credo, "~> 0.3.10", only: [:dev, :test]},
+      {:dialyxir, "~> 0.3.3", only: [:dev, :test]},
       {:espec, "~> 0.8.20", only: :test}
     ]
   end

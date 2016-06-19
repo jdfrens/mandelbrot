@@ -1,4 +1,7 @@
-%{"espec": {:hex, :espec, "0.8.21", "c3fe5f1317fcc56837fca088d86b725ab1a50ca13e6c290f79f8aa386a86d952", [:mix], [{:meck, "~> 0.8.4", [hex: :meck, optional: false]}]},
+%{"bunt": {:hex, :bunt, "0.1.6", "5d95a6882f73f3b9969fdfd1953798046664e6f77ec4e486e6fafc7caad97c6f", [:mix], []},
+  "credo": {:hex, :credo, "0.3.13", "90d2d2deb9d376bb2a63f81126a320c3920ce65acb1294982ab49a8aacc7d89f", [:mix], [{:bunt, "~> 0.1.4", [hex: :bunt, optional: false]}]},
+  "dialyxir": {:hex, :dialyxir, "0.3.3", "2f8bb8ab4e17acf4086cae847bd385c0f89296d3e3448dc304c26bfbe4b46cb4", [:mix], []},
+  "espec": {:hex, :espec, "0.8.21", "c3fe5f1317fcc56837fca088d86b725ab1a50ca13e6c290f79f8aa386a86d952", [:mix], [{:meck, "~> 0.8.4", [hex: :meck, optional: false]}]},
   "inflex": {:hex, :inflex, "1.5.0", "e4ff5d900280b2011b24d1ac1c4590986ee5add2ea644c9894e72213cf93ff0b", [:mix], []},
   "meck": {:hex, :meck, "0.8.4", "59ca1cd971372aa223138efcf9b29475bde299e1953046a0c727184790ab1520", [:rebar, :make], []},
   "poison": {:hex, :poison, "2.1.0", "f583218ced822675e484648fa26c933d621373f01c6c76bd00005d7bd4b82e27", [:mix], []}}

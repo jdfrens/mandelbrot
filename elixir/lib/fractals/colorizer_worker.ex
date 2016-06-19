@@ -21,11 +21,11 @@ defmodule Fractals.ColorizerWorker do
   end
 
   def handle_cast({:color, {number, data}}, options) do
-    Task.start(fn -> write({number, colorize(options, data)}) end)
+    Task.start(fn -> write({number, colorize(data, options)}) end)
     {:noreply, options}
   end
 
-  def colorize(options, data) do
+  def colorize(data, options) do
     Enum.map(data, &Colorizer.color_point(&1, options))
   end
 
