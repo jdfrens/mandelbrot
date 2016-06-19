@@ -21,8 +21,13 @@ defmodule Fractals.EscapeTimeWorker do
   end
 
   def handle_cast({:escape_time, {number, data}}, options) do
-    pixels = Mandelbrot.pixels(data)
-    ColorizerWorker.color(ColorizerWorker, {number, pixels})
+    Task.start(fn ->
+      send_chunk({number, Mandelbrot.pixels(data)})
+    end)
     {:noreply, options}
+  end
+
+  def send_chunk(chunk) do
+    ColorizerWorker.color(ColorizerWorker, chunk)
   end
 end
