@@ -21,7 +21,7 @@ defmodule Fractals.ColorizerWorker do
   end
 
   def handle_cast({:color, {number, data}}, options) do
-    Task.start(fn -> write({number, colorize(data, options)}) end)
+    {:ok, _pid} = Task.start(fn -> write({number, colorize(data, options)}) end)
     {:noreply, options}
   end
 

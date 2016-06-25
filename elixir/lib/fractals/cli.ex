@@ -21,7 +21,7 @@ defmodule Fractals.CLI do
       |> Options.open_output_file
       |> Options.set_next_pid(self)
     {time, _} = :timer.tc(fn ->
-      Fractals.JobSupervisor.start_child(options)
+      {:ok, _pid} = Fractals.JobSupervisor.start_child(options)
       Fractals.GridWorker.work(Fractals.GridWorker)
       waiting_loop(options)
     end)

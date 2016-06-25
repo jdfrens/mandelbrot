@@ -21,7 +21,7 @@ defmodule Fractals.GridWorker do
   end
 
   def handle_cast(:work, options) do
-    Task.start(fn ->
+    {:ok, _pid} = Task.start(fn ->
       Grid.grid(options)
       |> Grid.chunk(options)
       |> Stream.each(&send_chunk(&1))

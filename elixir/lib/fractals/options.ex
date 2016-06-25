@@ -36,7 +36,7 @@ defmodule Fractals.Options do
   end
 
   def close_output_file(options) do
-    File.close(options.output_pid)
+    :ok = File.close(options.output_pid)
     options
   end
 

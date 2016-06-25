@@ -21,7 +21,7 @@ defmodule Fractals.EscapeTimeWorker do
   end
 
   def handle_cast({:escape_time, {number, data}}, options) do
-    Task.start(fn ->
+    {:ok, _pid} = Task.start(fn ->
       send_chunk({number, Mandelbrot.pixels(data)})
     end)
     {:noreply, options}
