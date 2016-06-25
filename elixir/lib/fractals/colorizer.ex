@@ -3,6 +3,7 @@ defmodule Fractals.Colorizer do
   # TODO: write other colorizers and figure out a good naming scheme
 
   alias Fractals.Options
+  alias Fractals.Colorizer.WarpPov
 
   @maximum_iterations 256
 
@@ -12,20 +13,27 @@ defmodule Fractals.Colorizer do
     end
   end
 
-  def color_point({_, iterations}, %Options{color: :black_on_white}) when escaped?(iterations) do
-    PPM.black
+  def color_point({_, iterations}, %Options{color: color}) do
+    case color do
+      :black_on_white -> black_on_white(iterations)
+      :white_on_black -> white_on_black(iterations)
+      :gray           -> gray(iterations)
+      :red            -> WarpPov.red(iterations)
+      :green          -> WarpPov.green(iterations)
+      :blue           -> WarpPov.blue(iterations)
+      # FIXME: random colors
+      :random         -> WarpPov.blue(iterations)
+    end
   end
-  def color_point(_, %Options{color: :black_on_white}), do: PPM.white
 
-  def color_point({_, iterations}, %Options{color: :white_on_black}) when escaped?(iterations) do
-    PPM.white
-  end
-  def color_point(_, %Options{color: :white_on_black}), do: PPM.black
+  def black_on_white(iterations) when escaped?(iterations), do: PPM.black
+  def black_on_white(_), do: PPM.white
 
-  def color_point({_, iterations}, %Options{color: :gray}) when escaped?(iterations) do
-    PPM.black
-  end
-  def color_point({_, iterations}, %Options{color: :gray}) do
+  def white_on_black(iterations) when escaped?(iterations), do: PPM.white
+  def white_on_black(_), do: PPM.black
+
+  def gray(iterations) when escaped?(iterations), do: PPM.black
+  def gray(iterations) do
     factor = :math.sqrt(iterations / @maximum_iterations)
     intensity = round(@maximum_iterations * factor * factor)
     PPM.ppm(intensity, intensity, intensity)
