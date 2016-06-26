@@ -1,5 +1,5 @@
 defmodule Fractals.Colorizer.WarpPovSpec do
-  use ESpec
+  use ESpec, async: true
 
   alias Fractals.Colorizer.WarpPov
 

@@ -3,7 +3,7 @@ defmodule Fractals.Colorizer do
   # TODO: write other colorizers and figure out a good naming scheme
 
   alias Fractals.Options
-  alias Fractals.Colorizer.WarpPov
+  alias Fractals.Colorizer.{Random,WarpPov}
 
   @maximum_iterations 256
 
@@ -21,8 +21,7 @@ defmodule Fractals.Colorizer do
       :red            -> WarpPov.red(iterations)
       :green          -> WarpPov.green(iterations)
       :blue           -> WarpPov.blue(iterations)
-      # FIXME: random colors
-      :random         -> WarpPov.blue(iterations)
+      :random         -> Random.at(Random, iterations)
     end
   end
 
