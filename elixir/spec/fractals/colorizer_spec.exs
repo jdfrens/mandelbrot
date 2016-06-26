@@ -40,9 +40,9 @@ defmodule Fractals.ColorizerSpec do
       it "scales 0 to black" do
         expect(Colorizer.color_point({z,   0}, options)) |> to(eq PPM.black)
       end
-      it "scales 128 to 128" do
+      it "scales 128 to 181" do
         expect(Colorizer.color_point({z, 128}, options))
-        |> to(eq PPM.ppm(128, 128, 128))
+        |> to(eq PPM.ppm(181, 181, 181))
       end
       it "is white after maximum iterations" do
         expect(Colorizer.color_point({z, 255}, options)) |> to(eq PPM.white)

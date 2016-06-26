@@ -6,6 +6,7 @@ defmodule Fractals.Colorizer do
   alias Fractals.Colorizer.{Random,WarpPov}
 
   @maximum_iterations 256
+  @maximum_intensity 256
 
   defmacro escaped?(iterations) do
     quote do
@@ -34,7 +35,7 @@ defmodule Fractals.Colorizer do
   def gray(iterations) when escaped?(iterations), do: PPM.black
   def gray(iterations) do
     factor = :math.sqrt(iterations / @maximum_iterations)
-    intensity = round(@maximum_iterations * factor * factor)
+    intensity = round(@maximum_intensity * factor)
     PPM.ppm(intensity, intensity, intensity)
   end
 end
