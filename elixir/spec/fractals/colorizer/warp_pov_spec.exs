@@ -21,32 +21,32 @@ defmodule Fractals.Colorizer.WarpPovSpec do
     end
   end
 
-  describe ".hues" do
+  describe ".intensities" do
     it "is black inside" do
-      expect(WarpPov.hues(256)).to eq({0, 0})
+      expect(WarpPov.intensities(256)).to eq({0, 0})
     end
 
     context "for the plateau (when secondary is 0)" do
       it "is all 0 for 0 iterations" do
-        expect(WarpPov.hues(0)).to eq({0, 0})
+        expect(WarpPov.intensities(0)).to eq({0, 0})
       end
       it "is all 0 for 1 iteration" do
-        expect(WarpPov.hues(1)).to eq({0, 0})
+        expect(WarpPov.intensities(1)).to eq({0, 0})
       end
       it "is primary 2 for 2 iteration" do
-        expect(WarpPov.hues(2)).to eq({2, 0})
+        expect(WarpPov.intensities(2)).to eq({2, 0})
       end
       it "is primary 251 for 127 (half minus one) iterations" do
-        expect(WarpPov.hues(127)).to eq({251, 0})
+        expect(WarpPov.intensities(127)).to eq({251, 0})
       end
     end
 
     context "on the border (when primary at maximum)" do
       it "is secondary 0 for 128 (half max) iterations" do
-        expect(WarpPov.hues(128)).to eq({255, 0})
+        expect(WarpPov.intensities(128)).to eq({255, 0})
       end
       it "is 253 secondary for 255 iterations" do
-        expect(WarpPov.hues(255)).to eq({255, 253})
+        expect(WarpPov.intensities(255)).to eq({255, 253})
       end
     end
   end

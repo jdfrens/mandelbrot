@@ -16,17 +16,17 @@ defmodule Fractals.Colorizer.WarpPov do
 
   @spec red(non_neg_integer) :: String.t
   def red(iterations) do
-    permute_red(hues(iterations))
+    permute_red(intensities(iterations))
   end
 
   @spec green(non_neg_integer) :: String.t
   def green(iterations) do
-    permute_green(hues(iterations))
+    permute_green(intensities(iterations))
   end
 
   @spec blue(non_neg_integer) :: String.t
   def blue(iterations) do
-    permute_blue(hues(iterations))
+    permute_blue(intensities(iterations))
   end
 
   @spec permute_red({non_neg_integer, non_neg_integer}) :: String.t
@@ -42,9 +42,9 @@ defmodule Fractals.Colorizer.WarpPov do
     PPM.ppm(secondary, secondary, primary)
   end
 
-  @spec hues(non_neg_integer) :: {non_neg_integer, non_neg_integer}
-  def hues(iterations) when escaped?(iterations), do: {0 , 0}
-  def hues(iterations) do
+  @spec intensities(non_neg_integer) :: {non_neg_integer, non_neg_integer}
+  def intensities(iterations) when escaped?(iterations), do: {0 , 0}
+  def intensities(iterations) do
     half_iterations = @maximum_iterations/2-1
     if iterations <= half_iterations do
       {scale(max(1, iterations)), 0}
