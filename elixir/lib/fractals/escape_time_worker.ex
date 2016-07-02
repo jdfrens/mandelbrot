@@ -2,7 +2,7 @@ defmodule Fractals.EscapeTimeWorker do
   use GenServer
 
   alias Fractals.ColorizerWorker
-  alias Fractals.EscapeTime.Mandelbrot
+  alias Fractals.EscapeTime.{Julia,Mandelbrot}
 
   # Client
 
@@ -22,9 +22,16 @@ defmodule Fractals.EscapeTimeWorker do
 
   def handle_cast({:escape_time, {number, data}}, options) do
     {:ok, _pid} = Task.start(fn ->
-      send_chunk({number, Mandelbrot.pixels(data)})
+      send_chunk({number, pixels(options.fractal, data, options)})
     end)
     {:noreply, options}
+  end
+
+  def pixels(:mandelbrot, data, _options) do
+    Mandelbrot.pixels(data)
+  end
+  def pixels(:julia, data, options) do
+    Julia.pixels(data, options.c)
   end
 
   def send_chunk(chunk) do
