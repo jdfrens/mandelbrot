@@ -13,11 +13,14 @@ defmodule Mix.Tasks.Fractals.Generate do
     IO.puts "Generating #{ppm_filename}"
     Mix.shell.cmd("fractals #{input_filename} #{ppm_filename}")
     IO.puts "Generating #{png_filename}"
-    Mix.shell.cmd("convert #{ppm_filename} #{png_filename}")
+    Task.start(fn ->
+      Mix.shell.cmd("convert #{ppm_filename} #{png_filename}")
+    end)
   end
 
   def input_filenames do
-    Path.wildcard("../json/mandelbrot*.json")
+    Path.wildcard("../json/mandelbrot*.json") ++
+      Path.wildcard("../json/julia*.json")
   end
 
   def input_to_image_filename(input_filename, extension) do
