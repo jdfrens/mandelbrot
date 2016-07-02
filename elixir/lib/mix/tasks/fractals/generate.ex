@@ -20,7 +20,8 @@ defmodule Mix.Tasks.Fractals.Generate do
 
   def input_filenames do
     Path.wildcard("../json/mandelbrot*.json") ++
-      Path.wildcard("../json/julia*.json")
+      Path.wildcard("../json/julia*.json") ++
+      Path.wildcard("../json/burningship*.json")
   end
 
   def input_to_image_filename(input_filename, extension) do

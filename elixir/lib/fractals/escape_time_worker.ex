@@ -2,7 +2,7 @@ defmodule Fractals.EscapeTimeWorker do
   use GenServer
 
   alias Fractals.ColorizerWorker
-  alias Fractals.EscapeTime.{Julia,Mandelbrot}
+  alias Fractals.EscapeTime.{BurningShip, Julia, Mandelbrot}
 
   # Client
 
@@ -32,6 +32,9 @@ defmodule Fractals.EscapeTimeWorker do
   end
   def pixels(:julia, data, options) do
     Julia.pixels(data, options.c)
+  end
+  def pixels(:burningship, data, _options) do
+    BurningShip.pixels(data)
   end
 
   def send_chunk(chunk) do

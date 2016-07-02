@@ -15,6 +15,12 @@ defmodule Complex do
     end
   end
 
+  defmacro zero do
+    quote do
+      %Complex{real: 0.0, imag: 0.0}
+    end
+  end
+
   @spec parse(String.t) :: Complex.t
   def parse(str) do
     [_, real, imag] = Regex.run(~r/([-]?\d+\.\d+)\+([-]?\d+\.\d+)i/, str)
