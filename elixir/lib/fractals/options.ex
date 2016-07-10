@@ -22,7 +22,13 @@ defmodule Fractals.Options do
     :next_pid,
   ]
 
-  @default_flags [concurrency: "none", processes: 4, chunk_size: 1000]
+  @default_flags [chunk_size: 1000]
+
+  def merge_configs(configs) do
+    configs
+    |> Enum.map(&Enum.into(&1, %{}))
+    |> Enum.reduce(&Map.merge(&2, &1))
+  end
 
   def parse(flags, options_filename, image_filename) do
     %Options{output_filename: image_filename}
@@ -59,11 +65,11 @@ defmodule Fractals.Options do
   end
 
   def parse_file(options, filename) do
-    json = filename |> File.read! |> Poison.Parser.parse!
-    build_from_json(options, json)
+    yaml = YamlElixir.read_from_file(filename, atoms: true)
+    parse(options, yaml)
   end
 
-  def build_from_json(options, json) do
+  def parse(options, json) do
     %{options |
       fractal:     parse_fractal(json["fractal"]),
       size:        parse_size(json["size"]),

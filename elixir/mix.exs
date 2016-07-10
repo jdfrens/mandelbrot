@@ -13,12 +13,14 @@ defmodule Fractals.Mixfile do
   end
 
   def application do
-    [applications: [:logger],
+    [applications: [:logger, :yaml_elixir],
      mod: {Fractals, []}]
   end
 
   defp deps do
     [
+      {:yaml_elixir, "~> 1.2.0"},
+      {:yamerl, github: "yakaz/yamerl"},
       {:inflex, "~> 1.7.0"},
       {:poison, "~> 2.2"},
       {:credo, "~> 0.4.5", only: [:dev, :test]},

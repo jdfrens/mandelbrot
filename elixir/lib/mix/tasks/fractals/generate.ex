@@ -19,12 +19,16 @@ defmodule Mix.Tasks.Fractals.Generate do
   end
 
   def input_filenames do
-    Path.wildcard("../json/mandelbrot*.json") ++
-      Path.wildcard("../json/julia*.json") ++
-      Path.wildcard("../json/burningship*.json")
+    [
+      "../yaml/mandelbrot-*.yml",
+      "../yaml/julia-*.yml",
+      "../yaml/burningship-*.yml",
+      "../yaml/sinusoidal-*.yml"
+      ]
+    |> Enum.flat_map(&Path.wildcard/1)
   end
 
   def input_to_image_filename(input_filename, extension) do
-    Path.join(["images", Path.basename(input_filename, ".json") <> extension])
+    Path.join(["images", Path.basename(input_filename, ".yml") <> extension])
   end
 end
