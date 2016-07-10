@@ -9,7 +9,7 @@ defmodule Complex do
 
   @type t :: %Complex{real: float, imag: float}
 
-  defmacro cmplx(real, imag) do
+  defmacro cmplx(real, imag \\ 0.0) do
     quote do
       %Complex{real: unquote(real), imag: unquote(imag)}
     end

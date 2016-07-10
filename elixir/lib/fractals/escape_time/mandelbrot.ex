@@ -16,7 +16,7 @@ defmodule Fractals.EscapeTime.Mandelbrot do
   end
 
   def escape_time(grid_point) do
-    cmplx(0.0, 0.0)
+    Complex.zero
     |> Stream.iterate(&iterator(&1,grid_point))
     |> Stream.with_index
     |> Stream.drop_while(fn {z, i} -> !escaped?(z) && i < @max_iterations end)
