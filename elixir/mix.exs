@@ -4,7 +4,7 @@ defmodule Fractals.Mixfile do
   def project do
     [app: :fractals,
      version: "0.0.1",
-     elixir: "~> 1.2",
+     elixir: "~> 1.3",
      escript: [main_module: Fractals.CLI],
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
