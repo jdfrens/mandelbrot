@@ -6,8 +6,8 @@ defmodule Fractals.GridWorker do
 
   # Client
 
-  def start_link([options]) do
-    GenServer.start_link(__MODULE__, options, name: __MODULE__)
+  def start_link(params) do
+    GenServer.start_link(__MODULE__, params, name: __MODULE__)
   end
 
   def work(pid) do
@@ -15,10 +15,6 @@ defmodule Fractals.GridWorker do
   end
 
   # Server
-
-  def init(options) do
-    {:ok, options}
-  end
 
   def handle_cast(:work, options) do
     {:ok, _pid} = Task.start(fn ->

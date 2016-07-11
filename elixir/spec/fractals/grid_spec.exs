@@ -4,10 +4,10 @@ defmodule Fractals.GridSpec do
   import Complex, warn: false
 
   alias Fractals.Grid
-  alias Fractals.Options
+  alias Fractals.Params
 
-  let :options do
-    %Options{
+  let :params do
+    %Params{
       size:        %Fractals.Size{width: 2, height: 3},
       upper_left:  cmplx(-1.0,  1.0),
       lower_right: cmplx( 1.0, -1.0)
@@ -15,21 +15,21 @@ defmodule Fractals.GridSpec do
   end
 
   describe ".chunk" do
-    let :options do
-      %Options{
+    let :params do
+      %Params{
         chunk_size: 3,
         chunk_count: 2
       }
     end
 
     it "chunks evenly" do
-      chunks = Grid.chunk([:a, :b, :c, :d, :e, :f], options)
+      chunks = Grid.chunk([:a, :b, :c, :d, :e, :f], params)
       expect(chunks |> Enum.to_list)
       |> to(eq([{1, [:a, :b, :c]}, {2, [:d, :e, :f]}]))
     end
 
     it "chunks unevenly" do
-      chunks = Grid.chunk([:a, :b, :c, :xyz], options)
+      chunks = Grid.chunk([:a, :b, :c, :xyz], params)
       expect(chunks |> Enum.to_list)
       |> to(eq([{1, [:a, :b, :c]}, {2, [:xyz]}]))
     end
@@ -37,7 +37,7 @@ defmodule Fractals.GridSpec do
 
   describe ".grid" do
     it "generates a grid" do
-      expect(Grid.grid(options)).to eq([
+      expect(Grid.grid(params)).to eq([
         cmplx(-1.0,  1.0), cmplx(1.0,  1.0),
         cmplx(-1.0,  0.0), cmplx(1.0,  0.0),
         cmplx(-1.0, -1.0), cmplx(1.0, -1.0),
@@ -47,13 +47,13 @@ defmodule Fractals.GridSpec do
 
   describe ".xs" do
     it "generates left-right based on corners and width" do
-      expect(Grid.xs(options)).to eq([-1.0, 1.0])
+      expect(Grid.xs(params)).to eq([-1.0, 1.0])
     end
   end
 
   describe ".ys" do
     it "generates top-down based on corners and height" do
-      expect(Grid.ys(options)).to eq([1.0, 0.0, -1.0])
+      expect(Grid.ys(params)).to eq([1.0, 0.0, -1.0])
     end
   end
 

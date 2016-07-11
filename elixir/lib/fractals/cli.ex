@@ -1,5 +1,5 @@
 defmodule Fractals.CLI do
-  alias Fractals.Options
+  alias Fractals.Params
 
   def main(args) do
     case OptionParser.parse(args) do
@@ -8,33 +8,33 @@ defmodule Fractals.CLI do
         |> Keyword.put(:params_filename, params_filename)
         |> Keyword.put(:output_filename, output_filename)
         |> Keyword.put(:next_pid, self)
-        |> Options.parse
+        |> Params.parse
         |> main_helper
       _ ->
         usage()
     end
   end
 
-  def main_helper(%Options{fractal: :nova}) do
+  def main_helper(%Params{fractal: :nova}) do
     IO.puts "Nova fractal not supported."
   end
-  def main_helper(options) do
+  def main_helper(params) do
     {time, _} = :timer.tc(fn ->
-      {:ok, _pid} = Fractals.JobSupervisor.start_child(options)
+      {:ok, _pid} = Fractals.JobSupervisor.start_child(params)
       Fractals.GridWorker.work(Fractals.GridWorker)
-      waiting_loop(options)
+      waiting_loop(params)
     end)
     IO.puts "#{time / 1_000_000} seconds"
   end
 
-  def waiting_loop(options) do
+  def waiting_loop(params) do
     receive do
       {:writing, chunk_number} ->
-        IO.puts "writing #{chunk_number} of #{options.chunk_count}"
-        waiting_loop(options)
+        IO.puts "writing #{chunk_number} of #{params.chunk_count}"
+        waiting_loop(params)
       # IDEA: could match on pid for Fractals.OutputWorker
       {:done, _} ->
-        Options.close(options)
+        Params.close(params)
     end
   end
 

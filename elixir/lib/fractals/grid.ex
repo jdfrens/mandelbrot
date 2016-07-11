@@ -4,34 +4,36 @@ defmodule Fractals.Grid do
   complex numbers.
   """
 
+  alias Fractals.Params
+
   import Complex, only: :macros
 
-  def chunk(grid, options) do
+  def chunk(grid, params) do
     grid
-    |> Stream.chunk(options.chunk_size, options.chunk_size, [])
-    |> Stream.zip(1..options.chunk_count)
+    |> Stream.chunk(params.chunk_size, params.chunk_size, [])
+    |> Stream.zip(1..params.chunk_count)
     |> Stream.map(fn {chunk, number} -> {number, chunk} end)
   end
 
-  def grid(options) do
-    for y <- ys(options), x <- xs(options), do: cmplx(x, y)
+  def grid(params) do
+    for y <- ys(params), x <- xs(params), do: cmplx(x, y)
   end
 
-  def xs(options) do
-    %Fractals.Options{
+  def xs(params) do
+    %Params{
       size:        %Fractals.Size{width: width},
       upper_left:  %Complex{real: x0},
       lower_right: %Complex{real: x1}
-    } = options
+    } = params
     float_sequence(width, x0, x1)
   end
 
-  def ys(options) do
-    %Fractals.Options{
+  def ys(params) do
+    %Params{
       size:        %Fractals.Size{height: height},
       upper_left:  %Complex{imag: y1},
       lower_right: %Complex{imag: y0}
-    } = options
+    } = params
     float_sequence(height, y1, y0)
   end
 

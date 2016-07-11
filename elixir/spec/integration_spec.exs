@@ -28,13 +28,13 @@ defmodule Fractals.IntegrationSpec do
   end
 
   it "generates a pretty picture" do
-    options = Fractals.Options.parse([
+    params = Fractals.Params.parse([
       params_filename: @input_filename,
       output_filename: @output_filename,
       next_pid: self
     ])
     ExUnit.CaptureIO.capture_io(fn ->
-      Fractals.CLI.main_helper(options)
+      Fractals.CLI.main_helper(params)
     end)
     output = File.read!(@output_filename)
     expect(output) |> to(eq @expected_output)

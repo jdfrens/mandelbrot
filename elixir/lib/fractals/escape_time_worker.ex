@@ -6,8 +6,8 @@ defmodule Fractals.EscapeTimeWorker do
 
   # Client
 
-  def start_link([options]) do
-    GenServer.start_link(__MODULE__, options, name: __MODULE__)
+  def start_link(params) do
+    GenServer.start_link(__MODULE__, params, name: __MODULE__)
   end
 
   def escape_time(pid, chunk) do
@@ -16,24 +16,20 @@ defmodule Fractals.EscapeTimeWorker do
 
   # Server
 
-  def init(options) do
-    {:ok, options}
-  end
-
-  def handle_cast({:escape_time, {number, data}}, options) do
+  def handle_cast({:escape_time, {number, data}}, params) do
     {:ok, _pid} = Task.start(fn ->
-      send_chunk({number, pixels(options.fractal, data, options)})
+      send_chunk({number, pixels(params.fractal, data, params)})
     end)
-    {:noreply, options}
+    {:noreply, params}
   end
 
-  def pixels(:mandelbrot, data, _options) do
+  def pixels(:mandelbrot, data, _params) do
     Mandelbrot.pixels(data)
   end
-  def pixels(:julia, data, options) do
-    Julia.pixels(data, options.c)
+  def pixels(:julia, data, params) do
+    Julia.pixels(data, params.c)
   end
-  def pixels(:burningship, data, _options) do
+  def pixels(:burningship, data, _params) do
     BurningShip.pixels(data)
   end
 

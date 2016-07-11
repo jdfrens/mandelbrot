@@ -2,7 +2,7 @@ defmodule Fractals.Colorizer do
   # NOTE: this implements the very simple black-on-white coloring
   # TODO: write other colorizers and figure out a good naming scheme
 
-  alias Fractals.Options
+  alias Fractals.Params
   alias Fractals.Colorizer.{Random,WarpPov}
 
   @maximum_iterations 256
@@ -14,7 +14,7 @@ defmodule Fractals.Colorizer do
     end
   end
 
-  def color_point({_, iterations}, %Options{color: color}) do
+  def color_point({_, iterations}, %Params{color: color}) do
     case color do
       :black_on_white -> black_on_white(iterations)
       :white_on_black -> white_on_black(iterations)

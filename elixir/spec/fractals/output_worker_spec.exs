@@ -1,7 +1,7 @@
 defmodule Fractals.OutputWorkerSpec do
   use ESpec, aysnc: true
 
-  alias Fractals.{Options, Size}
+  alias Fractals.{Params, Size}
   alias Fractals.OutputWorker
 
   import ExUnit.Assertions, only: [flunk: 1]
@@ -10,8 +10,8 @@ defmodule Fractals.OutputWorkerSpec do
     {:ok, pid} = StringIO.open("")
     pid
   end
-  let :options do
-    %Options{
+  let :params do
+    %Params{
       size: size,
       output_pid: output_pid,
       next_pid: self,
@@ -19,7 +19,7 @@ defmodule Fractals.OutputWorkerSpec do
     }
   end
   let :subject do
-    {:ok, pid} = OutputWorker.start_link(options)
+    {:ok, pid} = OutputWorker.start_link(params)
     pid
   end
 

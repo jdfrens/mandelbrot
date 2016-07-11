@@ -9,7 +9,7 @@ defmodule Fractals.JobSupervisor do
     supervise([worker(Fractals.Job, [])], strategy: :simple_one_for_one)
   end
 
-  def start_child(options) do
-    Supervisor.start_child(__MODULE__, [options])
+  def start_child(params) do
+    Supervisor.start_child(__MODULE__, [params])
   end
 end

@@ -7,8 +7,8 @@ defmodule Fractals.Colorizer.Random do
 
   ## Client
 
-  def start_link(_) do
-    GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
+  def start_link do
+    GenServer.start_link(__MODULE__, nil, name: __MODULE__)
   end
 
   def at(pid, iterations) do
@@ -17,7 +17,7 @@ defmodule Fractals.Colorizer.Random do
 
   ## Server
 
-  def init(:ok) do
+  def init(_) do
     {:ok, make_colors}
   end
 

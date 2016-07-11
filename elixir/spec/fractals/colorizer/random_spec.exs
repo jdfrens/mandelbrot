@@ -3,7 +3,7 @@ defmodule Fractals.Colorizer.RandomSpec do
 
   alias Fractals.Colorizer.Random
 
-  before do: Random.start_link(:ok)
+  before do: Random.start_link
   finally do: Process.unregister(Random)
 
   describe ".at" do

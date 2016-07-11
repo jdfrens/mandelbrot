@@ -1,13 +1,13 @@
 defmodule Fractals.OutputSupervisor do
   use Supervisor
 
-  def start_link(options) do
-    Supervisor.start_link(__MODULE__, options)
+  def start_link(params) do
+    Supervisor.start_link(__MODULE__, params)
   end
 
-  def init(options) do
+  def init(params) do
     children = [
-      worker(Fractals.OutputWorker, options)
+      worker(Fractals.OutputWorker, [params])
     ]
     supervise(children, strategy: :one_for_one)
   end

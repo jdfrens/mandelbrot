@@ -1,6 +1,6 @@
-defmodule Fractals.Options do
+defmodule Fractals.Params do
   @moduledoc """
-  Structure for options when generating fractals.
+  Structure for params when generating fractals.
   """
 
   defstruct [
@@ -21,12 +21,12 @@ defmodule Fractals.Options do
 
   import Complex, only: :macros
 
-  alias Fractals.{Options, Size}
+  alias Fractals.{Params, Size}
 
   # NOTE: does not work as module variable because of compiler deadlock
   # cf. https://github.com/elixir-lang/elixir/issues/4844
-  defp default_options do
-    %Options{
+  defp default_params do
+    %Params{
       seed:       666,
       chunk_size: 1000,
       fractal: :mandelbrot,
@@ -41,35 +41,40 @@ defmodule Fractals.Options do
     }
   end
 
-  def parse(raw_params, options \\ default_options) do
+  @precomputed_attributes [:chunk_count]
+
+  def parse(raw_params, params \\ default_params) do
     raw_params
-    |> Enum.reduce(options, &accumulate_attribute/2)
+    |> Enum.reduce(params, &accumulate_attribute/2)
     |> precompute
   end
 
-  def close(options) do
-    :ok = File.close(options.output_pid)
-    options
+  def close(params) do
+    :ok = File.close(params.output_pid)
+    params
   end
 
-  defp precompute(options) do
-    options
-    |> Map.put(:chunk_count, compute_chunk_count(options))
+  defp precompute(params) do
+    Enum.reduce(@precomputed_attributes, params, &precompute_attribute/2)
   end
 
-  defp accumulate_attribute({attribute, value}, options) do
-    parse_attribute(attribute, value, options)
+  defp precompute_attribute(attribute, params) do
+    %{params | attribute => precompute_value(attribute, params)}
   end
 
-  defp parse_attribute(:params_filename, filename, options) do
+  defp accumulate_attribute({attribute, value}, params) do
+    parse_attribute(attribute, value, params)
+  end
+
+  defp parse_attribute(:params_filename, filename, params) do
     yaml = filename |> YamlElixir.read_from_file |> symbolize
-    parse(yaml, options)
+    parse(yaml, params)
   end
-  defp parse_attribute(:output_filename, filename, options) do
-    %{options | output_pid: File.open!(filename, [:write])}
+  defp parse_attribute(:output_filename, filename, params) do
+    %{params | output_pid: File.open!(filename, [:write])}
   end
-  defp parse_attribute(attribute, value, options) do
-    %{options | attribute => parse_value(attribute, value)}
+  defp parse_attribute(attribute, value, params) do
+    %{params | attribute => parse_value(attribute, value)}
   end
 
   defp parse_value(:fractal, value) do
@@ -112,12 +117,12 @@ defmodule Fractals.Options do
   defp to_atom(key) when is_atom(key), do: key
   defp to_atom(key), do: String.to_atom(Macro.underscore(key))
 
-  defp compute_chunk_count(%Options{size: %Size{width: width, height: height}, chunk_size: chunk_size}) do
-    pixel_count = width * height
-    if rem(pixel_count, chunk_size) == 0 do
-      div(pixel_count, chunk_size)
+  defp precompute_value(:chunk_count, params) do
+    pixel_count = params.size.width * params.size.height
+    if rem(pixel_count, params.chunk_size) == 0 do
+      div(pixel_count, params.chunk_size)
     else
-      div(pixel_count, chunk_size) + 1
+      div(pixel_count, params.chunk_size) + 1
     end
   end
 end
