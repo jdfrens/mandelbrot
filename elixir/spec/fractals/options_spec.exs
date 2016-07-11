@@ -5,135 +5,117 @@ defmodule Fractals.OptionsSpec do
 
   alias Fractals.{Options, Size}
 
-  describe ".merge_configs" do
-    it "merges two maps" do
-      expect(Options.merge_configs([%{a: 1}, %{b: 2}]))
-      |> to(eq(%{a: 1, b: 2}))
-    end
-    it "lets the second override the first" do
-      expect(Options.merge_configs([%{a: 1}, %{a: 111}]))
-      |> to(eq(%{a: 111}))
-    end
-    it "merges keyword list into map" do
-      expect(Options.merge_configs([[a: 1], [b: 2]]))
-      |> to(eq(%{a: 1, b: 2}))
-    end
-    it "merges a map with a keyword list into map" do
-      expect(Options.merge_configs([%{a: 1}, [b: 2]]))
-      |> to(eq(%{a: 1, b: 2}))
-    end
-  end
-
   describe ".parse" do
-    let :options, do: %Fractals.Options{}
-
     context "when specifying all options" do
-      let :full_yaml do
-        """
-          fractal:    Mandelbrot
-          size:       720x480
-          color:      Blue
-          seed:       12345
-          upperLeft:  0.0+55.2i
-          lowerRight: 92.3+120.3i
-          c:          3.14+4.13i
-          z:          4.4+1.1i
-          r:          9.9+3.3i
-          p:          0.3+0.5i
-        """
-        |> YamlElixir.read_from_string(atoms: true)
-      end
+      let :raw_params, do: [params_filename: "spec/inputs/full_params.yml"]
 
       it "parses the fractal type" do
-        expect(Options.parse(options, full_yaml).fractal).to eq(:mandelbrot)
+        expect(Options.parse(raw_params).fractal).to eq(:mandelbrot)
       end
       it "parses the image size" do
-        expect(Options.parse(options, full_yaml).size)
+        expect(Options.parse(raw_params).size)
         .to eq(%Size{width: 720, height: 480})
       end
       it "parses the color scheme" do
-        expect(Options.parse(options, full_yaml).color).to eq(:blue)
+        expect(Options.parse(raw_params).color).to eq(:blue)
       end
       it "parses the random seed" do
-        expect(Options.parse(options, full_yaml).seed).to eq(12345)
+        expect(Options.parse(raw_params).seed).to eq(12345)
       end
       it "parses the upper-left corner" do
-        expect(Options.parse(options, full_yaml).upper_left).to eq(cmplx(0.0, 55.2))
+        expect(Options.parse(raw_params).upper_left).to eq(cmplx(0.0, 55.2))
       end
       it "parses the lower-right corder" do
-        expect(Options.parse(options, full_yaml).lower_right).to eq(cmplx(92.3, 120.3))
+        expect(Options.parse(raw_params).lower_right).to eq(cmplx(92.3, 120.3))
       end
       it "parses the c parameter" do
-        expect(Options.parse(options, full_yaml).c).to eq(cmplx(3.14, 4.13))
+        expect(Options.parse(raw_params).c).to eq(cmplx(3.14, 4.13))
       end
       it "parses the z parameter" do
-        expect(Options.parse(options, full_yaml).z).to eq(cmplx(4.4,  1.1))
+        expect(Options.parse(raw_params).z).to eq(cmplx(4.4,  1.1))
       end
       it "parses the r parameter" do
-        expect(Options.parse(options, full_yaml).r).to eq(cmplx(9.9,  3.3))
+        expect(Options.parse(raw_params).r).to eq(cmplx(9.9,  3.3))
       end
       it "parses the p parameter" do
-        expect(Options.parse(options, full_yaml).p).to eq(cmplx(0.3,  0.5))
+        expect(Options.parse(raw_params).p).to eq(cmplx(0.3,  0.5))
       end
     end
 
     context "when relying on defaults" do
-      let :default_yaml do
-        """
-          fractal:    Julia
-          upperLeft:  5.0+6.0i
-          lowerRight: 6.0+5.0i
-        """
-        |> YamlElixir.read_from_string(atoms: true)
-      end
+      let :raw_params, do: []
 
-      it "still parses the fractal type" do
-        expect(Options.parse(options, default_yaml).fractal).to eq(:julia)
+      it "defaults to Mandelbrot" do
+        expect(Options.parse(raw_params).fractal).to eq(:mandelbrot)
       end
       it "defaults the image size" do
-        expect(Options.parse(options, default_yaml).size)
+        expect(Options.parse(raw_params).size)
         .to eq(%Size{width: 512, height: 384})
       end
       it "defaults the color scheme" do
-        expect(Options.parse(options, default_yaml).color).to eq(:black_on_white)
+        expect(Options.parse(raw_params).color).to eq(:black_on_white)
       end
       it "defaults the random seed" do
-        expect(Options.parse(options, default_yaml).seed).to eq(666)
+        expect(Options.parse(raw_params).seed).to eq(666)
       end
       it "still parses the upper-left corner" do
-        expect(Options.parse(options, default_yaml).upper_left).to eq(cmplx(5.0, 6.0))
+        expect(Options.parse(raw_params).upper_left).to eq(cmplx(5.0, 6.0))
       end
       it "still parses the lower-right corder" do
-        expect(Options.parse(options, default_yaml).lower_right).to eq(cmplx(6.0, 5.0))
+        expect(Options.parse(raw_params).lower_right).to eq(cmplx(6.0, 5.0))
       end
       it "defaults the c parameter" do
-        expect(Options.parse(options, default_yaml).c).to eq(cmplx(1.0, 0.0))
+        expect(Options.parse(raw_params).c).to eq(cmplx(1.0, 0.0))
       end
       it "defaults the z parameter" do
-        expect(Options.parse(options, default_yaml).z).to eq(cmplx(0.0, 0.0))
+        expect(Options.parse(raw_params).z).to eq(cmplx(0.0, 0.0))
       end
       it "defaults the r parameter" do
-        expect(Options.parse(options, default_yaml).r).to eq(cmplx(0.0, 0.0))
+        expect(Options.parse(raw_params).r).to eq(cmplx(0.0, 0.0))
       end
       it "defaults the p parameter" do
-        expect(Options.parse(options, default_yaml).p).to eq(cmplx(0.0, 0.0))
+        expect(Options.parse(raw_params).p).to eq(cmplx(0.0, 0.0))
+      end
+      it "defaults the chunk size" do
+        expect(Options.parse(raw_params).chunk_size).to eq(1000)
       end
     end
-  end
 
-  describe ".compute_chunk_count" do
-    it "divides evenly" do
-      options = %Options{
-        size: %Size{width: 10, height: 2},
-        chunk_size: 5}
-      expect(Options.compute_chunk_count(options)) |> to(eq(4))
+    context "when specifying flags and input file" do
+      let :raw_params do
+        [
+          c: "99.0+0.0i",
+          params_filename: "spec/inputs/partial_params.yml",
+          fractal: "Burningship"
+        ]
+      end
+
+      it "recognizes the early flag" do
+        expect(Options.parse(raw_params).c) |> to(eq(cmplx(99.0)))
+      end
+      it "recognizes a value from the file" do
+        expect(Options.parse(raw_params).color) |> to(eq(:blue))
+      end
+      it "recognizes a value overridden by a flag" do
+        expect(Options.parse(raw_params).fractal) |> to(eq(:burningship))
+      end
     end
 
-    it "adds one for a remainder" do
-      options = %Options{
-        size: %Size{width: 10, height: 2},
-        chunk_size: 3}
-      expect(Options.compute_chunk_count(options)) |> to(eq(7))
+    context "when values need to be computed" do
+      it "divides evenly" do
+        expect(Options.parse([size: "10x2", chunk_size: 5]).chunk_count)
+        |> to(eq(4))
+      end
+
+      it "adds one for a remainder" do
+        expect(Options.parse([size: "10x2", chunk_size: 3]).chunk_count)
+        |> to(eq(7))
+      end
+
+      it "always computes and overrides explicit setting" do
+        expect(Options.parse([size: "10x2", chunk_size: 3, chunk_count: 99999]).chunk_count)
+        |> to(eq(7))
+      end
     end
   end
 end

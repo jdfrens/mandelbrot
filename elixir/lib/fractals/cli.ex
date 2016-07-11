@@ -3,8 +3,13 @@ defmodule Fractals.CLI do
 
   def main(args) do
     case OptionParser.parse(args) do
-      {flags, [options_filename, output_filename], _} ->
-        main_helper(Options.parse(flags, options_filename, output_filename))
+      {flags, [params_filename, output_filename], _} ->
+        flags
+        |> Keyword.put(:params_filename, params_filename)
+        |> Keyword.put(:output_filename, output_filename)
+        |> Keyword.put(:next_pid, self)
+        |> Options.parse
+        |> main_helper
       _ ->
         usage()
     end
@@ -13,13 +18,7 @@ defmodule Fractals.CLI do
   def main_helper(%Options{fractal: :nova}) do
     IO.puts "Nova fractal not supported."
   end
-  def main_helper(%Options{} = options) do
-    # SMELL: this is probably too much for this module, but where to move it?
-    # YUCK: this should be done elsewhere, I think
-    options =
-      options
-      |> Options.open_output_file
-      |> Options.set_next_pid(self)
+  def main_helper(options) do
     {time, _} = :timer.tc(fn ->
       {:ok, _pid} = Fractals.JobSupervisor.start_child(options)
       Fractals.GridWorker.work(Fractals.GridWorker)
@@ -35,7 +34,7 @@ defmodule Fractals.CLI do
         waiting_loop(options)
       # IDEA: could match on pid for Fractals.OutputWorker
       {:done, _} ->
-        Options.close_output_file(options)
+        Options.close(options)
     end
   end
 
