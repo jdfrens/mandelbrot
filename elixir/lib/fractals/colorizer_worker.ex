@@ -21,6 +21,7 @@ defmodule Fractals.ColorizerWorker do
     {:noreply, params}
   end
 
+  @spec colorize({atom, {non_neg_integer, list}}, Params) :: list(String.t)
   def colorize(data, params) do
     Enum.map(data, &Colorizer.color_point(&1, params))
   end

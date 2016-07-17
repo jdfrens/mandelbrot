@@ -7,12 +7,14 @@ defmodule Fractals.Params do
     # operational
     :seed,
     :chunk_size, :chunk_count,
+    :max_iterations, :cutoff_squared,
     # fractal
     :fractal,
     :c, :z, :r, :p,
     # image
     :size, :color,
     :upper_left, :lower_right,
+    :max_intensity,
     # output
     :output_filename, :output_pid,
     # processes
@@ -23,29 +25,30 @@ defmodule Fractals.Params do
 
   alias Fractals.{Params, Size}
 
-  # NOTE: does not work as module variable because of compiler deadlock
-  # cf. https://github.com/elixir-lang/elixir/issues/4844
-  defp default_params do
+  def default do
     %Params{
-      seed:       666,
-      chunk_size: 1000,
-      fractal: :mandelbrot,
-      p:       Complex.zero,
-      r:       Complex.zero,
-      z:       Complex.zero,
-      c:       cmplx(1.0),
-      size:    %Size{width: 512, height: 384},
-      color:   :black_on_white,
-      upper_left:  cmplx(5.0, 6.0),
-      lower_right: cmplx(6.0, 5.0)
+      seed:           666,
+      chunk_size:     1000,
+      cutoff_squared: 4.0,
+      max_iterations: 256,
+      fractal:        :mandelbrot,
+      p:              Complex.zero,
+      r:              Complex.zero,
+      z:              Complex.zero,
+      c:              cmplx(1.0),
+      size:           %Size{width: 512, height: 384},
+      color:          :black_on_white,
+      max_intensity:  255,
+      upper_left:     cmplx(5.0, 6.0),
+      lower_right:    cmplx(6.0, 5.0)
     }
   end
 
   @precomputed_attributes [:chunk_count]
 
-  def parse(raw_params, params \\ default_params) do
+  def parse(raw_params, params \\ default) do
     raw_params
-    |> Enum.reduce(params, &accumulate_attribute/2)
+    |> Enum.reduce(params, &parse_attribute/2)
     |> precompute
   end
 
@@ -62,18 +65,14 @@ defmodule Fractals.Params do
     %{params | attribute => precompute_value(attribute, params)}
   end
 
-  defp accumulate_attribute({attribute, value}, params) do
-    parse_attribute(attribute, value, params)
-  end
-
-  defp parse_attribute(:params_filename, filename, params) do
+  defp parse_attribute({:params_filename, filename}, params) do
     yaml = filename |> YamlElixir.read_from_file |> symbolize
     parse(yaml, params)
   end
-  defp parse_attribute(:output_filename, filename, params) do
+  defp parse_attribute({:output_filename, filename}, params) do
     %{params | output_pid: File.open!(filename, [:write])}
   end
-  defp parse_attribute(attribute, value, params) do
+  defp parse_attribute({attribute, value}, params) do
     %{params | attribute => parse_value(attribute, value)}
   end
 

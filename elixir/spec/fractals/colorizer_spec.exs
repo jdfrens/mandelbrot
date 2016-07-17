@@ -8,7 +8,7 @@ defmodule Fractals.ColorizerSpec do
 
   describe ".color_point" do
     context "for black-on-white" do
-      let :params, do: %Params{color: :black_on_white}
+      let :params, do: %{Params.default | color: :black_on_white}
 
       it "colors outside" do
         expect(Colorizer.color_point({z, 512}, params)) |> to(eq PPM.black)
@@ -20,7 +20,7 @@ defmodule Fractals.ColorizerSpec do
     end
 
     context "for white-on-black" do
-      let :params, do: %Params{color: :white_on_black}
+      let :params, do: %{Params.default | color: :white_on_black}
 
       it "colors outside" do
         expect(Colorizer.color_point({z, 512}, params)) |> to(eq PPM.white)
@@ -32,7 +32,7 @@ defmodule Fractals.ColorizerSpec do
     end
 
     context "for gray" do
-      let :params, do: %Params{color: :gray}
+      let :params, do: %{Params.default | color: :gray}
 
       it "is black inside" do
         expect(Colorizer.color_point({z, 512}, params)) |> to(eq PPM.black)
@@ -40,12 +40,27 @@ defmodule Fractals.ColorizerSpec do
       it "scales 0 to black" do
         expect(Colorizer.color_point({z,   0}, params)) |> to(eq PPM.black)
       end
-      it "scales 128 to 181" do
+      it "scales 128 to 180" do
         expect(Colorizer.color_point({z, 128}, params))
-        |> to(eq PPM.ppm(181, 181, 181))
+        |> to(eq PPM.ppm(180, 180, 180))
       end
       it "is white after maximum iterations" do
         expect(Colorizer.color_point({z, 255}, params)) |> to(eq PPM.white)
+      end
+    end
+
+    context "for Warp POV" do
+      it "computes red" do
+        expect(Colorizer.color_point({z, 128}, %{Params.default | color: :red}))
+        |> to(eq PPM.ppm(255, 0, 0))
+      end
+      it "computes green" do
+        expect(Colorizer.color_point({z, 128}, %{Params.default | color: :green}))
+        |> to(eq PPM.ppm(0, 255, 0))
+      end
+      it "computes blue" do
+        expect(Colorizer.color_point({z, 128}, %{Params.default | color: :blue}))
+        |> to(eq PPM.ppm(0, 0, 255))
       end
     end
   end

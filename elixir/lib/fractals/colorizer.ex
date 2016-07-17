@@ -5,37 +5,35 @@ defmodule Fractals.Colorizer do
   alias Fractals.Params
   alias Fractals.Colorizer.{Random,WarpPov}
 
-  @maximum_iterations 256
-  @maximum_intensity 256
-
-  defmacro escaped?(iterations) do
+  defmacro escaped?(iterations, max_iterations) do
     quote do
-      unquote(iterations) >= @maximum_iterations
+      unquote(iterations) >= unquote(max_iterations)
     end
   end
 
-  def color_point({_, iterations}, %Params{color: color}) do
-    case color do
-      :black_on_white -> black_on_white(iterations)
-      :white_on_black -> white_on_black(iterations)
-      :gray           -> gray(iterations)
-      :red            -> WarpPov.red(iterations)
-      :green          -> WarpPov.green(iterations)
-      :blue           -> WarpPov.blue(iterations)
+  @spec color_point({Complex.t, non_neg_integer}, Params) :: String.t
+  def color_point({_, iterations}, params) do
+    case params.color do
+      :black_on_white -> black_on_white(iterations, params.max_iterations)
+      :white_on_black -> white_on_black(iterations, params.max_iterations)
+      :gray           -> gray(iterations, params)
+      :red            -> WarpPov.red(iterations, params)
+      :green          -> WarpPov.green(iterations, params)
+      :blue           -> WarpPov.blue(iterations, params)
       :random         -> Random.at(Random, iterations)
     end
   end
 
-  def black_on_white(iterations) when escaped?(iterations), do: PPM.black
-  def black_on_white(_), do: PPM.white
+  def black_on_white(iterations, max_iterations) when escaped?(iterations, max_iterations), do: PPM.black
+  def black_on_white(_,_), do: PPM.white
 
-  def white_on_black(iterations) when escaped?(iterations), do: PPM.white
-  def white_on_black(_), do: PPM.black
+  def white_on_black(iterations, max_iterations) when escaped?(iterations, max_iterations), do: PPM.white
+  def white_on_black(_,_), do: PPM.black
 
-  def gray(iterations) when escaped?(iterations), do: PPM.black
-  def gray(iterations) do
-    factor = :math.sqrt(iterations / @maximum_iterations)
-    intensity = round(@maximum_intensity * factor)
+  def gray(iterations, %Params{max_iterations: max_iterations}) when escaped?(iterations, max_iterations), do: PPM.black
+  def gray(iterations, params) do
+    factor = :math.sqrt(iterations / params.max_iterations)
+    intensity = round(params.max_intensity * factor)
     PPM.ppm(intensity, intensity, intensity)
   end
 end

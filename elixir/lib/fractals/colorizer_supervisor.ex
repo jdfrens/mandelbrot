@@ -8,7 +8,7 @@ defmodule Fractals.ColorizerSupervisor do
   def init(params) do
     children = [
       worker(Fractals.ColorizerWorker, [params]),
-      worker(Fractals.Colorizer.Random, [])
+      worker(Fractals.Colorizer.Random, [params])
     ]
     supervise(children, strategy: :one_for_one)
   end

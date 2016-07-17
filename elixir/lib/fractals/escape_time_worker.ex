@@ -23,14 +23,14 @@ defmodule Fractals.EscapeTimeWorker do
     {:noreply, params}
   end
 
-  def pixels(:mandelbrot, data, _params) do
-    Mandelbrot.pixels(data)
+  def pixels(:mandelbrot, data, params) do
+    Mandelbrot.pixels(data, params)
   end
   def pixels(:julia, data, params) do
-    Julia.pixels(data, params.c)
+    Julia.pixels(data, params)
   end
-  def pixels(:burningship, data, _params) do
-    BurningShip.pixels(data)
+  def pixels(:burningship, data, params) do
+    BurningShip.pixels(data, params)
   end
 
   def send_chunk(chunk) do

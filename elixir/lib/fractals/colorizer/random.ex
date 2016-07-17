@@ -1,14 +1,10 @@
 defmodule Fractals.Colorizer.Random do
   use GenServer
 
-  import Fractals.Colorizer, only: :macros
-
-  @maximum_iterations 256
-
   ## Client
 
-  def start_link do
-    GenServer.start_link(__MODULE__, nil, name: __MODULE__)
+  def start_link(params) do
+    GenServer.start_link(__MODULE__, params, name: __MODULE__)
   end
 
   def at(pid, iterations) do
@@ -17,26 +13,27 @@ defmodule Fractals.Colorizer.Random do
 
   ## Server
 
-  def init(_) do
-    {:ok, make_colors}
+  def init(params) do
+    {:ok, make_colors(params)}
   end
 
-  def handle_call({:at, iterations}, _, colors) when escaped?(iterations) do
-    {:reply, PPM.black, colors}
-  end
   def handle_call({:at, iterations}, _, colors) do
     {:reply, Enum.at(colors, iterations), colors}
   end
 
-  defp make_colors do
-    Enum.map(0..255, &random_color/1)
+  ## Helpers
+
+  defp make_colors(params) do
+    Enum.map(range(params), &random_color(&1, params)) ++ [PPM.black]
   end
 
-  defp random_color(_) do
-    PPM.ppm(random_hue, random_hue, random_hue)
+  defp range(params), do: 0..(params.max_iterations-1)
+
+  defp random_color(_, params) do
+    PPM.ppm(random_hue(params), random_hue(params), random_hue(params))
   end
 
-  defp random_hue do
-    :random.uniform(255)
+  defp random_hue(params) do
+    :rand.uniform(params.max_intensity+1) - 1
   end
 end

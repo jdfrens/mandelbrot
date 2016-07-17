@@ -4,14 +4,17 @@ defmodule Fractals.EscapeTime.MandelbrotSpec do
 
   import Complex
 
+  alias Fractals.Params
   alias Fractals.EscapeTime.Mandelbrot
+
+  let :params, do: Params.default
 
   describe ".pixels" do
     it "converts grid points to iterations" do
       grid_points = [cmplx(0.0, 0.0), cmplx(1.1, 1.1), cmplx(0.5, -0.5)]
-      actual_pixels = Mandelbrot.pixels(grid_points)
+      actual_pixels = Mandelbrot.pixels(grid_points, params)
       expected_pixels = [
-        {cmplx(0.0, 0.0),      Mandelbrot.max_iterations},
+        {cmplx(0.0, 0.0),      params.max_iterations},
         {cmplx(1.1, 3.52),     2},
         {cmplx(3.285, -1.344), 5}
       ]
@@ -23,13 +26,13 @@ defmodule Fractals.EscapeTime.MandelbrotSpec do
   describe ".escape_time" do
     it "escapes" do
       check_pixel(
-        Mandelbrot.escape_time(cmplx(1.1, 1.1)),
+        Mandelbrot.escape_time(cmplx(1.1, 1.1), params),
         {cmplx(1.1, 3.52), 2})
     end
 
     it "does not escape" do
-      expect(Mandelbrot.escape_time(cmplx(0.0, 0.0)))
-      |> to(eq({cmplx(0.0, 0.0), Mandelbrot.max_iterations}))
+      expect(Mandelbrot.escape_time(cmplx(0.0, 0.0), params))
+      |> to(eq({cmplx(0.0, 0.0), params.max_iterations}))
     end
   end
 

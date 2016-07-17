@@ -9,24 +9,23 @@ defmodule Fractals.Colorizer.WarpPov do
   Taken from http://warp.povusers.org/Mandelbrot/
   """
 
+  alias Fractals.Params
+
   import Fractals.Colorizer, only: :macros
 
-  @maximum_intensity 255
-  @maximum_iterations 256
-
-  @spec red(non_neg_integer) :: String.t
-  def red(iterations) do
-    permute_red(intensities(iterations))
+  @spec red(non_neg_integer, Params) :: String.t
+  def red(iterations, params) do
+    permute_red(intensities(iterations, params))
   end
 
-  @spec green(non_neg_integer) :: String.t
-  def green(iterations) do
-    permute_green(intensities(iterations))
+  @spec green(non_neg_integer, Params) :: String.t
+  def green(iterations, params) do
+    permute_green(intensities(iterations, params))
   end
 
-  @spec blue(non_neg_integer) :: String.t
-  def blue(iterations) do
-    permute_blue(intensities(iterations))
+  @spec blue(non_neg_integer, Params) :: String.t
+  def blue(iterations, params) do
+    permute_blue(intensities(iterations, params))
   end
 
   @spec permute_red({non_neg_integer, non_neg_integer}) :: String.t
@@ -42,19 +41,19 @@ defmodule Fractals.Colorizer.WarpPov do
     PPM.ppm(secondary, secondary, primary)
   end
 
-  @spec intensities(non_neg_integer) :: {non_neg_integer, non_neg_integer}
-  def intensities(iterations) when escaped?(iterations), do: {0 , 0}
-  def intensities(iterations) do
-    half_iterations = @maximum_iterations/2-1
+  @spec intensities(non_neg_integer, Params) :: {non_neg_integer, non_neg_integer}
+  def intensities(iterations, %Params{max_iterations: max_iterations}) when escaped?(iterations, max_iterations), do: {0, 0}
+  def intensities(iterations, params) do
+    half_iterations = params.max_iterations/2-1
     if iterations <= half_iterations do
-      {scale(max(1, iterations)), 0}
+      {scale(max(1, iterations), params), 0}
     else
-      {@maximum_intensity, scale(iterations - half_iterations)}
+      {params.max_intensity, scale(iterations - half_iterations, params)}
     end
   end
 
-  @spec scale(float) :: non_neg_integer
-  def scale(i) do
-    round(2.0 * (i - 1) / @maximum_iterations * @maximum_intensity)
+  @spec scale(float, Params) :: non_neg_integer
+  def scale(i, params) do
+    round(2.0 * (i - 1) / params.max_iterations * params.max_intensity)
   end
 end
