@@ -45,6 +45,7 @@ defmodule Fractals.Params do
   end
 
   @precomputed_attributes [:chunk_count]
+  @complex_attributes [:upper_left, :lower_right, :c, :p, :r, :z]
 
   def parse(raw_params, params \\ default) do
     raw_params
@@ -79,25 +80,10 @@ defmodule Fractals.Params do
   defp parse_value(:fractal, value) do
     String.to_atom(String.downcase(value))
   end
-  defp parse_value(:c, value) do
-    Complex.parse(value)
-  end
   defp parse_value(:color, color) do
     String.to_atom(Inflex.underscore(color))
   end
-  defp parse_value(:upper_left, value) do
-    Complex.parse(value)
-  end
-  defp parse_value(:lower_right, value) do
-    Complex.parse(value)
-  end
-  defp parse_value(:p, value) do
-    Complex.parse(value)
-  end
-  defp parse_value(:r, value) do
-    Complex.parse(value)
-  end
-  defp parse_value(:z, value) do
+  defp parse_value(attribute, value) when attribute in @complex_attributes do
     Complex.parse(value)
   end
   defp parse_value(:size, value) do
