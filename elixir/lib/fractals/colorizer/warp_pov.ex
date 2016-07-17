@@ -11,7 +11,7 @@ defmodule Fractals.Colorizer.WarpPov do
 
   alias Fractals.Params
 
-  import Fractals.Colorizer, only: :macros
+  import Fractals.EscapeTime.Helpers
 
   @spec red(non_neg_integer, Params) :: String.t
   def red(iterations, params) do
@@ -42,7 +42,7 @@ defmodule Fractals.Colorizer.WarpPov do
   end
 
   @spec intensities(non_neg_integer, Params) :: {non_neg_integer, non_neg_integer}
-  def intensities(iterations, %Params{max_iterations: max_iterations}) when escaped?(iterations, max_iterations), do: {0, 0}
+  def intensities(iterations, %Params{max_iterations: max_iterations}) when inside?(iterations, max_iterations), do: {0, 0}
   def intensities(iterations, params) do
     half_iterations = params.max_iterations/2-1
     if iterations <= half_iterations do

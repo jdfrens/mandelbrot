@@ -5,11 +5,7 @@ defmodule Fractals.Colorizer do
   alias Fractals.Params
   alias Fractals.Colorizer.{Random,WarpPov}
 
-  defmacro escaped?(iterations, max_iterations) do
-    quote do
-      unquote(iterations) >= unquote(max_iterations)
-    end
-  end
+  import Fractals.EscapeTime.Helpers
 
   @spec color_point({Complex.t, non_neg_integer}, Params) :: String.t
   def color_point({_, iterations}, params) do
@@ -24,13 +20,13 @@ defmodule Fractals.Colorizer do
     end
   end
 
-  def black_on_white(iterations, max_iterations) when escaped?(iterations, max_iterations), do: PPM.black
+  def black_on_white(iterations, max_iterations) when inside?(iterations, max_iterations), do: PPM.black
   def black_on_white(_,_), do: PPM.white
 
-  def white_on_black(iterations, max_iterations) when escaped?(iterations, max_iterations), do: PPM.white
+  def white_on_black(iterations, max_iterations) when inside?(iterations, max_iterations), do: PPM.white
   def white_on_black(_,_), do: PPM.black
 
-  def gray(iterations, %Params{max_iterations: max_iterations}) when escaped?(iterations, max_iterations), do: PPM.black
+  def gray(iterations, %Params{max_iterations: max_iterations}) when inside?(iterations, max_iterations), do: PPM.black
   def gray(iterations, params) do
     factor = :math.sqrt(iterations / params.max_iterations)
     intensity = round(params.max_intensity * factor)
