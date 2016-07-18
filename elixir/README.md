@@ -13,7 +13,7 @@ I'm blogging about this project at [Programming During Recess](http://www.progra
 * [I produce a minimal viable Mandelbrot](http://www.programming-during-recess.net/2016/06/19/minimal-viable-mandelbrot/), tag: [`blog_2016_06_19`](https://github.com/jdfrens/mandelbrot/tree/blog_2016_06_19/elixir)
 * [I implement color schemes](http://www.programming-during-recess.net/2016/06/26/color-schemes-for-mandelbrot-sets/), tag: [`blog_2016_06_26`](https://github.com/jdfrens/mandelbrot/tree/blog_2016_06_26/elixir)
 * [I generate Julia set and burning ships](http://www.programming-during-recess.net/2016/07/03/mandelbrots-julias-and-burning-ships/), tag: [`blog_2016_07_03`](https://github.com/jdfrens/mandelbrot/tree/blog_2016_07_03/elixir)
-
+* [I parse my params better](http://www.programming-during-recess.net/2016/07/17/better-params-parsing/), tag: [`blog_2016_07_17`](https://github.com/jdfrens/mandelbrot/tree/blog_2016_07_17/elixir)
 
 ## Installation
 
