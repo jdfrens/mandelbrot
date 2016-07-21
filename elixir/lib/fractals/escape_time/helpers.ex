@@ -10,4 +10,9 @@ defmodule Fractals.EscapeTime.Helpers do
       Complex.magnitude_squared(unquote(z)) >= unquote(cutoff_squared)
     end
   end
+
+  def done?({z, iterations}, params) do
+    escaped?(z, params.cutoff_squared) ||
+      inside?(iterations, params.max_iterations)
+  end
 end

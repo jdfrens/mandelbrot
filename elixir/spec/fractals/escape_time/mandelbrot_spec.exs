@@ -23,19 +23,6 @@ defmodule Fractals.EscapeTime.MandelbrotSpec do
     end
   end
 
-  describe ".escape_time" do
-    it "escapes" do
-      check_pixel(
-        Mandelbrot.escape_time(cmplx(1.1, 1.1), params),
-        {cmplx(1.1, 3.52), 2})
-    end
-
-    it "does not escape" do
-      expect(Mandelbrot.escape_time(cmplx(0.0, 0.0), params))
-      |> to(eq({cmplx(0.0, 0.0), params.max_iterations}))
-    end
-  end
-
   let :z, do: cmplx(3.0, 2.0)
   let :c, do: cmplx(1.0, 1.0)
 
