@@ -1,10 +1,17 @@
 defmodule Mix.Tasks.Fractals.Generate do
   use Mix.Task
 
+  @default_fractals ["mandelbrot*", "julia*", "burningship*"]
+
   @shortdoc "Generate the fractals!"
-  def run(_args) do
+  def run(args) do
     Mix.Task.run "escript.build"
-    Enum.each(input_filenames, &generate/1)
+    case args do
+      [] ->
+        run(@default_fractals)
+      _ ->
+        Enum.each(input_filenames(args), &generate/1)
+    end
   end
 
   def generate(input_filename) do
@@ -18,13 +25,9 @@ defmodule Mix.Tasks.Fractals.Generate do
     end)
   end
 
-  def input_filenames do
-    [
-      "../yaml/mandelbrot-*.yml",
-      "../yaml/julia-*.yml",
-      "../yaml/burningship-*.yml",
-      "../yaml/sinusoidal-*.yml"
-      ]
+  def input_filenames(base_names) do
+    base_names
+    |> Enum.map(&("../yaml/#{&1}.yml"))
     |> Enum.flat_map(&Path.wildcard/1)
   end
 
