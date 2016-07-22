@@ -1,8 +1,8 @@
-defmodule Fractals.IntegrationSpec do
-  use ESpec
+defmodule Fractals.IntegrationTest do
+  use ExUnit.Case
 
-  @input_filename  "spec/integration_input.json"
-  @output_filename "spec/integration_output.ppm"
+  @input_filename  "test/integration_input.yml"
+  @output_filename "test/integration_output.ppm"
 
   @expected_output [
     "P3",
@@ -16,18 +16,20 @@ defmodule Fractals.IntegrationSpec do
     ""
     ] |> Enum.join("\n")
 
-  before do
+  setup do
     if File.exists?(@output_filename) do
       File.rm!(@output_filename)
     end
     Application.start(:fractals)
+
+    on_exit fn ->
+      Application.stop(:fractals)
+    end
+
+    :ok
   end
 
-  finally do
-    Application.stop(:fractals)
-  end
-
-  it "generates a pretty picture" do
+  test "generates a pretty picture" do
     params = Fractals.Params.parse([
       params_filename: @input_filename,
       output_filename: @output_filename,
@@ -37,6 +39,6 @@ defmodule Fractals.IntegrationSpec do
       Fractals.CLI.main_helper(params)
     end)
     output = File.read!(@output_filename)
-    expect(output) |> to(eq @expected_output)
+    assert output == @expected_output
   end
 end
