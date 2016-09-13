@@ -1,59 +1,71 @@
 defmodule Fractals.OutputWorker do
-  alias Fractals.Params
+  use GenServer
 
   # Client API
 
   def start_link(params) do
-    pid = spawn_link(__MODULE__, :server, [0, params])
-    Process.register(pid, __MODULE__)
-    {:ok, pid}
+    GenServer.start_link(__MODULE__, params, name: __MODULE__)
   end
 
   def write(pid, chunk) do
-    send pid, {:write, chunk}
+    GenServer.cast(pid, {:write, chunk})
   end
 
   # Server API
 
-  def server(0, params) do
-    write_header(params)
-    server(1, params)
+  def init(params) do
+    {:ok, %{next_number: 0, cache: build_cache(params), params: params}}
   end
-  def server(number, %Params{chunk_count: count} = params) when number == count+1 do
-    done(params)
-    # YUCK: keeps server running so supervisor doesn't restart
-    # IDEA: could use :transient strategy, but not simple replacement
-    server(number + 1, params)
-  end
-  def server(chunk_number, params) do
-    receive do
-      {:write, {^chunk_number, data}} ->
-        write_chunk(chunk_number, data, params)
-        server(chunk_number + 1, params)
-    end
+
+  def handle_cast({:write, chunk}, state) do
+    {next_number, cache} =
+      state.cache
+      |> update_cache(chunk)
+      |> output_cache(state.next_number, state.params)
+    {:noreply, %{state | next_number: next_number, cache: cache}}
   end
 
   # helpers
 
-  def done(params) do
+  defp update_cache(cache, {number, data}) do
+    Map.put(cache, number, data)
+  end
+
+  defp output_cache(cache, next_number, params) do
+    case Map.get(cache, next_number) do
+      nil ->
+        {next_number, cache}
+      :done ->
+        done(params)
+      data ->
+        write_chunk(next_number, data, params)
+        # TODO: delete `next_number` from `cache`?
+        output_cache(cache, next_number + 1, params)
+    end
+  end
+
+  defp build_cache(params) do
+    %{0 => header(params), params.chunk_count+1 => :done}
+  end
+
+  defp done(params) do
     notify_next_pid(params, {:done, self})
   end
 
-  def write_header(%Params{size: size} = params) do
-    PPM.p3_header(size.width, size.height)
-    |> lines_to_file(params)
+  defp header(params) do
+    PPM.p3_header(params.size.width, params.size.height)
   end
 
-  def write_chunk(chunk_number, data, params) do
+  defp write_chunk(chunk_number, data, params) do
     notify_next_pid(params, {:writing, chunk_number})
     lines_to_file(data, params)
   end
 
-  def lines_to_file(lines, params) do
+  defp lines_to_file(lines, params) do
     Enum.each(lines, &(IO.puts(params.output_pid, &1)))
   end
 
-  def notify_next_pid(params, message) do
+  defp notify_next_pid(params, message) do
     send params.next_pid, message
   end
 end
