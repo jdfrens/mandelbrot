@@ -8,7 +8,6 @@ defmodule Fractals.Mixfile do
      escript: [main_module: Fractals.CLI],
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     preferred_cli_env: [espec: :test],
      deps: deps]
   end
 
@@ -20,12 +19,10 @@ defmodule Fractals.Mixfile do
   defp deps do
     [
       {:yaml_elixir, "~> 1.2.0"},
-      {:yamerl, github: "yakaz/yamerl"},
       {:inflex, "~> 1.7.0"},
       {:poison, "~> 2.2"},
       {:credo, "~> 0.4.5", only: [:dev, :test]},
       {:dialyxir, "~> 0.3.3", only: [:dev, :test]},
-      {:espec, "~> 0.8.22", only: :test}
     ]
   end
 end
