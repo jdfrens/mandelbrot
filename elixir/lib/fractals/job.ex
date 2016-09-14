@@ -1,16 +1,16 @@
 defmodule Fractals.Job do
   use Supervisor
 
-  def start_link(params) do
-    Supervisor.start_link(__MODULE__, params)
+  def start_link do
+    Supervisor.start_link(__MODULE__, :ok)
   end
 
-  def init(params) do
+  def init(:ok) do
     children = [
-      supervisor(Fractals.GridSupervisor, [params]),
-      supervisor(Fractals.EscapeTimeSupervisor, [params]),
-      supervisor(Fractals.ColorizerSupervisor, [params]),
-      supervisor(Fractals.OutputSupervisor, [params])
+      supervisor(Fractals.GridSupervisor, []),
+      supervisor(Fractals.EscapeTimeSupervisor, []),
+      supervisor(Fractals.ColorizerSupervisor, []),
+      supervisor(Fractals.OutputSupervisor, [])
     ]
     supervise(children, strategy: :one_for_one)
   end

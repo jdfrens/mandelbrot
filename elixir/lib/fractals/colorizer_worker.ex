@@ -6,8 +6,8 @@ defmodule Fractals.ColorizerWorker do
 
   # Client
 
-  def start_link(params) do
-    GenServer.start_link(__MODULE__, params, name: __MODULE__)
+  def start_link do
+    GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 
   def color(pid, chunk) do
@@ -16,9 +16,9 @@ defmodule Fractals.ColorizerWorker do
 
   # Server
 
-  def handle_cast({:color, {number, data}}, params) do
-    {:ok, _pid} = Task.start(fn -> write({number, colorize(data, params)}) end)
-    {:noreply, params}
+  def handle_cast({:color, %Chunk{params: params, data: data} = chunk}, state) do
+    {:ok, _pid} = Task.start(fn -> write(%{chunk | data: colorize(data, params)}) end)
+    {:noreply, state}
   end
 
   @spec colorize({atom, {non_neg_integer, list}}, Params) :: list(String.t)

@@ -3,8 +3,8 @@ defmodule Fractals.OutputWorker do
 
   # Client API
 
-  def start_link(params) do
-    GenServer.start_link(__MODULE__, params, name: __MODULE__)
+  def start_link do
+    GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 
   def write(pid, chunk) do
@@ -13,38 +13,52 @@ defmodule Fractals.OutputWorker do
 
   # Server API
 
-  def init(params) do
-    {:ok, %{next_number: 0, cache: build_cache(params), params: params}}
+  defmodule State do
+    defstruct next_number: 0, cache: %{}
   end
 
+  def init(:ok) do
+    {:ok, nil}
+  end
+
+  def handle_cast({:write, chunk}, nil) do
+    state =
+      %State{next_number: 0, cache: build_initial_cache(chunk.params)}
+      |> process(chunk)
+    {:noreply, state}
+  end
   def handle_cast({:write, chunk}, state) do
-    {next_number, cache} =
-      state.cache
-      |> update_cache(chunk)
-      |> output_cache(state.next_number, state.params)
-    {:noreply, %{state | next_number: next_number, cache: cache}}
+    state = process(state, chunk)
+    {:noreply, state}
   end
 
   # helpers
 
-  defp update_cache(cache, {number, data}) do
+  defp process(%State{next_number: next_number, cache: cache}, chunk) do
+    cache
+    |> update_cache(chunk)
+    |> output_cache(next_number, chunk.params)
+  end
+
+  defp update_cache(cache, %Chunk{number: number, data: data}) do
     Map.put(cache, number, data)
   end
 
   defp output_cache(cache, next_number, params) do
     case Map.get(cache, next_number) do
       nil ->
-        {next_number, cache}
+        %State{next_number: next_number, cache: cache}
       :done ->
         done(params)
+        nil
       data ->
         write_chunk(next_number, data, params)
-        # TODO: delete `next_number` from `cache`?
+        cache = Map.delete(cache, next_number)
         output_cache(cache, next_number + 1, params)
     end
   end
 
-  defp build_cache(params) do
+  defp build_initial_cache(params) do
     %{0 => header(params), params.chunk_count+1 => :done}
   end
 

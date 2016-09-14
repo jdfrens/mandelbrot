@@ -6,24 +6,24 @@ defmodule Fractals.GridWorker do
 
   # Client
 
-  def start_link(params) do
-    GenServer.start_link(__MODULE__, params, name: __MODULE__)
+  def start_link do
+    GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 
-  def work(pid) do
-    GenServer.cast(pid, :work)
+  def work(pid, params) do
+    GenServer.cast(pid, {:work, params})
   end
 
   # Server
 
-  def handle_cast(:work, options) do
+  def handle_cast({:work, params}, :ok) do
     {:ok, _pid} = Task.start(fn ->
-      Grid.grid(options)
-      |> Grid.chunk(options)
+      Grid.grid(params)
+      |> Grid.chunk(params)
       |> Stream.each(&send_chunk(&1))
       |> Stream.run
     end)
-    {:noreply, options}
+    {:noreply, :ok}
   end
 
   def send_chunk(chunk) do

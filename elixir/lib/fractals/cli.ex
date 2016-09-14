@@ -20,8 +20,8 @@ defmodule Fractals.CLI do
   end
   def main_helper(params) do
     {time, _} = :timer.tc(fn ->
-      {:ok, _pid} = Fractals.JobSupervisor.start_child(params)
-      Fractals.GridWorker.work(Fractals.GridWorker)
+      {:ok, _pid} = Fractals.JobSupervisor.start_child
+      Fractals.GridWorker.work(Fractals.GridWorker, params)
       waiting_loop(params)
     end)
     IO.puts "#{time / 1_000_000} seconds"

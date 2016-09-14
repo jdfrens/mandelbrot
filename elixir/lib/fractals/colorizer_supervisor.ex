@@ -1,14 +1,14 @@
 defmodule Fractals.ColorizerSupervisor do
   use Supervisor
 
-  def start_link(params) do
-    Supervisor.start_link(__MODULE__, params)
+  def start_link do
+    Supervisor.start_link(__MODULE__, :ok)
   end
 
-  def init(params) do
+  def init(:ok) do
     children = [
-      worker(Fractals.ColorizerWorker, [params]),
-      worker(Fractals.Colorizer.Random, [params])
+      worker(Fractals.ColorizerWorker, []),
+      worker(Fractals.Colorizer.Random, [])
     ]
     supervise(children, strategy: :one_for_one)
   end

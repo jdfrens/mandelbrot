@@ -20,7 +20,8 @@ defmodule PPM do
     ]
   end
 
-  def ppm(red, green, blue) do
-    :erlang.iolist_to_binary(:io_lib.format(@format, [red, green, blue]))
+  def ppm(red, green, blue), do: ppm([red, green, blue])
+  def ppm(rgb) do
+    :erlang.iolist_to_binary(:io_lib.format(@format, rgb))
   end
 end

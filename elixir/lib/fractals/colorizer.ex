@@ -16,7 +16,7 @@ defmodule Fractals.Colorizer do
       :red            -> WarpPov.red(iterations, params)
       :green          -> WarpPov.green(iterations, params)
       :blue           -> WarpPov.blue(iterations, params)
-      :random         -> Random.at(Random, iterations)
+      :random         -> Random.at(Random, iterations, params)
     end
   end
 

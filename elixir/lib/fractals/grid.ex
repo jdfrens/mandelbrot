@@ -12,7 +12,7 @@ defmodule Fractals.Grid do
     grid
     |> Stream.chunk(params.chunk_size, params.chunk_size, [])
     |> Stream.zip(1..params.chunk_count)
-    |> Stream.map(fn {chunk, number} -> {number, chunk} end)
+    |> Stream.map(fn {data, number} -> %Chunk{number: number, data: data, params: params} end)
   end
 
   def grid(params) do
