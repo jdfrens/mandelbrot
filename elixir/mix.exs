@@ -20,7 +20,6 @@ defmodule Fractals.Mixfile do
     [
       {:yaml_elixir, "~> 1.2.0"},
       {:inflex, "~> 1.7.0"},
-      {:poison, "~> 2.2"},
       {:credo, "~> 0.4.5", only: [:dev, :test]},
       {:dialyxir, "~> 0.3.3", only: [:dev, :test]},
     ]
