@@ -48,7 +48,7 @@ defmodule Fractals.OutputWorkerTest do
   defp params(context) do
     params = %Params{
       output_pid: context.output_pid,
-      next_pid: self,
+      next_pid: self(),
       size: %Size{width: 3, height: 1},
       chunk_count: context.chunk_count
     }

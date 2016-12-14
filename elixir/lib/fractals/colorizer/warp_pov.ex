@@ -44,7 +44,7 @@ defmodule Fractals.Colorizer.WarpPov do
   @spec intensities(non_neg_integer, Params) :: {non_neg_integer, non_neg_integer}
   def intensities(iterations, %Params{max_iterations: max_iterations}) when inside?(iterations, max_iterations), do: {0, 0}
   def intensities(iterations, params) do
-    half_iterations = params.max_iterations/2-1
+    half_iterations = params.max_iterations / 2 - 1
     if iterations <= half_iterations do
       {scale(max(1, iterations), params), 0}
     else

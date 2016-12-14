@@ -36,7 +36,7 @@ defmodule Fractals.GridTest do
 
   describe ".grid" do
     test "generate a grid" do
-      assert Grid.grid(params) == [
+      assert Grid.grid(params()) == [
         cmplx(-1.0,  1.0), cmplx(1.0,  1.0),
         cmplx(-1.0,  0.0), cmplx(1.0,  0.0),
         cmplx(-1.0, -1.0), cmplx(1.0, -1.0),
@@ -46,13 +46,13 @@ defmodule Fractals.GridTest do
 
   describe ".xs" do
     test "generate left-right based on corners and width" do
-      assert Grid.xs(params) == [-1.0, 1.0]
+      assert Grid.xs(params()) == [-1.0, 1.0]
     end
   end
 
   describe ".ys" do
     test "generate top-down based on corners and height" do
-      assert Grid.ys(params) == [1.0, 0.0, -1.0]
+      assert Grid.ys(params()) == [1.0, 0.0, -1.0]
     end
   end
 

@@ -16,7 +16,7 @@ defmodule Fractals.Colorizer.Random do
   ## Server
 
   def init(:ok) do
-    {:ok, make_colors}
+    {:ok, make_colors()}
   end
 
   def handle_call({:at, iterations, params}, _, colors) do

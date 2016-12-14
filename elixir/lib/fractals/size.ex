@@ -3,5 +3,5 @@ defmodule Fractals.Size do
   Structure to keep track of width and height
   """
 
-  defstruct [ :width, :height ]
+  defstruct [:width, :height]
 end

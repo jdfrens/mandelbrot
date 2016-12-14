@@ -47,7 +47,7 @@ defmodule Fractals.Params do
   @precomputed_attributes [:chunk_count]
   @complex_attributes [:upper_left, :lower_right, :c, :p, :r, :z]
 
-  def parse(raw_params, params \\ default) do
+  def parse(raw_params, params \\ default()) do
     raw_params
     |> Enum.reduce(params, &parse_attribute/2)
     |> precompute

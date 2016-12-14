@@ -59,11 +59,11 @@ defmodule Fractals.OutputWorker do
   end
 
   defp build_initial_cache(params) do
-    %{0 => header(params), params.chunk_count+1 => :done}
+    %{0 => header(params), params.chunk_count + 1 => :done}
   end
 
   defp done(params) do
-    notify_next_pid(params, {:done, self})
+    notify_next_pid(params, {:done, self()})
   end
 
   defp header(params) do

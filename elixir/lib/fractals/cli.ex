@@ -7,7 +7,7 @@ defmodule Fractals.CLI do
         flags
         |> Keyword.put(:params_filename, params_filename)
         |> Keyword.put(:output_filename, output_filename)
-        |> Keyword.put(:next_pid, self)
+        |> Keyword.put(:next_pid, self())
         |> Params.parse
         |> main_helper
       _ ->
