@@ -4,5 +4,6 @@
   "espec": {:hex, :espec, "0.8.22", "65712cf269071202b6196a91eb752d954841da2c3452726b56344be8b78260d2", [:mix], [{:meck, "~> 0.8.4", [hex: :meck, optional: false]}]},
   "inflex": {:hex, :inflex, "1.8.0", "7cfc752ae244b30b42ac9cf4c092771b485bc3424139aba4a933e54be8c63931", [:mix], []},
   "meck": {:hex, :meck, "0.8.4", "59ca1cd971372aa223138efcf9b29475bde299e1953046a0c727184790ab1520", [:rebar, :make], []},
+  "porcelain": {:hex, :porcelain, "2.0.3", "2d77b17d1f21fed875b8c5ecba72a01533db2013bd2e5e62c6d286c029150fdc", [:mix], []},
   "yamerl": {:hex, :yamerl, "0.3.2", "9eac1537d251e926f47763ab1db0d9e6e8f2397646c290d58aa6ceebc6832fb7", [:rebar3], []},
   "yaml_elixir": {:hex, :yaml_elixir, "1.2.1", "4a8ee3b25598100c710ff11dde4d79b6335608ac092d69aab45cc7475b5abc4d", [:mix], [{:yamerl, "~> 0.3.2", [hex: :yamerl, optional: false]}]}}
