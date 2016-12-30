@@ -17,8 +17,11 @@ defmodule Mix.Tasks.Fractals.Generate do
   def generate(input_filename) do
     ppm_filename = input_to_image_filename(input_filename, ".ppm")
     png_filename = input_to_image_filename(input_filename, ".png")
+
     IO.puts "Generating #{ppm_filename}"
-    Mix.shell.cmd("fractals #{input_filename} #{ppm_filename}")
+    Application.ensure_all_started(:fractals)
+    Fractals.CLI.main([input_filename, ppm_filename])
+
     IO.puts "Generating #{png_filename}"
     Task.start(fn ->
       Mix.shell.cmd("convert #{ppm_filename} #{png_filename}")
