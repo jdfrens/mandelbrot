@@ -33,7 +33,7 @@ defmodule Fractals.IntegrationTest do
     params = Fractals.Params.parse([
       params_filename: @input_filename,
       output_filename: @output_filename,
-      next_pid: self()
+      source_pid: self()
     ])
     ExUnit.CaptureIO.capture_io(fn ->
       Fractals.CLI.main_helper(params)

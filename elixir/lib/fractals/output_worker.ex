@@ -63,7 +63,7 @@ defmodule Fractals.OutputWorker do
   end
 
   defp done(params) do
-    notify_next_pid(params, {:done, self()})
+    notify_source_pid(params, {:done, self()})
   end
 
   defp header(params) do
@@ -71,7 +71,7 @@ defmodule Fractals.OutputWorker do
   end
 
   defp write_chunk(chunk_number, data, params) do
-    notify_next_pid(params, {:writing, chunk_number})
+    notify_source_pid(params, {:writing, chunk_number})
     lines_to_file(data, params)
   end
 
@@ -79,7 +79,7 @@ defmodule Fractals.OutputWorker do
     Enum.each(lines, &(IO.puts(params.output_pid, &1)))
   end
 
-  defp notify_next_pid(params, message) do
-    send params.next_pid, message
+  defp notify_source_pid(params, message) do
+    send params.source_pid, message
   end
 end

@@ -18,7 +18,7 @@ defmodule Fractals.Params do
     # output
     :output_filename, :output_pid,
     # processes
-    :next_pid
+    :source_pid
   ]
 
   import Complex, only: :macros
