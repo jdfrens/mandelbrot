@@ -32,7 +32,6 @@ defmodule Fractals.CLI do
       {:writing, chunk_number} ->
         IO.puts "writing #{chunk_number} of #{params.chunk_count}"
         waiting_loop(params)
-      # IDEA: could match on pid for Fractals.OutputWorker
       {:done, _} ->
         Params.close(params)
     end

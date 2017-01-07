@@ -7,6 +7,7 @@ defmodule Fractals.Job do
 
   def init(:ok) do
     children = [
+      worker(Progress, [[:generate_chunk, :escape_chunk, :colorize_chunk, :write_chunk]]),
       supervisor(Fractals.GridSupervisor, []),
       supervisor(Fractals.EscapeTimeSupervisor, []),
       supervisor(Fractals.ColorizerSupervisor, []),

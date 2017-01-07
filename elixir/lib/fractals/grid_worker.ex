@@ -27,6 +27,7 @@ defmodule Fractals.GridWorker do
   end
 
   def send_chunk(chunk) do
+    Progress.incr(:generate_chunk)
     EscapeTimeWorker.escape_time(EscapeTimeWorker, chunk)
   end
 end

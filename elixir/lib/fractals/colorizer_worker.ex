@@ -27,6 +27,7 @@ defmodule Fractals.ColorizerWorker do
   end
 
   def write(chunk) do
+    Progress.incr(:colorize_chunk)
     OutputWorker.write(Fractals.OutputWorker, chunk)
   end
 end

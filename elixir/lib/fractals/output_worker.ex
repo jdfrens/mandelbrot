@@ -68,6 +68,7 @@ defmodule Fractals.OutputWorker do
   end
 
   defp write_chunk(chunk_number, data, params) do
+    Progress.incr(:write_chunk)
     notify_source_pid(params, {:writing, chunk_number})
     lines_to_file(data, params)
   end

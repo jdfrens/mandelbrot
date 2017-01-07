@@ -41,10 +41,10 @@ defmodule Fractals.ParamsTest do
       assert Params.parse(argv).p == cmplx(0.3,  0.5)
     end
     test "parsing the output_filename paramter", %{argv: argv} do
-      assert Params.parse(argv).output_filename == "the-output.png"
+      assert Params.parse(argv).output_filename == "test/the-output.png"
     end
     test "parsing the ppm_filename paramter", %{argv: argv} do
-      assert Params.parse(argv).ppm_filename == "the-output.ppm"
+      assert Params.parse(argv).ppm_filename == "test/the-output.ppm"
     end
   end
 
