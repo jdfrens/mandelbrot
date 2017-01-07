@@ -10,7 +10,8 @@ defmodule Fractals.Job do
       supervisor(Fractals.GridSupervisor, []),
       supervisor(Fractals.EscapeTimeSupervisor, []),
       supervisor(Fractals.ColorizerSupervisor, []),
-      supervisor(Fractals.OutputSupervisor, [])
+      supervisor(Fractals.OutputSupervisor, []),
+      supervisor(Fractals.ConversionSupervisor, [])
     ]
     supervise(children, strategy: :one_for_one)
   end

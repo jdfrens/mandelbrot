@@ -5,8 +5,10 @@ defmodule Fractals.OutputWorkerTest do
   alias Fractals.OutputWorker
 
   setup do
+    test_pid = self()
+    next_stage = fn _params -> send test_pid, :sent_to_next_stage end
     {:ok, output_pid} = StringIO.open("")
-    {:ok, subject} = OutputWorker.start_link
+    {:ok, subject} = OutputWorker.start_link(next_stage)
     [output_pid: output_pid, subject: subject]
   end
 
@@ -15,7 +17,7 @@ defmodule Fractals.OutputWorkerTest do
 
     test "writing a chunk", %{subject: subject, output_pid: output_pid, params: params} do
       OutputWorker.write(subject, %Chunk{number: 1, data: ["a", "b", "c"], params: params})
-      assert_receive {:done, _self}, 500
+      assert_receive :sent_to_next_stage, 500
       assert StringIO.contents(output_pid) == {"", "P3\n3\n1\n255\na\nb\nc\n"}
     end
   end
@@ -28,7 +30,7 @@ defmodule Fractals.OutputWorkerTest do
       OutputWorker.write(subject, %Chunk{number: 1, data: ["a"], params: params})
       OutputWorker.write(subject, %Chunk{number: 2, data: ["m"], params: params})
       OutputWorker.write(subject, %Chunk{number: 3, data: ["x"], params: params})
-      assert_receive {:done, _self}, 500
+      assert_receive :sent_to_next_stage, 500
       assert StringIO.contents(output_pid) == {"", "P3\n3\n1\n255\na\nm\nx\n"}
     end
 
@@ -37,7 +39,7 @@ defmodule Fractals.OutputWorkerTest do
       OutputWorker.write(subject, %Chunk{number: 2, data: ["m"], params: params})
       OutputWorker.write(subject, %Chunk{number: 3, data: ["x"], params: params})
       OutputWorker.write(subject, %Chunk{number: 1, data: ["a"], params: params})
-      assert_receive {:done, _self}, 500
+      assert_receive :sent_to_next_stage, 500
       assert StringIO.contents(output_pid) == {"", "P3\n3\n1\n255\na\nm\nx\n"}
     end
   end

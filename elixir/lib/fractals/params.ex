@@ -16,7 +16,7 @@ defmodule Fractals.Params do
     :upper_left, :lower_right,
     :max_intensity,
     # output
-    :output_filename, :output_pid,
+    :output_filename, :ppm_filename, :output_pid,
     # processes
     :source_pid
   ]
@@ -71,10 +71,24 @@ defmodule Fractals.Params do
     parse(yaml, params)
   end
   defp parse_attribute({:output_filename, filename}, params) do
-    %{params | output_pid: File.open!(filename, [:write])}
+    %{params |
+      output_filename: filename,
+      ppm_filename: ppm_filename(filename),
+      output_pid: output_pid(ppm_filename(filename))}
   end
   defp parse_attribute({attribute, value}, params) do
     %{params | attribute => parse_value(attribute, value)}
+  end
+
+  defp ppm_filename(output_filename) do
+    root_filename =
+      output_filename
+      |> Path.rootname(".png")
+      |> Path.rootname(".ppm")
+    root_filename <> ".ppm"
+  end
+  defp output_pid(filename) do
+    File.open!(filename, [:write])
   end
 
   defp parse_value(:fractal, value) do
