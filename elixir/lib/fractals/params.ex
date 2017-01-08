@@ -5,7 +5,8 @@ defmodule Fractals.Params do
 
   defstruct [
     # operational
-    :seed,
+    :id,
+    :seed,  # TODO: actually use the seed
     :chunk_size, :chunk_count,
     :max_iterations, :cutoff_squared,
     # fractal
@@ -27,6 +28,7 @@ defmodule Fractals.Params do
 
   def default do
     %Params{
+      id:             UUID.uuid1,
       seed:           666,
       chunk_size:     1000,
       cutoff_squared: 4.0,
