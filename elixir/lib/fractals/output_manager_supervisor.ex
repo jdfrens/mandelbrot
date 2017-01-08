@@ -1,4 +1,4 @@
-defmodule Fractals.OutputSupervisor do
+defmodule Fractals.OutputManagerSupervisor do
   use Supervisor
 
   def start_link do
@@ -7,8 +7,8 @@ defmodule Fractals.OutputSupervisor do
 
   def init(:ok) do
     children = [
-      worker(Fractals.OutputManager, []),
-      supervisor(Fractals.OutputWorkerSupervisor, [])
+      supervisor(Fractals.OutputManagerSupervisor, []),
+      worker(Fractals.OutputWorker, [])
     ]
     supervise(children, strategy: :one_for_one)
   end

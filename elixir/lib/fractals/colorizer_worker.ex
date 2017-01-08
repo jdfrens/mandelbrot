@@ -1,7 +1,7 @@
 defmodule Fractals.ColorizerWorker do
   use GenServer
 
-  alias Fractals.OutputWorker
+  alias Fractals.OutputManager
   alias Fractals.Colorizer
 
   # Client
@@ -28,6 +28,6 @@ defmodule Fractals.ColorizerWorker do
 
   def write(chunk) do
     Progress.incr(:colorize_chunk)
-    OutputWorker.write(Fractals.OutputWorker, chunk)
+    OutputManager.write(OutputManager, chunk)
   end
 end
