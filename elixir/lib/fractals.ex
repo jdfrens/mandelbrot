@@ -1,13 +1,19 @@
 defmodule Fractals do
   use Application
 
+  @progress_measures [:generate_chunk, :escape_chunk, :colorize_chunk, :write_chunk]
+
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
     children = [
-      supervisor(Fractals.JobSupervisor, [])
+      worker(Progress, [@progress_measures]),
+      supervisor(Fractals.GridSupervisor, []),
+      supervisor(Fractals.EscapeTimeSupervisor, []),
+      supervisor(Fractals.ColorizerSupervisor, []),
+      supervisor(Fractals.OutputSupervisor, []),
+      supervisor(Fractals.ConversionSupervisor, [])
     ]
-    opts = [strategy: :one_for_one, name: Fractals.Supervisor]
-    Supervisor.start_link(children, opts)
+    Supervisor.start_link(children, strategy: :one_for_one)
   end
 end

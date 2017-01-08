@@ -20,11 +20,6 @@ defmodule Fractals.IntegrationTest do
     if File.exists?(@output_filename) do
       File.rm!(@output_filename)
     end
-    Application.start(:fractals)
-
-    on_exit fn ->
-      Application.stop(:fractals)
-    end
 
     :ok
   end

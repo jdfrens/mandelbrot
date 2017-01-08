@@ -3,8 +3,10 @@ defmodule Fractals.OutputWorker do
 
   # Client API
 
-  def start_link(next_stage \\ &Fractals.ConversionWorker.convert/1) do
-    GenServer.start_link(__MODULE__, next_stage, name: __MODULE__)
+  def start_link(options \\ []) do
+    next_stage = Keyword.get(options, :next_stage, &Fractals.ConversionWorker.convert/1)
+    name       = Keyword.get(options, :name, __MODULE__)
+    GenServer.start_link(__MODULE__, next_stage, name: name)
   end
 
   def write(pid, chunk) do

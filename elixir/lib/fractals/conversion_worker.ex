@@ -7,8 +7,10 @@ defmodule Fractals.ConversionWorker do
 
   # Client
 
-  def start_link(convert \\ &Fractals.ImageMagick.convert/2) do
-    GenServer.start_link(__MODULE__, convert, name: __MODULE__)
+  def start_link(options \\ []) do
+    convert = Keyword.get(options, :convert, &Fractals.ImageMagick.convert/2)
+    name    = Keyword.get(options, :name, __MODULE__)
+    GenServer.start_link(__MODULE__, convert, name: name)
   end
 
   def convert(pid, params) do
