@@ -13,9 +13,7 @@ defmodule Fractals.OutputWorker do
 
   # Server API
 
-  defmodule State do
-    defstruct next_number: 0, cache: %{}
-  end
+  alias Fractals.Output.OutputState
 
   def init(next_stage) do
     {:ok, {nil, next_stage}}
@@ -23,7 +21,7 @@ defmodule Fractals.OutputWorker do
 
   def handle_cast({:write, chunk}, {nil, next_stage}) do
     state =
-      %State{next_number: 0, cache: build_initial_cache(chunk.params)}
+      %OutputState{next_number: 0, cache: build_initial_cache(chunk.params)}
       |> process(chunk, next_stage)
     {:noreply, {state, next_stage}}
   end
@@ -34,7 +32,7 @@ defmodule Fractals.OutputWorker do
 
   # helpers
 
-  defp process(%State{next_number: next_number, cache: cache}, chunk, next_stage) do
+  defp process(%OutputState{next_number: next_number, cache: cache}, chunk, next_stage) do
     cache
     |> update_cache(chunk)
     |> output_cache(next_number, chunk.params, next_stage)
@@ -47,7 +45,7 @@ defmodule Fractals.OutputWorker do
   defp output_cache(cache, next_number, params, next_stage) do
     case Map.get(cache, next_number) do
       nil ->
-        %State{next_number: next_number, cache: cache}
+        %OutputState{next_number: next_number, cache: cache}
       :done ->
         next_stage.(params)
         nil
@@ -74,10 +72,14 @@ defmodule Fractals.OutputWorker do
   end
 
   defp lines_to_file(lines, params) do
-    Enum.each(lines, &(IO.puts(params.output_pid, &1)))
+    IO.write(params.output_pid, add_newlines(lines))
   end
 
   defp notify_source_pid(params, message) do
     send params.source_pid, message
+  end
+
+  defp add_newlines(lines) do
+    Enum.map(lines, &([&1, "\n"]))
   end
 end
