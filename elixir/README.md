@@ -36,10 +36,24 @@ $ mix spec
 $ mix escript.build
 ```
 
-You can run the executable, although you'll probably want to convert the [PPM file](https://en.wikipedia.org/wiki/Netpbm_format#PPM_example) into a more common image format with [ImageMagick](http://www.imagemagick.org/).
+Maybe compile it with `MIX_ENV=prod`?
+
+## Generating Fractals
+
+If you generate [PPM file](https://en.wikipedia.org/wiki/Netpbm_format#PPM_example) files, you're all done.  If you want PNG files, you need to install [ImageMagick](http://www.imagemagick.org/).  The Elixir program will automatically call the `convert` program to convert from PPM to PNG.
 
 ```
-$ fractals ../json/burningship-line-blue.json blb.ppm
-$ convert blb.ppm blb.png   # from ImageMagick
+$ fractals ../yaml/burningship-line-blue.json blb.png
 $ open blb.png
+```
+
+
+## Performance
+
+Each stage records a timestamp when it processes some data.  To graph this performance data, you need [gnuplot](http://www.gnuplot.info/).
+
+```
+$ fractals ../yaml/burningship-line-blue.json blb.png
+$ gnuplot plot.gp
+$ open logs/progress.png
 ```
