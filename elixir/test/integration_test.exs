@@ -1,6 +1,8 @@
 defmodule Fractals.IntegrationTest do
   use ExUnit.Case
 
+  # IDEA: generate two fractals
+
   @input_filename  "test/integration_input.yml"
   @output_filename "test/integration_output.ppm"
 
@@ -31,7 +33,9 @@ defmodule Fractals.IntegrationTest do
       source_pid: self()
     ])
     ExUnit.CaptureIO.capture_io(fn ->
-      Fractals.CLI.main_helper(params)
+      # SMELL: this seemss awkward
+      Fractals.fractalize(params)
+      Fractals.CLI.loop([@input_filename])
     end)
     output = File.read!(@output_filename)
     assert output == @expected_output

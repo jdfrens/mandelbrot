@@ -4,7 +4,10 @@ defmodule Fractals.OutputWorker do
   # Client API
 
   def start_link(options \\ []) do
-    next_stage = Keyword.get(options, :next_stage, &Fractals.ConversionWorker.convert/1)
+    next_stage = Keyword.get(options, :next_stage, fn params ->
+      Fractals.Params.close(params)
+      Fractals.ConversionWorker.convert(params)
+    end)
     name       = Keyword.get(options, :name, __MODULE__)
     GenServer.start_link(__MODULE__, next_stage, name: name)
   end
@@ -69,7 +72,7 @@ defmodule Fractals.OutputWorker do
 
   defp write_chunk(chunk_number, data, params) do
     Progress.incr(:write_chunk)
-    notify_source_pid(params, {:writing, params.ppm_filename, chunk_number})
+    notify_source_pid(params, {:writing, chunk_number, params})
     lines_to_file(data, params)
   end
 

@@ -19,7 +19,7 @@ defmodule Fractals.ConversionWorkerTest do
       params = %Params{params | output_filename: "output.ppm"}
       ConversionWorker.convert(pid, params)
 
-      assert_receive {:done, _pid}
+      assert_receive {:done, _pid, _params}
     end
 
     test "calls converter and reports done for a PNG file", %{pid: pid, params: params} do
@@ -27,7 +27,7 @@ defmodule Fractals.ConversionWorkerTest do
       ConversionWorker.convert(pid, params)
 
       assert_receive {"output.ppm", "output.png"}
-      assert_receive {:done, _pid}
+      assert_receive {:done, _pid, _params}
     end
   end
 end

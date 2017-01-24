@@ -1,6 +1,9 @@
 defmodule Fractals.Params do
   @moduledoc """
   Structure for params when generating fractals.
+
+  * `:params_filenames` is a list of filenames of params in reverse order
+    in which they were processed.
   """
 
   defstruct [
@@ -16,6 +19,8 @@ defmodule Fractals.Params do
     :size, :color,
     :upper_left, :lower_right,
     :max_intensity,
+    # input
+    :params_filenames,
     # output
     :output_filename, :ppm_filename, :output_pid,
     # processes
@@ -42,7 +47,8 @@ defmodule Fractals.Params do
       color:          :black_on_white,
       max_intensity:  255,
       upper_left:     cmplx(5.0, 6.0),
-      lower_right:    cmplx(6.0, 5.0)
+      lower_right:    cmplx(6.0, 5.0),
+      params_filenames: []
     }
   end
 
@@ -69,8 +75,9 @@ defmodule Fractals.Params do
   end
 
   defp parse_attribute({:params_filename, filename}, params) do
+    params_filenames = [filename | params.params_filenames]
     yaml = filename |> YamlElixir.read_from_file |> symbolize
-    parse(yaml, params)
+    parse(yaml, %{params | params_filenames: params_filenames})
   end
   defp parse_attribute({:output_filename, filename}, params) do
     %{params |

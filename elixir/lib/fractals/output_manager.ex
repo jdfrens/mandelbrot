@@ -25,7 +25,8 @@ defmodule Fractals.OutputManager do
   def get_pid(lookup, id) do
     case Map.get(lookup, id) do
       nil ->
-        {:ok, pid} = Supervisor.start_child(OutputWorkerSupervisor, [])
+        name = {:global, {:output_worker, id}}
+        {:ok, pid} = Supervisor.start_child(OutputWorkerSupervisor, [[name: name]])
         get_pid(Map.put(lookup, id, pid), id)
       pid ->
         {lookup, pid}

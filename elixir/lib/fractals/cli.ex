@@ -3,36 +3,37 @@ defmodule Fractals.CLI do
 
   def main(args) do
     case OptionParser.parse(args) do
-      {flags, [params_filename], _} ->
-        flags
-        |> Keyword.put(:params_filename, params_filename)
-        |> Keyword.put(:output_filename, output_filename(params_filename))
-        |> Keyword.put(:source_pid, self())
-        |> Params.parse
-        |> main_helper
+      {flags, filenames, _} ->
+        go(flags, filenames)
       _ ->
         usage()
     end
   end
 
-  def main_helper(%Params{fractal: :nova}) do
-    IO.puts "Nova fractal not supported."
-  end
-  def main_helper(params) do
-    {time, _} = :timer.tc(fn ->
-      Fractals.GridWorker.work(Fractals.GridWorker, params)
-      waiting_loop(params)
+  def go(flags, filenames) do
+    filenames
+    |> Enum.each(fn params_filename ->
+      flags
+      |> Keyword.put(:params_filename, params_filename)
+      |> Keyword.put(:output_filename, output_filename(params_filename))
+      |> Keyword.put(:source_pid, self())
+      |> Params.parse
+      |> Fractals.fractalize
     end)
-    IO.puts "#{time / 1_000_000} seconds"
+    loop(filenames)
   end
 
-  def waiting_loop(params) do
+  def loop([]) do
+    IO.puts "ALL DONE!"
+    IO.puts "Have a nice day."
+  end
+  def loop(filenames) do
     receive do
-      {:writing, filename, chunk_number} ->
-        IO.puts "writing #{chunk_number}/#{params.chunk_count} to #{filename}"
-        waiting_loop(params)
-      {:done, _} ->
-        Params.close(params)
+      {:writing, chunk_number, params} ->
+        IO.puts "writing #{chunk_number}/#{params.chunk_count} to #{params.ppm_filename}"
+        loop(filenames)
+      {:done, _, params} ->
+        loop(List.delete(filenames, List.last(params.params_filenames)))
     end
   end
 

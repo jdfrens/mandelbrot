@@ -42,7 +42,7 @@ defmodule Fractals.ConversionWorker do
   end
 
   defp done(params) do
-    notify_source_pid(params, {:done, self()})
+    notify_source_pid(params, {:done, self(), params})
   end
 
   defp notify_source_pid(params, message) do
