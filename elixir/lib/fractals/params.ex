@@ -52,8 +52,11 @@ defmodule Fractals.Params do
     }
   end
 
-  @precomputed_attributes [:chunk_count]
+  @precomputed_attributes [:chunk_count, :ppm_filename, :output_pid]
   @complex_attributes [:upper_left, :lower_right, :c, :p, :r, :z]
+
+  # IDEA: don't let user set some values (like output_pid)
+  # IDEA: add `postcheck` after `precompute` to check necessary values
 
   def parse(raw_params, params \\ default()) do
     raw_params
@@ -66,38 +69,17 @@ defmodule Fractals.Params do
     params
   end
 
-  defp precompute(params) do
-    Enum.reduce(@precomputed_attributes, params, &precompute_attribute/2)
-  end
-
-  defp precompute_attribute(attribute, params) do
-    %{params | attribute => precompute_value(attribute, params)}
-  end
+  # *******
+  # Parsing
+  # *******
 
   defp parse_attribute({:params_filename, filename}, params) do
     params_filenames = [filename | params.params_filenames]
     yaml = filename |> YamlElixir.read_from_file |> symbolize
     parse(yaml, %{params | params_filenames: params_filenames})
   end
-  defp parse_attribute({:output_filename, filename}, params) do
-    %{params |
-      output_filename: filename,
-      ppm_filename: ppm_filename(filename),
-      output_pid: output_pid(ppm_filename(filename))}
-  end
   defp parse_attribute({attribute, value}, params) do
     %{params | attribute => parse_value(attribute, value)}
-  end
-
-  defp ppm_filename(output_filename) do
-    root_filename =
-      output_filename
-      |> Path.rootname(".png")
-      |> Path.rootname(".ppm")
-    root_filename <> ".ppm"
-  end
-  defp output_pid(filename) do
-    File.open!(filename, [:write])
   end
 
   defp parse_value(:fractal, value) do
@@ -118,12 +100,17 @@ defmodule Fractals.Params do
   end
   defp parse_value(_attribute, value), do: value
 
-  defp symbolize(params) do
-    for {key, val} <- params, into: %{}, do: {to_atom(key), val}
+  # **********
+  # Precompute
+  # **********
+
+  defp precompute(params) do
+    Enum.reduce(@precomputed_attributes, params, &precompute_attribute/2)
   end
 
-  defp to_atom(key) when is_atom(key), do: key
-  defp to_atom(key), do: String.to_atom(Macro.underscore(key))
+  defp precompute_attribute(attribute, params) do
+    %{params | attribute => precompute_value(attribute, params)}
+  end
 
   defp precompute_value(:chunk_count, params) do
     pixel_count = params.size.width * params.size.height
@@ -133,4 +120,37 @@ defmodule Fractals.Params do
       div(pixel_count, params.chunk_size) + 1
     end
   end
+  defp precompute_value(:ppm_filename, params) do
+    case params.output_filename do
+      nil ->
+        nil
+      filename ->
+        image_basename(filename) <> ".ppm"
+    end
+  end
+  defp precompute_value(:output_pid, params) do
+    case params.ppm_filename do
+      nil ->
+        nil
+      filename ->
+        File.open!(filename, [:write])
+    end
+  end
+
+  defp image_basename(filename) do
+    filename
+    |> Path.rootname(".png")
+    |> Path.rootname(".ppm")
+  end
+
+  # *******
+  # Helpers
+  # *******
+
+  defp symbolize(params) do
+    for {key, val} <- params, into: %{}, do: {to_atom(key), val}
+  end
+
+  defp to_atom(key) when is_atom(key), do: key
+  defp to_atom(key), do: String.to_atom(Macro.underscore(key))
 end
