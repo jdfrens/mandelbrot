@@ -2,10 +2,13 @@ defmodule Fractals do
   use Application
 
   @progress_measures [:generate_chunk, :escape_chunk, :colorize_chunk, :write_chunk]
+  @unimplemented Application.get_env(:fractals, :unimplemented)
 
   def fractalize(params) do
     # TODO: call start process instead
-    Fractals.GridWorker.work(Fractals.GridWorker, params)
+    unless Enum.member?(@unimplemented, params.fractal) do
+      Fractals.GridWorker.work(Fractals.GridWorker, params)
+    end
   end
 
   def start(_type, _args) do

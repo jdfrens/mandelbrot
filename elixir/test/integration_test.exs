@@ -3,8 +3,8 @@ defmodule Fractals.IntegrationTest do
 
   # IDEA: generate two fractals
 
-  @input_filename  "test/integration_input.yml"
-  @output_filename "test/integration_output.ppm"
+  @mandelbrot_input_filename  "test/inputs/integration_mandelbrot.yml"
+  @mandelbrot_output_filename "test/images/integration_mandelbrot.ppm"
 
   @expected_output [
     "P3",
@@ -19,25 +19,26 @@ defmodule Fractals.IntegrationTest do
     ] |> Enum.join("\n")
 
   setup do
-    if File.exists?(@output_filename) do
-      File.rm!(@output_filename)
+    if File.exists?(@mandelbrot_output_filename) do
+      File.rm!(@mandelbrot_output_filename)
     end
 
     :ok
   end
 
   test "generates a pretty picture" do
-    params = Fractals.Params.parse([
-      params_filename: @input_filename,
-      output_filename: @output_filename,
+    params = Fractals.Params.process([
+      output_directory: "test/images",
+      params_filename: @mandelbrot_input_filename,
       source_pid: self()
     ])
     ExUnit.CaptureIO.capture_io(fn ->
       # SMELL: this seemss awkward
       Fractals.fractalize(params)
-      Fractals.CLI.loop([@input_filename])
+      Fractals.CLI.watch([@mandelbrot_input_filename])
     end)
-    output = File.read!(@output_filename)
+
+    output = File.read!(@mandelbrot_output_filename)
     assert output == @expected_output
   end
 end

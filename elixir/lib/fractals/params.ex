@@ -1,9 +1,6 @@
 defmodule Fractals.Params do
   @moduledoc """
   Structure for params when generating fractals.
-
-  * `:params_filenames` is a list of filenames of params in reverse order
-    in which they were processed.
   """
 
   defstruct [
@@ -20,9 +17,9 @@ defmodule Fractals.Params do
     :upper_left, :lower_right,
     :max_intensity,
     # input
-    :params_filenames,
+    :params_filename,
     # output
-    :output_filename, :ppm_filename, :output_pid,
+    :output_directory, :output_filename, :ppm_filename, :output_pid,
     # processes
     :source_pid
   ]
@@ -48,20 +45,27 @@ defmodule Fractals.Params do
       max_intensity:  255,
       upper_left:     cmplx(5.0, 6.0),
       lower_right:    cmplx(6.0, 5.0),
-      params_filenames: []
+      output_directory: "images"
     }
   end
 
-  @precomputed_attributes [:chunk_count, :ppm_filename, :output_pid]
+  @precomputed_attributes [:chunk_count, :output_filename, :ppm_filename, :output_pid]
   @complex_attributes [:upper_left, :lower_right, :c, :p, :r, :z]
+  # IDEA: this could be a param
+  @output_extension ".png"
 
   # IDEA: don't let user set some values (like output_pid)
   # IDEA: add `postcheck` after `precompute` to check necessary values
 
+  def process(raw_params, params \\ default()) do
+    raw_params
+    |> parse(params)
+    |> precompute
+  end
+
   def parse(raw_params, params \\ default()) do
     raw_params
     |> Enum.reduce(params, &parse_attribute/2)
-    |> precompute
   end
 
   def close(params) do
@@ -74,9 +78,8 @@ defmodule Fractals.Params do
   # *******
 
   defp parse_attribute({:params_filename, filename}, params) do
-    params_filenames = [filename | params.params_filenames]
     yaml = filename |> YamlElixir.read_from_file |> symbolize
-    parse(yaml, %{params | params_filenames: params_filenames})
+    parse(yaml, %{params | params_filename: filename})
   end
   defp parse_attribute({attribute, value}, params) do
     %{params | attribute => parse_value(attribute, value)}
@@ -120,12 +123,20 @@ defmodule Fractals.Params do
       div(pixel_count, params.chunk_size) + 1
     end
   end
+  defp precompute_value(:output_filename, params) do
+    case params.params_filename do
+      nil ->
+        nil
+      filename ->
+        output_basepath(filename, params) <> @output_extension
+    end
+  end
   defp precompute_value(:ppm_filename, params) do
     case params.output_filename do
       nil ->
         nil
       filename ->
-        image_basename(filename) <> ".ppm"
+        output_basepath(filename, params) <> ".ppm"
     end
   end
   defp precompute_value(:output_pid, params) do
@@ -137,10 +148,15 @@ defmodule Fractals.Params do
     end
   end
 
-  defp image_basename(filename) do
+  defp output_basepath(filename, params) do
+    Path.join(params.output_directory, basename(filename))
+  end
+
+  defp basename(filename) do
     filename
-    |> Path.rootname(".png")
-    |> Path.rootname(".ppm")
+    |> Path.basename(".yml")
+    |> Path.basename(".png")
+    |> Path.basename(".ppm")
   end
 
   # *******

@@ -6,3 +6,4 @@ erl_crash.dump
 /fractals
 /images
 /logs
+/test/images
