@@ -4,13 +4,6 @@ defmodule Fractals do
   @progress_measures [:generate_chunk, :escape_chunk, :colorize_chunk, :write_chunk]
   @unimplemented Application.get_env(:fractals, :unimplemented)
 
-  def fractalize(params) do
-    # TODO: call start process instead
-    unless Enum.member?(@unimplemented, params.fractal) do
-      Fractals.GridWorker.work(Fractals.GridWorker, params)
-    end
-  end
-
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
@@ -25,6 +18,17 @@ defmodule Fractals do
       # TODO: end process
     ]
     Supervisor.start_link(children, strategy: :one_for_one)
+  end
+
+  def fractalize(params) do
+    # TODO: call start process instead
+    unless implemented?(params.fractal) do
+      Fractals.GridWorker.work(Fractals.GridWorker, params)
+    end
+  end
+
+  defp implemented?(fractal) do
+    Enum.member?(@unimplemented, fractal)
   end
 end
 

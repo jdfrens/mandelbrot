@@ -3,6 +3,9 @@ defmodule Fractals.OutputWorker do
 
   # Client API
 
+  # :next_stage is a callback function which is called when an image
+  # is all written.  By default, this will close the output file and invoke
+  # the conversion worker (from PPM to PNG).
   def start_link(options \\ []) do
     next_stage = Keyword.get(options, :next_stage, fn params ->
       Fractals.Params.close(params)
