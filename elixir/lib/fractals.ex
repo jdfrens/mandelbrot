@@ -10,11 +10,13 @@ defmodule Fractals do
     children = [
       worker(Progress, [@progress_measures]),
       # TODO: start process
-      supervisor(Fractals.GridSupervisor, []),
-      supervisor(Fractals.EscapeTimeSupervisor, []),
-      supervisor(Fractals.ColorizerSupervisor, []),
-      supervisor(Fractals.OutputSupervisor, []),
-      supervisor(Fractals.ConversionSupervisor, []),
+      worker(Fractals.GridWorker, []),
+      worker(Fractals.EscapeTimeWorker, []),
+      worker(Fractals.ColorizerWorker, []),
+      worker(Fractals.Colorizer.Random, []),
+      worker(Fractals.OutputManager, []),
+      supervisor(Fractals.OutputWorkerSupervisor, []),
+      worker(Fractals.ConversionWorker, []),
       # TODO: end process
     ]
     Supervisor.start_link(children, strategy: :one_for_one)
