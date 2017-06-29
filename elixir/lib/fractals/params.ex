@@ -30,7 +30,6 @@ defmodule Fractals.Params do
 
   def default do
     %Params{
-      id:             UUID.uuid1,
       seed:           666,
       chunk_size:     1000,
       cutoff_squared: 4.0,
@@ -49,18 +48,18 @@ defmodule Fractals.Params do
     }
   end
 
-  @precomputed_attributes [:chunk_count, :output_filename, :ppm_filename, :output_pid]
+  @computed_attributes [:id, :chunk_count, :output_filename, :ppm_filename, :output_pid]
   @complex_attributes [:upper_left, :lower_right, :c, :p, :r, :z]
   # IDEA: this could be a param
   @output_extension ".png"
 
   # IDEA: don't let user set some values (like output_pid)
-  # IDEA: add `postcheck` after `precompute` to check necessary values
+  # IDEA: add `postcheck` after `compute` to check necessary values
 
   def process(raw_params, params \\ default()) do
     raw_params
     |> parse(params)
-    |> precompute
+    |> compute
   end
 
   def parse(raw_params, params \\ default()) do
@@ -104,18 +103,21 @@ defmodule Fractals.Params do
   defp parse_value(_attribute, value), do: value
 
   # **********
-  # Precompute
+  # Compute
   # **********
 
-  defp precompute(params) do
-    Enum.reduce(@precomputed_attributes, params, &precompute_attribute/2)
+  defp compute(params) do
+    Enum.reduce(@computed_attributes, params, &compute_attribute/2)
   end
 
-  defp precompute_attribute(attribute, params) do
-    %{params | attribute => precompute_value(attribute, params)}
+  defp compute_attribute(attribute, params) do
+    %{params | attribute => compute_value(attribute, params)}
   end
 
-  defp precompute_value(:chunk_count, params) do
+  defp compute_value(:id, _params) do
+    UUID.uuid1
+  end
+  defp compute_value(:chunk_count, params) do
     pixel_count = params.size.width * params.size.height
     if rem(pixel_count, params.chunk_size) == 0 do
       div(pixel_count, params.chunk_size)
@@ -123,7 +125,7 @@ defmodule Fractals.Params do
       div(pixel_count, params.chunk_size) + 1
     end
   end
-  defp precompute_value(:output_filename, params) do
+  defp compute_value(:output_filename, params) do
     case params.params_filename do
       nil ->
         nil
@@ -131,7 +133,7 @@ defmodule Fractals.Params do
         output_basepath(filename, params) <> @output_extension
     end
   end
-  defp precompute_value(:ppm_filename, params) do
+  defp compute_value(:ppm_filename, params) do
     case params.output_filename do
       nil ->
         nil
@@ -139,7 +141,7 @@ defmodule Fractals.Params do
         output_basepath(filename, params) <> ".ppm"
     end
   end
-  defp precompute_value(:output_pid, params) do
+  defp compute_value(:output_pid, params) do
     case params.ppm_filename do
       nil ->
         nil
