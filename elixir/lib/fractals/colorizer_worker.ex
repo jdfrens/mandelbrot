@@ -17,7 +17,7 @@ defmodule Fractals.ColorizerWorker do
   # Server
 
   def handle_cast({:color, %Chunk{params: params, data: data} = chunk}, state) do
-    {:ok, _pid} = Task.start(fn -> write(%{chunk | data: colorize(data, params)}) end)
+    write(%{chunk | data: colorize(data, params)})
     {:noreply, state}
   end
 

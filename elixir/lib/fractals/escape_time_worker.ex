@@ -17,11 +17,9 @@ defmodule Fractals.EscapeTimeWorker do
   # Server
 
   def handle_cast({:escape_time, %Chunk{params: params, data: data} = chunk}, :ok) do
-    {:ok, _pid} = Task.start(fn ->
-      new_data = pixels(params.fractal, data, params)
-      Progress.incr(:escape_chunk)
-      send_chunk(%{chunk | data: new_data})
-    end)
+    new_data = pixels(params.fractal, data, params)
+    Progress.incr(:escape_chunk)
+    send_chunk(%{chunk | data: new_data})
     {:noreply, :ok}
   end
 

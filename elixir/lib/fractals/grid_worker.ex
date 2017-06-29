@@ -17,12 +17,10 @@ defmodule Fractals.GridWorker do
   # Server
 
   def handle_cast({:work, params}, :ok) do
-    {:ok, _pid} = Task.start(fn ->
-      Grid.grid(params)
-      |> Grid.chunk(params)
-      |> Stream.each(&send_chunk(&1))
-      |> Stream.run
-    end)
+    Grid.grid(params)
+    |> Grid.chunk(params)
+    |> Stream.each(&send_chunk(&1))
+    |> Stream.run
     {:noreply, :ok}
   end
 
