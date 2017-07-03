@@ -7,17 +7,21 @@ defmodule Fractals do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
+    grid = worker(Fractals.GridWorker, [])
+    # worker(Fractals.EscapeTimeWorker, [])
+    # worker(Fractals.ColorizerWorker, [])
+    # worker(Fractals.Colorizer.Random, [])
+    # worker(Fractals.OutputManager, [])
+    # supervisor(Fractals.OutputWorkerSupervisor, [])
+    # worker(Fractals.ConversionWorker, [])
+    spike = worker(Spike, [])
+
     children = [
       worker(Progress, [@progress_measures]),
       # TODO: start process
-      worker(Fractals.GridWorker, []),
-      worker(Fractals.EscapeTimeWorker, []),
-      worker(Fractals.ColorizerWorker, []),
-      worker(Fractals.Colorizer.Random, []),
-      worker(Fractals.OutputManager, []),
-      supervisor(Fractals.OutputWorkerSupervisor, []),
-      worker(Fractals.ConversionWorker, []),
+      grid,
       # TODO: end process
+      spike
     ]
     Supervisor.start_link(children, strategy: :one_for_one)
   end

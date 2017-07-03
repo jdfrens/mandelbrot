@@ -1,6 +1,8 @@
 defmodule Fractals.IntegrationTest do
   use ExUnit.Case
 
+  @moduletag :skip
+
   # IDEA: generate two fractals
 
   @mandelbrot_input_filename  "test/inputs/integration_mandelbrot.yml"

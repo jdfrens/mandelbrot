@@ -8,11 +8,16 @@ defmodule Fractals.Grid do
 
   import Complex, only: :macros
 
+  def chunked_grid(params) do
+    params |> grid |> chunk(params)
+  end
+
   def chunk(grid, params) do
     grid
     |> Stream.chunk(params.chunk_size, params.chunk_size, [])
     |> Stream.zip(1..params.chunk_count)
     |> Stream.map(fn {data, number} -> %Chunk{number: number, data: data, params: params} end)
+    |> Enum.to_list
   end
 
   def grid(params) do
