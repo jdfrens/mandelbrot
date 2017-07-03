@@ -7,12 +7,13 @@ defmodule Spike do
 
   def init(:ok) do
     IO.puts("Spike init!!!")
-    {:consumer, :irrelevant_state, subscribe_to: [Fractals.GridWorker]}
+    {:consumer, :irrelevant_state, subscribe_to: [Fractals.EscapeTimeWorker]}
   end
 
   def handle_events(events, _from, state) do
     IO.puts("Spike handlin' events!!!!")
     IO.puts(length(events))
+    IO.inspect(List.first(events))
     {:noreply, [], state}
   end
 end

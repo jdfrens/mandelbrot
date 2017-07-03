@@ -8,7 +8,7 @@ defmodule Fractals do
     import Supervisor.Spec, warn: false
 
     grid = worker(Fractals.GridWorker, [])
-    # worker(Fractals.EscapeTimeWorker, [])
+    escape_time = worker(Fractals.EscapeTimeWorker, [])
     # worker(Fractals.ColorizerWorker, [])
     # worker(Fractals.Colorizer.Random, [])
     # worker(Fractals.OutputManager, [])
@@ -20,6 +20,7 @@ defmodule Fractals do
       worker(Progress, [@progress_measures]),
       # TODO: start process
       grid,
+      escape_time,
       # TODO: end process
       spike
     ]
