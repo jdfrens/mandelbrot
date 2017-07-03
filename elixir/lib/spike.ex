@@ -7,7 +7,7 @@ defmodule Spike do
 
   def init(:ok) do
     IO.puts("Spike init!!!")
-    {:consumer, :irrelevant_state, subscribe_to: [Fractals.EscapeTimeWorker]}
+    {:consumer, :irrelevant_state, subscribe_to: [Fractals.ColorizerWorker]}
   end
 
   def handle_events(events, _from, state) do

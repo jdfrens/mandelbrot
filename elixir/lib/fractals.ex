@@ -9,22 +9,26 @@ defmodule Fractals do
 
     grid = worker(Fractals.GridWorker, [])
     escape_time = worker(Fractals.EscapeTimeWorker, [])
-    # worker(Fractals.ColorizerWorker, [])
-    # worker(Fractals.Colorizer.Random, [])
+    colorizer = worker(Fractals.ColorizerWorker, [])
     # worker(Fractals.OutputManager, [])
     # supervisor(Fractals.OutputWorkerSupervisor, [])
     # worker(Fractals.ConversionWorker, [])
     spike = worker(Spike, [])
 
-    children = [
+    unstaged = [
+      worker(Fractals.Colorizer.Random, [])
+    ]
+
+    staged = [
       worker(Progress, [@progress_measures]),
       # TODO: start process
       grid,
       escape_time,
+      colorizer,
       # TODO: end process
       spike
     ]
-    Supervisor.start_link(children, strategy: :one_for_one)
+    Supervisor.start_link(staged ++ unstaged, strategy: :one_for_one)
   end
 
   def fractalize(params) do
