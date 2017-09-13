@@ -13,7 +13,7 @@ defmodule Fractals.OutputManager do
   # Server API
 
   def init(process_lookup) do
-    {:consumer, process_lookup, subscribe_to: [Fractals.ColorizerWorker]}
+    {:consumer, process_lookup, subscribe_to: [{Fractals.ColorizerWorker, max_demand: 10}]}
   end
 
   def handle_events(events, _from, process_lookup) do

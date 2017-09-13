@@ -16,7 +16,7 @@ defmodule Fractals.ColorizerWorker do
   # Server
 
   def init(:ok) do
-    {:producer_consumer, :ok, subscribe_to: [Fractals.EscapeTimeWorker]}
+    {:producer_consumer, :ok, subscribe_to: [{Fractals.EscapeTimeWorker, max_demand: 10}]}
   end
 
   def handle_events(events, _from, :ok) do

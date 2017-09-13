@@ -12,7 +12,7 @@ defmodule Fractals.EscapeTimeWorker do
   # Server
 
   def init(:ok) do
-    {:producer_consumer, :ok, subscribe_to: [Fractals.GridWorker]}
+    {:producer_consumer, :ok, subscribe_to: [{Fractals.GridWorker, max_demand: 10}]}
   end
 
   def handle_events(events, _from, :ok) do
@@ -33,8 +33,4 @@ defmodule Fractals.EscapeTimeWorker do
   def pixels(:burningship, data, params) do
     BurningShip.pixels(data, params)
   end
-
-  # def send_chunk(chunk) do
-  #   ColorizerWorker.color(ColorizerWorker, chunk)
-  # end
 end

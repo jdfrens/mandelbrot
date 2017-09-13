@@ -29,10 +29,17 @@ defmodule Fractals.CLI do
   end
   def watch(filenames) do
     receive do
+      {:starting, _from, params} ->
+        IO.puts "starting #{params.output_filename}"
+        watch(filenames)
       {:writing, chunk_number, params} ->
         IO.puts "writing #{chunk_number}/#{params.chunk_count} to #{params.ppm_filename}"
         watch(filenames)
+      {:skipping, _, params, reason} ->
+        IO.puts "skipping #{params.output_filename}: #{reason}"
+        watch(List.delete(filenames, params.params_filename))
       {:done, _, params} ->
+        IO.puts "finished #{params.output_filename}"
         watch(List.delete(filenames, params.params_filename))
     end
   end
