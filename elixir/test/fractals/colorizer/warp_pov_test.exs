@@ -4,7 +4,7 @@ defmodule Fractals.Colorizer.WarpPovTest do
   alias Fractals.Colorizer.WarpPov
 
   setup do
-    [params: Fractals.Params.default]
+    [params: Fractals.Params.default()]
   end
 
   describe ".red" do
@@ -33,12 +33,15 @@ defmodule Fractals.Colorizer.WarpPovTest do
     test "is all 0 for 0 iterations", %{params: params} do
       assert WarpPov.intensities(0, params) == {0, 0}
     end
+
     test "is all 0 for 1 iteration", %{params: params} do
       assert WarpPov.intensities(1, params) == {0, 0}
     end
+
     test "is primary 2 for 2 iteration", %{params: params} do
       assert WarpPov.intensities(2, params) == {2, 0}
     end
+
     test "is primary 251 for 127 (half minus one) iterations", %{params: params} do
       assert WarpPov.intensities(127, params) == {251, 0}
     end
@@ -46,6 +49,7 @@ defmodule Fractals.Colorizer.WarpPovTest do
     test "is secondary 0 for 128 (half max) iterations", %{params: params} do
       assert WarpPov.intensities(128, params) == {255, 0}
     end
+
     test "is 253 secondary for 255 iterations", %{params: params} do
       assert WarpPov.intensities(255, params) == {255, 253}
     end
@@ -55,9 +59,11 @@ defmodule Fractals.Colorizer.WarpPovTest do
     test "scales 1 iteration to 0", %{params: params} do
       assert WarpPov.scale(1, params) == 0
     end
+
     test "scales 64 iterations to 251", %{params: params} do
       assert WarpPov.scale(127, params) == 251
     end
+
     test "scales half of max iterations to max intensity", %{params: params} do
       assert WarpPov.scale(128, params) == 253
     end

@@ -6,20 +6,31 @@ defmodule Fractals.Params do
   defstruct [
     # operational
     :id,
-    :seed,  # TODO: actually use the seed
-    :chunk_size, :chunk_count,
-    :max_iterations, :cutoff_squared,
+    # TODO: actually use the seed
+    :seed,
+    :chunk_size,
+    :chunk_count,
+    :max_iterations,
+    :cutoff_squared,
     # fractal
     :fractal,
-    :c, :z, :r, :p,
+    :c,
+    :z,
+    :r,
+    :p,
     # image
-    :size, :color,
-    :upper_left, :lower_right,
+    :size,
+    :color,
+    :upper_left,
+    :lower_right,
     :max_intensity,
     # input
     :params_filename,
     # output
-    :output_directory, :output_filename, :ppm_filename, :output_pid,
+    :output_directory,
+    :output_filename,
+    :ppm_filename,
+    :output_pid,
     # processes
     :source_pid
   ]
@@ -30,20 +41,20 @@ defmodule Fractals.Params do
 
   def default do
     %Params{
-      seed:           666,
-      chunk_size:     1000,
+      seed: 666,
+      chunk_size: 1000,
       cutoff_squared: 4.0,
       max_iterations: 256,
-      fractal:        :mandelbrot,
-      p:              Complex.zero,
-      r:              Complex.zero,
-      z:              Complex.zero,
-      c:              cmplx(1.0),
-      size:           %Size{width: 512, height: 384},
-      color:          :black_on_white,
-      max_intensity:  255,
-      upper_left:     cmplx(5.0, 6.0),
-      lower_right:    cmplx(6.0, 5.0),
+      fractal: :mandelbrot,
+      p: Complex.zero(),
+      r: Complex.zero(),
+      z: Complex.zero(),
+      c: cmplx(1.0),
+      size: %Size{width: 512, height: 384},
+      color: :black_on_white,
+      max_intensity: 255,
+      upper_left: cmplx(5.0, 6.0),
+      lower_right: cmplx(6.0, 5.0),
       output_directory: "images"
     }
   end
@@ -81,6 +92,7 @@ defmodule Fractals.Params do
          yaml <- symbolize(raw_yaml),
          do: parse(yaml, %{params | params_filename: filename})
   end
+
   defp parse_attribute({attribute, value}, params) do
     %{params | attribute => parse_value(attribute, value)}
   end
@@ -88,19 +100,24 @@ defmodule Fractals.Params do
   defp parse_value(:fractal, value) do
     String.to_atom(String.downcase(value))
   end
+
   defp parse_value(:color, color) do
     String.to_atom(Inflex.underscore(color))
   end
+
   defp parse_value(attribute, value) when attribute in @complex_attributes do
     Complex.parse(value)
   end
+
   defp parse_value(:size, value) do
     [_, width, height] = Regex.run(~r/(\d+)x(\d+)/, value)
+
     %Size{
-     width:  String.to_integer(width),
-     height: String.to_integer(height)
+      width: String.to_integer(width),
+      height: String.to_integer(height)
     }
   end
+
   defp parse_value(_attribute, value), do: value
 
   # **********
@@ -116,36 +133,44 @@ defmodule Fractals.Params do
   end
 
   defp compute_value(:id, _params) do
-    UUID.uuid1
+    UUID.uuid1()
   end
+
   defp compute_value(:chunk_count, params) do
     pixel_count = params.size.width * params.size.height
+
     if rem(pixel_count, params.chunk_size) == 0 do
       div(pixel_count, params.chunk_size)
     else
       div(pixel_count, params.chunk_size) + 1
     end
   end
+
   defp compute_value(:output_filename, params) do
     case params.params_filename do
       nil ->
         nil
+
       filename ->
         output_basepath(filename, params) <> @output_extension
     end
   end
+
   defp compute_value(:ppm_filename, params) do
     case params.output_filename do
       nil ->
         nil
+
       filename ->
         output_basepath(filename, params) <> ".ppm"
     end
   end
+
   defp compute_value(:output_pid, params) do
     case params.ppm_filename do
       nil ->
         nil
+
       filename ->
         File.open!(filename, [:write])
     end

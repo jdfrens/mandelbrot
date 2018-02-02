@@ -9,6 +9,7 @@ defmodule Fractals.OutputWorkerSupervisor do
     children = [
       worker(Fractals.OutputWorker, [], restart: :transient)
     ]
+
     supervise(children, strategy: :simple_one_for_one)
   end
 end

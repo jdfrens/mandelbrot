@@ -12,7 +12,6 @@ defmodule Fractals.EscapeTime.Helpers do
   end
 
   def done?({z, iterations}, params) do
-    outside?(z, params.cutoff_squared) ||
-      inside?(iterations, params.max_iterations)
+    outside?(z, params.cutoff_squared) || inside?(iterations, params.max_iterations)
   end
 end

@@ -13,7 +13,7 @@ defmodule PPMSpec do
     end
 
     test "pads each components with spaces" do
-      assert PPM.ppm(  0,  0, 255) == "  0   0 255 "
+      assert PPM.ppm(0, 0, 255) == "  0   0 255 "
     end
   end
 end

@@ -20,15 +20,17 @@ defmodule Fractals.ColorizerWorker do
   end
 
   def handle_events(events, _from, :ok) do
-    colorized = Enum.map(events, fn(chunk) ->
-      # TODO: measure progress
-      # Progress.incr(:colorize_chunk)
-      %{chunk | data: colorize(chunk.data, chunk.params)}
-    end)
+    colorized =
+      Enum.map(events, fn chunk ->
+        # TODO: measure progress
+        # Progress.incr(:colorize_chunk)
+        %{chunk | data: colorize(chunk.data, chunk.params)}
+      end)
+
     {:noreply, colorized, :ok}
   end
 
-  @spec colorize({atom, {non_neg_integer, list}}, Params) :: list(String.t)
+  @spec colorize({atom, {non_neg_integer, list}}, Params) :: list(String.t())
   def colorize(data, params) do
     Enum.map(data, &Colorizer.color_point(&1, params))
   end

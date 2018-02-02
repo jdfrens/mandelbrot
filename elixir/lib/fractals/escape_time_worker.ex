@@ -16,20 +16,24 @@ defmodule Fractals.EscapeTimeWorker do
   end
 
   def handle_events(events, _from, :ok) do
-    escaped = Enum.map(events, fn(%Chunk{params: params} = chunk)->
-      %{chunk | data: pixels(params.fractal, chunk.data, params)}
-      # TODO: record this elsewhere?
-      # Progress.incr(:escape_chunk)
-    end)
+    escaped =
+      Enum.map(events, fn %Chunk{params: params} = chunk ->
+        %{chunk | data: pixels(params.fractal, chunk.data, params)}
+        # TODO: record this elsewhere?
+        # Progress.incr(:escape_chunk)
+      end)
+
     {:noreply, escaped, :ok}
   end
 
   def pixels(:mandelbrot, data, params) do
     Mandelbrot.pixels(data, params)
   end
+
   def pixels(:julia, data, params) do
     Julia.pixels(data, params)
   end
+
   def pixels(:burningship, data, params) do
     BurningShip.pixels(data, params)
   end

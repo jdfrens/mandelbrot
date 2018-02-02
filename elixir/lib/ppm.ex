@@ -8,7 +8,7 @@ defmodule PPM do
 
   @format "~3B ~3B ~3B "
 
-  def black, do: ppm(  0,   0,   0)
+  def black, do: ppm(0, 0, 0)
   def white, do: ppm(255, 255, 255)
 
   def p3_header(width, height) do
@@ -21,6 +21,7 @@ defmodule PPM do
   end
 
   def ppm(red, green, blue), do: ppm([red, green, blue])
+
   def ppm(rgb) do
     :erlang.iolist_to_binary(:io_lib.format(@format, rgb))
   end

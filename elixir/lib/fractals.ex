@@ -27,10 +27,11 @@ defmodule Fractals do
   end
 
   def fractalize(params) do
-    send params.source_pid, {:starting, self(), params}
+    send(params.source_pid, {:starting, self(), params})
+
     if unimplemented?(params.fractal) do
       # TODO: extract a common library for these notifications
-      send params.source_pid, {:skipping, self(), params, "not implemented"}
+      send(params.source_pid, {:skipping, self(), params, "not implemented"})
     else
       Fractals.GridWorker.work(Fractals.GridWorker, params)
     end

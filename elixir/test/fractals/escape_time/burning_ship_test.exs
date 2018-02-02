@@ -15,11 +15,13 @@ defmodule Fractals.EscapeTime.BurningShipTest do
     test "negates the imaginary component" do
       assert BurningShip.burn(cmplx(5.0, 3.0)) == cmplx(5.0, -3.0)
     end
+
     test "keeps the imaginary component negative" do
       assert BurningShip.burn(cmplx(5.0, -3.0)) == cmplx(5.0, -3.0)
     end
+
     test "uses the absolute value of the real component" do
-      assert BurningShip.burn(cmplx(-5.0,  3.0)) == cmplx(5.0, -3.0)
+      assert BurningShip.burn(cmplx(-5.0, 3.0)) == cmplx(5.0, -3.0)
     end
   end
 end

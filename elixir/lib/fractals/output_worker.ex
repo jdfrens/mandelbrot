@@ -7,11 +7,13 @@ defmodule Fractals.OutputWorker do
   # is all written.  By default, this will close the output file and invoke
   # the conversion worker (from PPM to PNG).
   def start_link(options \\ []) do
-    next_stage = Keyword.get(options, :next_stage, fn params ->
-      Fractals.Params.close(params)
-      Fractals.ConversionWorker.convert(params)
-    end)
-    name       = Keyword.get(options, :name, __MODULE__)
+    next_stage =
+      Keyword.get(options, :next_stage, fn params ->
+        Fractals.Params.close(params)
+        Fractals.ConversionWorker.convert(params)
+      end)
+
+    name = Keyword.get(options, :name, __MODULE__)
     GenServer.start_link(__MODULE__, next_stage, name: name)
   end
 
@@ -35,8 +37,10 @@ defmodule Fractals.OutputWorker do
     state =
       %OutputState{next_number: 0, cache: build_initial_cache(chunk.params)}
       |> process(chunk, next_stage)
+
     {:noreply, {state, next_stage}}
   end
+
   def handle_cast({:write, chunk}, {state, next_stage}) do
     state = process(state, chunk, next_stage)
     {:noreply, {state, next_stage}}
@@ -58,11 +62,14 @@ defmodule Fractals.OutputWorker do
     case Map.get(cache, next_number) do
       nil ->
         %OutputState{next_number: next_number, cache: cache}
+
       :done ->
         next_stage.(params)
         nil
+
       data ->
         write_chunk(next_number, data, params)
+
         cache
         |> Map.delete(next_number)
         |> output_cache(next_number + 1, params, next_stage)
@@ -70,7 +77,7 @@ defmodule Fractals.OutputWorker do
   end
 
   defp build_initial_cache(params) do
-    %{0 => header(params), params.chunk_count + 1 => :done}
+    %{0 => header(params), (params.chunk_count + 1) => :done}
   end
 
   defp header(params) do
@@ -88,10 +95,10 @@ defmodule Fractals.OutputWorker do
   end
 
   defp notify_source_pid(params, message) do
-    send params.source_pid, message
+    send(params.source_pid, message)
   end
 
   defp add_newlines(lines) do
-    Enum.map(lines, &([&1, "\n"]))
+    Enum.map(lines, &[&1, "\n"])
   end
 end

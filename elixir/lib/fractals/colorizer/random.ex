@@ -20,7 +20,7 @@ defmodule Fractals.Colorizer.Random do
   end
 
   def handle_call({:at, iterations, params}, _, colors) do
-    color = colors |> pick_color(iterations, params) |> PPM.ppm
+    color = colors |> pick_color(iterations, params) |> PPM.ppm()
     {:reply, color, colors}
   end
 
@@ -43,6 +43,6 @@ defmodule Fractals.Colorizer.Random do
   end
 
   defp random_color do
-    [:rand.uniform, :rand.uniform, :rand.uniform]
+    [:rand.uniform(), :rand.uniform(), :rand.uniform()]
   end
 end

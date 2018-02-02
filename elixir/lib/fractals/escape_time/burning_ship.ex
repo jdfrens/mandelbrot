@@ -8,7 +8,7 @@ defmodule Fractals.EscapeTime.BurningShip do
   use Fractals.EscapeTime
 
   def iterate(grid_point, _params) do
-    Stream.iterate(Complex.zero, &iterator(&1, grid_point))
+    Stream.iterate(Complex.zero(), &iterator(&1, grid_point))
   end
 
   def iterator(z, c) do

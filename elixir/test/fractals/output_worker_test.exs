@@ -6,7 +6,7 @@ defmodule Fractals.OutputWorkerTest do
 
   setup do
     test_pid = self()
-    next_stage = fn _params -> send test_pid, :sent_to_next_stage end
+    next_stage = fn _params -> send(test_pid, :sent_to_next_stage) end
     {:ok, output_pid} = StringIO.open("")
     {:ok, subject} = OutputWorker.start_link(next_stage: next_stage, name: :whatever)
     [output_pid: output_pid, subject: subject]
@@ -25,8 +25,7 @@ defmodule Fractals.OutputWorkerTest do
   describe "when sending multiple chunks" do
     setup [:chunk_count_3, :params]
 
-    test "writes multiple chunks",
-      %{subject: subject, output_pid: output_pid, params: params} do
+    test "writes multiple chunks", %{subject: subject, output_pid: output_pid, params: params} do
       OutputWorker.write(subject, %Chunk{number: 1, data: ["a"], params: params})
       OutputWorker.write(subject, %Chunk{number: 2, data: ["m"], params: params})
       OutputWorker.write(subject, %Chunk{number: 3, data: ["x"], params: params})
@@ -34,8 +33,11 @@ defmodule Fractals.OutputWorkerTest do
       assert StringIO.contents(output_pid) == {"", "P3\n3\n1\n255\na\nm\nx\n"}
     end
 
-    test "writes multiple chunks received out of order",
-      %{subject: subject, output_pid: output_pid, params: params} do
+    test "writes multiple chunks received out of order", %{
+      subject: subject,
+      output_pid: output_pid,
+      params: params
+    } do
       OutputWorker.write(subject, %Chunk{number: 2, data: ["m"], params: params})
       OutputWorker.write(subject, %Chunk{number: 3, data: ["x"], params: params})
       OutputWorker.write(subject, %Chunk{number: 1, data: ["a"], params: params})
@@ -54,6 +56,7 @@ defmodule Fractals.OutputWorkerTest do
       size: %Size{width: 3, height: 1},
       chunk_count: context.chunk_count
     }
+
     [params: params]
   end
 end

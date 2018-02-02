@@ -17,28 +17,32 @@ defmodule Fractals.Grid do
     |> Stream.chunk(params.chunk_size, params.chunk_size, [])
     |> Stream.zip(1..params.chunk_count)
     |> Stream.map(fn {data, number} -> %Chunk{number: number, data: data, params: params} end)
-    |> Enum.to_list
+    |> Enum.to_list()
   end
 
   def grid(params) do
-    for y <- ys(params), x <- xs(params), do: cmplx(x, y)
+    for y <- ys(params),
+        x <- xs(params),
+        do: cmplx(x, y)
   end
 
   def xs(params) do
     %Params{
-      size:        %Fractals.Size{width: width},
-      upper_left:  %Complex{real: x0},
+      size: %Fractals.Size{width: width},
+      upper_left: %Complex{real: x0},
       lower_right: %Complex{real: x1}
     } = params
+
     float_sequence(width, x0, x1)
   end
 
   def ys(params) do
     %Params{
-      size:        %Fractals.Size{height: height},
-      upper_left:  %Complex{imag: y1},
+      size: %Fractals.Size{height: height},
+      upper_left: %Complex{imag: y1},
       lower_right: %Complex{imag: y0}
     } = params
+
     float_sequence(height, y1, y0)
   end
 

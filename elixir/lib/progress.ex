@@ -21,9 +21,11 @@ defmodule Progress do
   # Server API
 
   def init(scopes, start_time \\ :os.system_time(@timeres)) do
-    files = Enum.map(scopes, fn scope ->
-      {scope, File.open!("logs/progress-#{scope}.log", [:write])}
-    end)
+    files =
+      Enum.map(scopes, fn scope ->
+        {scope, File.open!("logs/progress-#{scope}.log", [:write])}
+      end)
+
     counts = Enum.map(scopes, fn scope -> {scope, 0} end)
     Enum.each(files, fn {_, io} -> write(io, 0, start_time, start_time) end)
 
@@ -31,7 +33,7 @@ defmodule Progress do
   end
 
   def handle_cast({:incr, scope, n, time}, {start_time, files, counts}) do
-    {value, counts} = Keyword.get_and_update!(counts, scope, &({&1+n, &1+n}))
+    {value, counts} = Keyword.get_and_update!(counts, scope, &{&1 + n, &1 + n})
     write(files[scope], value, time, start_time)
 
     {:noreply, {start_time, files, counts}}

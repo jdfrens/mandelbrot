@@ -17,11 +17,13 @@ defmodule Fractals.OutputManager do
   end
 
   def handle_events(events, _from, process_lookup) do
-    new_lookup = Enum.reduce(events, process_lookup, fn(chunk, lookup) ->
-      {next_lookup, pid} = get_pid(lookup, chunk.params.id)
-      OutputWorker.write(pid, chunk)
-      next_lookup
-    end)
+    new_lookup =
+      Enum.reduce(events, process_lookup, fn chunk, lookup ->
+        {next_lookup, pid} = get_pid(lookup, chunk.params.id)
+        OutputWorker.write(pid, chunk)
+        next_lookup
+      end)
+
     {:noreply, [], new_lookup}
   end
 
@@ -31,6 +33,7 @@ defmodule Fractals.OutputManager do
         name = {:global, {:output_worker, id}}
         {:ok, pid} = Supervisor.start_child(OutputWorkerSupervisor, [[name: name]])
         get_pid(Map.put(lookup, id, pid), id)
+
       pid ->
         {lookup, pid}
     end
