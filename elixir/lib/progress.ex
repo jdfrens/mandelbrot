@@ -6,7 +6,8 @@ defmodule Progress do
 
   # Client API
 
-  def start_link(scopes \\ []) do
+  def start_link(opts) do
+    scopes = Keyword.get(opts, :scopes, [])
     GenServer.start_link(__MODULE__, scopes, name: __MODULE__)
   end
 

@@ -6,7 +6,7 @@ defmodule Fractals.OutputManager do
 
   # Client API
 
-  def start_link do
+  def start_link(_) do
     GenStage.start_link(__MODULE__, %{}, name: __MODULE__)
   end
 
@@ -31,7 +31,7 @@ defmodule Fractals.OutputManager do
     case Map.get(lookup, id) do
       nil ->
         name = {:global, {:output_worker, id}}
-        {:ok, pid} = Supervisor.start_child(OutputWorkerSupervisor, [[name: name]])
+        {:ok, pid} = OutputWorkerSupervisor.new_worker(name: name)
         get_pid(Map.put(lookup, id, pid), id)
 
       pid ->

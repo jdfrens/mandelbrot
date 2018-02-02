@@ -8,7 +8,7 @@ defmodule Fractals.OutputWorkerTest do
     test_pid = self()
     next_stage = fn _params -> send(test_pid, :sent_to_next_stage) end
     {:ok, output_pid} = StringIO.open("")
-    {:ok, subject} = OutputWorker.start_link(next_stage: next_stage, name: :whatever)
+    {:ok, subject} = OutputWorker.start_link({next_stage, :whatever})
     [output_pid: output_pid, subject: subject]
   end
 

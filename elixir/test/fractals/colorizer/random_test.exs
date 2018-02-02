@@ -5,7 +5,7 @@ defmodule Fractals.Colorizer.RandomTest do
   alias Fractals.Colorizer.Random
 
   setup do
-    Random.start_link()
+    Random.start_link(:ok)
     :ok
   end
 

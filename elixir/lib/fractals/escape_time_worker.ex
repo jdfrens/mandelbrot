@@ -5,7 +5,7 @@ defmodule Fractals.EscapeTimeWorker do
 
   # Client
 
-  def start_link do
+  def start_link(_) do
     GenStage.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 

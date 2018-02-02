@@ -8,19 +8,19 @@ defmodule Fractals do
     import Supervisor.Spec, warn: false
 
     staged = [
-      worker(Progress, [@progress_measures]),
+      {Progress, scopes: @progress_measures},
       # TODO: start process
-      worker(Fractals.GridWorker, []),
-      worker(Fractals.EscapeTimeWorker, []),
-      worker(Fractals.ColorizerWorker, []),
-      worker(Fractals.OutputManager, [])
+      Fractals.GridWorker,
+      Fractals.EscapeTimeWorker,
+      Fractals.ColorizerWorker,
+      Fractals.OutputManager
       # TODO: end process
     ]
 
     unstaged = [
-      worker(Fractals.Colorizer.Random, []),
-      supervisor(Fractals.OutputWorkerSupervisor, []),
-      worker(Fractals.ConversionWorker, [])
+      Fractals.Colorizer.Random,
+      Fractals.OutputWorkerSupervisor,
+      Fractals.ConversionWorker
     ]
 
     Supervisor.start_link(staged ++ unstaged, strategy: :one_for_one)
