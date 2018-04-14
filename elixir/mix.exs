@@ -18,7 +18,7 @@ defmodule Fractals.Mixfile do
 
   defp deps do
     [
-      {:yaml_elixir, "~> 1.3.0"},
+      {:yaml_elixir, "~> 2.0.0"},
       {:porcelain, "~> 2.0"},
       {:uuid, "~> 1.1"},
       {:inflex, "~> 1.8.0"},
