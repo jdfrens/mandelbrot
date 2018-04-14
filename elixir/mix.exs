@@ -22,7 +22,7 @@ defmodule Fractals.Mixfile do
       {:porcelain, "~> 2.0"},
       {:uuid, "~> 1.1"},
       {:inflex, "~> 1.8.0"},
-      {:credo, "~> 0.8.0", only: [:dev, :test]},
+      {:credo, "~> 0.9.1", only: [:dev, :test]},
       {:dialyxir, "~> 0.5.0", only: [:dev, :test]},
     ]
   end
