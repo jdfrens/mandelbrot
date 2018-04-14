@@ -21,6 +21,10 @@ defmodule Fractals.OutputWorker do
 
   # Server API
 
+  def init(:ok) do
+    {:ok, :state}
+  end
+
   alias Fractals.Output.OutputState
 
   def init(next_stage) do

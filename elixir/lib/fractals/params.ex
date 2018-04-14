@@ -77,8 +77,9 @@ defmodule Fractals.Params do
   # *******
 
   defp parse_attribute({:params_filename, filename}, params) do
-    yaml = filename |> YamlElixir.read_from_file |> symbolize
-    parse(yaml, %{params | params_filename: filename})
+    with {:ok, raw_yaml} <- YamlElixir.read_from_file(filename),
+         yaml <- symbolize(raw_yaml),
+         do: parse(yaml, %{params | params_filename: filename})
   end
   defp parse_attribute({attribute, value}, params) do
     %{params | attribute => parse_value(attribute, value)}

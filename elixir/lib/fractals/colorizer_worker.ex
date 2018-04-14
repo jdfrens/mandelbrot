@@ -1,4 +1,8 @@
 defmodule Fractals.ColorizerWorker do
+  @moduledoc """
+  Worker to compute colors on a chunk of pixels
+  """
+  
   use GenServer
 
   alias Fractals.OutputManager
@@ -15,6 +19,10 @@ defmodule Fractals.ColorizerWorker do
   end
 
   # Server
+
+  def init(:ok) do
+    {:ok, :state}
+  end
 
   def handle_cast({:color, %Chunk{params: params, data: data} = chunk}, state) do
     write(%{chunk | data: colorize(data, params)})

@@ -16,6 +16,10 @@ defmodule Fractals.OutputManager do
 
   # Server API
 
+  def init(args) do
+    {:ok, args}
+  end
+
   def handle_cast({:write, chunk}, process_lookup) do
     {new_lookup, pid} = get_pid(process_lookup, chunk.params.id)
     OutputWorker.write(pid, chunk)
