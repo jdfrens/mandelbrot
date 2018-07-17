@@ -1,0 +1,16 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/elixir:1.6
+
+    working_directory: ~/mandelbrot/elixir
+    steps:
+      - checkout:
+          path: ~/mandelbrot
+      - run: mix local.hex --force
+      - run: mix local.rebar
+      - run: mix deps.get
+      - run: mix test
+      - run: mix compile --warnings-as-errors
+      - run: mix format --check-formatted
