@@ -1,4 +1,8 @@
 defmodule Fractals.CLI do
+  @moduledoc """
+  The command-line interface for generating fractals.  This also starts up the application itself.
+  """
+
   alias Fractals.Params
 
   def main(args) do

@@ -1,5 +1,19 @@
 defmodule Fractals do
+  @moduledoc """
+  The application.
+  """
+
   use Application
+
+  alias Fractals.{
+    Colorizer.Random,
+    ColorizerWorker,
+    ConversionWorker,
+    EscapeTimeWorker,
+    GridWorker,
+    OutputManager,
+    OutputWorkerSupervisor
+  }
 
   @progress_measures [:generate_chunk, :escape_chunk, :colorize_chunk, :write_chunk]
   @unimplemented Application.get_env(:fractals, :unimplemented)
@@ -10,17 +24,17 @@ defmodule Fractals do
     staged = [
       {Progress, scopes: @progress_measures},
       # TODO: start process
-      Fractals.GridWorker,
-      Fractals.EscapeTimeWorker,
-      Fractals.ColorizerWorker,
-      Fractals.OutputManager
+      GridWorker,
+      EscapeTimeWorker,
+      ColorizerWorker,
+      OutputManager
       # TODO: end process
     ]
 
     unstaged = [
-      Fractals.Colorizer.Random,
-      Fractals.OutputWorkerSupervisor,
-      Fractals.ConversionWorker
+      Random,
+      OutputWorkerSupervisor,
+      ConversionWorker
     ]
 
     Supervisor.start_link(staged ++ unstaged, strategy: :one_for_one)
@@ -33,7 +47,7 @@ defmodule Fractals do
       # TODO: extract a common library for these notifications
       send(params.source_pid, {:skipping, self(), params, "not implemented"})
     else
-      Fractals.GridWorker.work(Fractals.GridWorker, params)
+      GridWorker.work(Fractals.GridWorker, params)
     end
   end
 

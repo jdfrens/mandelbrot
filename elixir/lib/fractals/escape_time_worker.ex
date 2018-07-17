@@ -1,4 +1,8 @@
 defmodule Fractals.EscapeTimeWorker do
+  @moduledoc """
+  Process that runs the right escape-time algorithm for the specified fractal.
+  """
+
   use GenStage
 
   alias Fractals.EscapeTime.{BurningShip, Julia, Mandelbrot}

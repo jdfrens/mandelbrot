@@ -1,4 +1,8 @@
 defmodule Fractals.GridWorker do
+  @moduledoc """
+  Producer process in the gen_stage workflow.  It chunks the pixel grid and feeds chunks into the workflow.
+  """
+
   use GenStage
 
   alias Fractals.Grid

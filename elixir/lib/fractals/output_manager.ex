@@ -1,4 +1,8 @@
 defmodule Fractals.OutputManager do
+  @moduledoc """
+  Manages supervisors for outputting files.
+  """
+
   use GenStage
 
   alias Fractals.OutputWorker

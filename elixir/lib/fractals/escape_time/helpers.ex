@@ -1,4 +1,7 @@
 defmodule Fractals.EscapeTime.Helpers do
+  @moduledoc """
+  Macros and functions for determining properties of a point in the fractal during an escape-time algorithm.
+  """
   defmacro inside?(iterations, max_iterations) do
     quote do
       unquote(iterations) >= unquote(max_iterations)

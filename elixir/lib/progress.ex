@@ -1,5 +1,7 @@
 # http://teamon.eu/2016/measuring-visualizing-genstage-flow-with-gnuplot/
 defmodule Progress do
+  @moduledoc false
+
   use GenServer
 
   @timeres :millisecond

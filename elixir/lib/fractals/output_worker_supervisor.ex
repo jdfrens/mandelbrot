@@ -1,5 +1,9 @@
 defmodule Fractals.OutputWorkerSupervisor do
+  @moduledoc false
+
   use DynamicSupervisor
+
+  alias Fractals.{ConversionWorker, OutputWorker, Params}
 
   def start_link(_) do
     DynamicSupervisor.start_link(__MODULE__, :ok, name: __MODULE__)
@@ -12,12 +16,12 @@ defmodule Fractals.OutputWorkerSupervisor do
   def new_worker(options \\ []) do
     next_stage =
       Keyword.get(options, :next_stage, fn params ->
-        Fractals.Params.close(params)
-        Fractals.ConversionWorker.convert(params)
+        Params.close(params)
+        ConversionWorker.convert(params)
       end)
 
     name = Keyword.get(options, :name)
-    child_spec = {Fractals.OutputWorker, {next_stage, name}}
+    child_spec = {OutputWorker, {next_stage, name}}
 
     DynamicSupervisor.start_child(__MODULE__, child_spec)
   end
