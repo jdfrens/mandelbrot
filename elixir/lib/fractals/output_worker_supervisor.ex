@@ -15,10 +15,10 @@ defmodule Fractals.OutputWorkerSupervisor do
         Fractals.Params.close(params)
         Fractals.ConversionWorker.convert(params)
       end)
+
     name = Keyword.get(options, :name)
     child_spec = {Fractals.OutputWorker, {next_stage, name}}
 
     DynamicSupervisor.start_child(__MODULE__, child_spec)
   end
-
 end

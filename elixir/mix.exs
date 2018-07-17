@@ -25,7 +25,7 @@ defmodule Fractals.Mixfile do
       {:inflex, "~> 1.10.0"},
       {:porcelain, "~> 2.0"},
       {:uuid, "~> 1.1"},
-      {:yaml_elixir, "~> 2.1.0"},
+      {:yaml_elixir, "~> 2.1.0"}
     ]
   end
 end

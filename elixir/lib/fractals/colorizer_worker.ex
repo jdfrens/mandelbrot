@@ -2,7 +2,7 @@ defmodule Fractals.ColorizerWorker do
   @moduledoc """
   Worker to compute colors on a chunk of pixels
   """
-  
+
   use GenStage
 
   alias Fractals.Colorizer
