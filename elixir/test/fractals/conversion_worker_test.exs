@@ -6,7 +6,7 @@ defmodule Fractals.ConversionWorkerTest do
 
   setup do
     test_pid = self()
-    convert = fn source, destination -> send test_pid, {source, destination} end
+    convert = fn source, destination -> send(test_pid, {source, destination}) end
     {:ok, pid} = ConversionWorker.start_link(convert: convert, name: :whatever)
 
     params = %Params{source_pid: test_pid}

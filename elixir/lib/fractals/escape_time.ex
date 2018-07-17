@@ -15,10 +15,10 @@ defmodule Fractals.EscapeTime do
 
   def escape_time(stream, params) do
     stream
-    |> Stream.with_index
+    |> Stream.with_index()
     |> Stream.drop_while(fn zi -> !done?(zi, params) end)
     |> Stream.take(1)
-    |> Enum.to_list
-    |> List.first
+    |> Enum.to_list()
+    |> List.first()
   end
 end

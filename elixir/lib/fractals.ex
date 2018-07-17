@@ -7,29 +7,37 @@ defmodule Fractals do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
-    children = [
-      worker(Progress, [@progress_measures]),
+    staged = [
+      {Progress, scopes: @progress_measures},
       # TODO: start process
-      worker(Fractals.GridWorker, []),
-      worker(Fractals.EscapeTimeWorker, []),
-      worker(Fractals.ColorizerWorker, []),
-      worker(Fractals.Colorizer.Random, []),
-      worker(Fractals.OutputManager, []),
-      supervisor(Fractals.OutputWorkerSupervisor, []),
-      worker(Fractals.ConversionWorker, []),
+      Fractals.GridWorker,
+      Fractals.EscapeTimeWorker,
+      Fractals.ColorizerWorker,
+      Fractals.OutputManager
       # TODO: end process
     ]
-    Supervisor.start_link(children, strategy: :one_for_one)
+
+    unstaged = [
+      Fractals.Colorizer.Random,
+      Fractals.OutputWorkerSupervisor,
+      Fractals.ConversionWorker
+    ]
+
+    Supervisor.start_link(staged ++ unstaged, strategy: :one_for_one)
   end
 
   def fractalize(params) do
-    # TODO: call start process instead
-    unless implemented?(params.fractal) do
+    send(params.source_pid, {:starting, self(), params})
+
+    if unimplemented?(params.fractal) do
+      # TODO: extract a common library for these notifications
+      send(params.source_pid, {:skipping, self(), params, "not implemented"})
+    else
       Fractals.GridWorker.work(Fractals.GridWorker, params)
     end
   end
 
-  defp implemented?(fractal) do
+  defp unimplemented?(fractal) do
     Enum.member?(@unimplemented, fractal)
   end
 end

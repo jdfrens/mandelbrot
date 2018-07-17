@@ -13,38 +13,44 @@ defmodule Fractals.Colorizer.WarpPov do
 
   import Fractals.EscapeTime.Helpers
 
-  @spec red(non_neg_integer, Params) :: String.t
+  @spec red(non_neg_integer, Params) :: String.t()
   def red(iterations, params) do
     permute_red(intensities(iterations, params))
   end
 
-  @spec green(non_neg_integer, Params) :: String.t
+  @spec green(non_neg_integer, Params) :: String.t()
   def green(iterations, params) do
     permute_green(intensities(iterations, params))
   end
 
-  @spec blue(non_neg_integer, Params) :: String.t
+  @spec blue(non_neg_integer, Params) :: String.t()
   def blue(iterations, params) do
     permute_blue(intensities(iterations, params))
   end
 
-  @spec permute_red({non_neg_integer, non_neg_integer}) :: String.t
+  @spec permute_red({non_neg_integer, non_neg_integer}) :: String.t()
   def permute_red({primary, secondary}) do
     PPM.ppm(primary, secondary, secondary)
   end
-  @spec permute_green({non_neg_integer, non_neg_integer}) :: String.t
+
+  @spec permute_green({non_neg_integer, non_neg_integer}) :: String.t()
   def permute_green({primary, secondary}) do
     PPM.ppm(secondary, primary, secondary)
   end
-  @spec permute_blue({non_neg_integer, non_neg_integer}) :: String.t
+
+  @spec permute_blue({non_neg_integer, non_neg_integer}) :: String.t()
   def permute_blue({primary, secondary}) do
     PPM.ppm(secondary, secondary, primary)
   end
 
   @spec intensities(non_neg_integer, Params) :: {non_neg_integer, non_neg_integer}
-  def intensities(iterations, %Params{max_iterations: max_iterations}) when inside?(iterations, max_iterations), do: {0, 0}
+  def intensities(iterations, %Params{max_iterations: max_iterations})
+      when inside?(iterations, max_iterations),
+      do: {0, 0}
+
   def intensities(iterations, params) do
     half_iterations = params.max_iterations / 2 - 1
+
     if iterations <= half_iterations do
       {scale(max(1, iterations), params), 0}
     else

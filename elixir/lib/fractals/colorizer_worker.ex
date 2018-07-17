@@ -3,39 +3,35 @@ defmodule Fractals.ColorizerWorker do
   Worker to compute colors on a chunk of pixels
   """
   
-  use GenServer
+  use GenStage
 
-  alias Fractals.OutputManager
   alias Fractals.Colorizer
 
   # Client
 
-  def start_link do
-    GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
-  end
-
-  def color(pid, chunk) do
-    GenServer.cast(pid, {:color, chunk})
+  def start_link(_) do
+    GenStage.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 
   # Server
 
   def init(:ok) do
-    {:ok, :state}
+    {:producer_consumer, :ok, subscribe_to: [{Fractals.EscapeTimeWorker, max_demand: 10}]}
   end
 
-  def handle_cast({:color, %Chunk{params: params, data: data} = chunk}, state) do
-    write(%{chunk | data: colorize(data, params)})
-    {:noreply, state}
+  def handle_events(events, _from, :ok) do
+    colorized =
+      Enum.map(events, fn chunk ->
+        # TODO: measure progress
+        # Progress.incr(:colorize_chunk)
+        %{chunk | data: colorize(chunk.data, chunk.params)}
+      end)
+
+    {:noreply, colorized, :ok}
   end
 
-  @spec colorize({atom, {non_neg_integer, list}}, Params) :: list(String.t)
+  @spec colorize({atom, {non_neg_integer, list}}, Params) :: list(String.t())
   def colorize(data, params) do
     Enum.map(data, &Colorizer.color_point(&1, params))
-  end
-
-  def write(chunk) do
-    Progress.incr(:colorize_chunk)
-    OutputManager.write(OutputManager, chunk)
   end
 end

@@ -1,43 +1,40 @@
 defmodule Fractals.EscapeTimeWorker do
-  use GenServer
+  use GenStage
 
-  alias Fractals.ColorizerWorker
   alias Fractals.EscapeTime.{BurningShip, Julia, Mandelbrot}
 
   # Client
 
-  def start_link do
-    GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
-  end
-
-  def escape_time(pid, chunk) do
-    GenServer.cast(pid, {:escape_time, chunk})
+  def start_link(_) do
+    GenStage.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 
   # Server
 
   def init(:ok) do
-    {:ok, :state}
+    {:producer_consumer, :ok, subscribe_to: [{Fractals.GridWorker, max_demand: 10}]}
   end
 
-  def handle_cast({:escape_time, %Chunk{params: params, data: data} = chunk}, :state) do
-    new_data = pixels(params.fractal, data, params)
-    Progress.incr(:escape_chunk)
-    send_chunk(%{chunk | data: new_data})
-    {:noreply, :ok}
+  def handle_events(events, _from, :ok) do
+    escaped =
+      Enum.map(events, fn %Chunk{params: params} = chunk ->
+        %{chunk | data: pixels(params.fractal, chunk.data, params)}
+        # TODO: record this elsewhere?
+        # Progress.incr(:escape_chunk)
+      end)
+
+    {:noreply, escaped, :ok}
   end
 
   def pixels(:mandelbrot, data, params) do
     Mandelbrot.pixels(data, params)
   end
+
   def pixels(:julia, data, params) do
     Julia.pixels(data, params)
   end
+
   def pixels(:burningship, data, params) do
     BurningShip.pixels(data, params)
-  end
-
-  def send_chunk(chunk) do
-    ColorizerWorker.color(ColorizerWorker, chunk)
   end
 end
