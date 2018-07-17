@@ -23,7 +23,7 @@ defmodule Fractals.ParamsTest do
     end
 
     test "parsing the random seed", %{argv: argv} do
-      assert Params.process(argv).seed == 12345
+      assert Params.process(argv).seed == 12_345
     end
 
     test "parsing the upper-left corner", %{argv: argv} do
@@ -147,7 +147,7 @@ defmodule Fractals.ParamsTest do
     end
 
     test "always computes and overrides explicit setting" do
-      assert Params.process(size: "10x2", chunk_size: 3, chunk_count: 99999).chunk_count == 7
+      assert Params.process(size: "10x2", chunk_size: 3, chunk_count: 99_999).chunk_count == 7
     end
   end
 end

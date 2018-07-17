@@ -1,5 +1,10 @@
 defmodule Fractals.EscapeTime do
+  @moduledoc """
+  Implements the basic escape-time algorithm for fractals.
+  """
+
   import Fractals.EscapeTime.Helpers
+  alias Fractals.EscapeTime
 
   defmacro __using__(_options) do
     quote do
@@ -7,7 +12,7 @@ defmodule Fractals.EscapeTime do
         Enum.map(grid_points, fn grid_point ->
           grid_point
           |> iterate(params)
-          |> Fractals.EscapeTime.escape_time(params)
+          |> EscapeTime.escape_time(params)
         end)
       end
     end

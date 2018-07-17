@@ -59,11 +59,11 @@ defmodule ComplexSpec do
 
   describe ".to_string" do
     test "uses a+bi format" do
-      assert String.Chars.to_string(cmplx(3.2, 9.8)) == "3.2+9.8i"
+      assert to_string(cmplx(3.2, 9.8)) == "3.2+9.8i"
     end
 
     test "handles negative numbers" do
-      assert String.Chars.to_string(cmplx(-3.2, -9.8)) == "-3.2-9.8i"
+      assert to_string(cmplx(-3.2, -9.8)) == "-3.2-9.8i"
     end
   end
 end

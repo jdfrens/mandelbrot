@@ -1,4 +1,8 @@
 defmodule Fractals.EscapeTime.Mandelbrot do
+  @moduledoc """
+  Implements the iterated function for the Mandelbrot set.
+  """
+
   import Complex
 
   use Fractals.EscapeTime

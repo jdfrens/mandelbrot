@@ -1,7 +1,7 @@
 defmodule Fractals.IntegrationTest do
   use ExUnit.Case
 
-  # IDEA: generate two fractals
+  # credo:disable-for-this-file Credo.Check.Design.AliasUsage
 
   @mandelbrot_input_filename "test/inputs/integration_mandelbrot.yml"
   @mandelbrot_output_filename "test/images/integration_mandelbrot.ppm"
@@ -36,7 +36,6 @@ defmodule Fractals.IntegrationTest do
       )
 
     ExUnit.CaptureIO.capture_io(fn ->
-      # SMELL: this seemss awkward
       Fractals.fractalize(params)
       Fractals.CLI.watch([@mandelbrot_input_filename])
     end)

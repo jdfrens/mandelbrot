@@ -17,7 +17,7 @@ defmodule Fractals.GridTest do
   describe ".chunk" do
     test "chunking evenly" do
       params = %Params{chunk_size: 3, chunk_count: 2}
-      chunks = Grid.chunk([:a, :b, :c, :d, :e, :f], params) |> Enum.to_list()
+      chunks = [:a, :b, :c, :d, :e, :f] |> Grid.chunk(params) |> Enum.to_list()
 
       assert chunks == [
                %Chunk{number: 1, data: [:a, :b, :c], params: params},
@@ -27,7 +27,7 @@ defmodule Fractals.GridTest do
 
     test "chunking unevenly" do
       params = %Params{chunk_size: 3, chunk_count: 2}
-      chunks = Grid.chunk([:a, :b, :c, :xyz], params) |> Enum.to_list()
+      chunks = [:a, :b, :c, :xyz] |> Grid.chunk(params) |> Enum.to_list()
 
       assert chunks == [
                %Chunk{number: 1, data: [:a, :b, :c], params: params},

@@ -1,4 +1,8 @@
 defmodule Fractals.EscapeTime.Julia do
+  @moduledoc """
+  Implements the iterated function for a Julia set.
+  """
+
   import Complex
 
   use Fractals.EscapeTime

@@ -1,8 +1,8 @@
 defmodule Fractals.OutputWorkerTest do
   use ExUnit.Case, aysnc: true
 
-  alias Fractals.{Params, Size}
   alias Fractals.OutputWorker
+  alias Fractals.{Params, Size}
 
   setup do
     test_pid = self()

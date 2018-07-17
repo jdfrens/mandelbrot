@@ -1,4 +1,9 @@
 defmodule Fractals.OutputWorker do
+  @moduledoc """
+  Worker to close out a file when it is completely written.  A callback function is also called for further processing
+  once the file is closed.
+  """
+
   use GenServer
 
   # Client API

@@ -1,8 +1,8 @@
 defmodule Fractals.Colorizer.RandomTest do
   use ExUnit.Case
 
-  alias Fractals.Params
   alias Fractals.Colorizer.Random
+  alias Fractals.Params
 
   setup do
     Random.start_link(:ok)

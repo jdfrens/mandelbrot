@@ -1,9 +1,12 @@
 defmodule Fractals.Colorizer do
-  # NOTE: this implements the very simple black-on-white coloring
-  # TODO: write other colorizers and figure out a good naming scheme
+  @moduledoc """
+  This finds the right colorizer as specified in the params.
+  """
 
-  alias Fractals.Params
+  # TODO: move black/white/gray generators.
+
   alias Fractals.Colorizer.{Random, WarpPov}
+  alias Fractals.Params
 
   import Fractals.EscapeTime.Helpers
 

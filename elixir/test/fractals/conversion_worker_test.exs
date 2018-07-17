@@ -1,8 +1,8 @@
 defmodule Fractals.ConversionWorkerTest do
   use ExUnit.Case, async: true
 
-  alias Fractals.Params
   alias Fractals.ConversionWorker
+  alias Fractals.Params
 
   setup do
     test_pid = self()
