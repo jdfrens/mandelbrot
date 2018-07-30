@@ -19,7 +19,7 @@ defmodule Fractals.Mixfile do
 
   defp deps do
     [
-      {:credo, "~> 0.9.1", only: [:dev, :test]},
+      {:credo, "~> 0.10.0", only: [:dev, :test]},
       {:dialyxir, "~> 0.5.0", only: [:dev, :test]},
       {:gen_stage, "~> 0.14"},
       {:inflex, "~> 1.10.0"},
