@@ -32,21 +32,27 @@ You can run the tests and compile the executable:
 
 ```elixir
 $ mix deps.get
-$ mix spec
+$ mix test
+$ mix credo --strict
 $ mix escript.build
 ```
 
-Maybe compile it with `MIX_ENV=prod`?
+Some earlier branches might have a `spec` task instead of `test`.  `credo --strict` may fail on older branches.
+
+You may want compile the executable with `MIX_ENV=prod`.
 
 ## Generating Fractals
 
 If you generate [PPM file](https://en.wikipedia.org/wiki/Netpbm_format#PPM_example) files, you're all done.  If you want PNG files, you need to install [ImageMagick](http://www.imagemagick.org/).  The Elixir program will automatically call the `convert` program to convert from PPM to PNG.
 
 ```
-$ fractals ../yaml/burningship-line-blue.json blb.png
-$ open blb.png
+$ fractals ../yaml/burningship-line-blue.yml
+# bunch of output, then:
+finished images/burningship-line-blue.png
+ALL DONE!
+Have a nice day.
+$ open images/burningship-line-blue.png
 ```
-
 
 ## Performance
 
