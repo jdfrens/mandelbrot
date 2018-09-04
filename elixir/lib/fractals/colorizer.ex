@@ -3,8 +3,6 @@ defmodule Fractals.Colorizer do
   This finds the right colorizer as specified in the params.
   """
 
-  # TODO: move black/white/gray generators.
-
   alias Fractals.Colorizer.{BlackAndWhiteAndGray, Random, WarpPov}
 
   @spec color_point({Complex.t(), non_neg_integer}, Params) :: String.t()
