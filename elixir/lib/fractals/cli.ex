@@ -6,13 +6,8 @@ defmodule Fractals.CLI do
   alias Fractals.Params
 
   def main(args) do
-    case OptionParser.parse(args) do
-      {flags, filenames, _} ->
-        go(flags, filenames)
-
-      _ ->
-        usage()
-    end
+    {flags, filenames, _} = OptionParser.parse(args)
+    go(flags, filenames)
   end
 
   def go(flags, filenames) do
@@ -53,9 +48,5 @@ defmodule Fractals.CLI do
         IO.puts("finished #{params.output_filename}")
         watch(List.delete(filenames, params.params_filename))
     end
-  end
-
-  defp usage do
-    IO.puts("You used this command wrong.")
   end
 end

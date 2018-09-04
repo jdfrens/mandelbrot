@@ -10,6 +10,7 @@ defmodule Fractals.Mixfile do
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      dialyzer: [ignore_warnings: ".dialyzer-ignore-warnings"],
       aliases: aliases()
     ]
   end
@@ -21,7 +22,7 @@ defmodule Fractals.Mixfile do
   defp deps do
     [
       {:credo, "~> 0.10.0", only: [:dev, :test]},
-      {:dialyxir, "~> 0.5.0", only: [:dev, :test]},
+      {:dialyxir, "~> 1.0.0-rc.2", only: [:dev], runtime: false},
       {:gen_stage, "~> 0.14"},
       {:inflex, "~> 1.10.0"},
       {:mogrify, "~> 0.6.1"},

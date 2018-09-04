@@ -1,0 +1,11 @@
+:0: Unknown function 'Elixir.GenStage':call/2
+:0: Unknown function 'Elixir.GenStage':start_link/3
+:0: Unknown function 'Elixir.Inflex':underscore/1
+:0: Unknown function 'Elixir.Mogrify':format/2
+:0: Unknown function 'Elixir.Mogrify':open/1
+:0: Unknown function 'Elixir.Mogrify':save/2
+:0: Unknown function 'Elixir.UUID':uuid1/0
+lib/gen_stage.ex:1: Callback info about the 'Elixir.GenStage' behaviour is not available
+lib/gen_stage.ex:1: Callback info about the 'Elixir.GenStage' behaviour is not available
+lib/gen_stage.ex:1: Callback info about the 'Elixir.GenStage' behaviour is not available
+lib/gen_stage.ex:1: Callback info about the 'Elixir.GenStage' behaviour is not available
