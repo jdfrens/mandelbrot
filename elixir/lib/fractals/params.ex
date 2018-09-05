@@ -3,6 +3,7 @@ defmodule Fractals.Params do
   Structure for params when generating fractals.
   """
 
+  import Complex, only: :macros
   defstruct [
     # operational
     :id,
@@ -35,9 +36,8 @@ defmodule Fractals.Params do
     :source_pid
   ]
 
-  import Complex, only: :macros
-
   alias Fractals.{Params, Size}
+  @zero Complex.new(0.0, 0.0)
 
   def default do
     %Params{
@@ -46,15 +46,15 @@ defmodule Fractals.Params do
       cutoff_squared: 4.0,
       max_iterations: 256,
       fractal: :mandelbrot,
-      p: Complex.zero(),
-      r: Complex.zero(),
-      z: Complex.zero(),
-      c: cmplx(1.0),
+      p: @zero,
+      r: @zero,
+      z: @zero,
+      c: Complex.new(1.0),
       size: %Size{width: 512, height: 384},
       color: :black_on_white,
       max_intensity: 255,
-      upper_left: cmplx(5.0, 6.0),
-      lower_right: cmplx(6.0, 5.0),
+      upper_left: Complex.new(5.0, 6.0),
+      lower_right: Complex.new(6.0, 5.0),
       output_directory: "images"
     }
   end

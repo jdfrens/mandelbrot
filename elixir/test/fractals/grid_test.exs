@@ -1,16 +1,14 @@
 defmodule Fractals.GridTest do
   use ExUnit.Case, async: true
 
-  import Complex, warn: false
-
   alias Fractals.Grid
   alias Fractals.Params
 
   def params do
     %Params{
       size: %Fractals.Size{width: 2, height: 3},
-      upper_left: cmplx(-1.0, 1.0),
-      lower_right: cmplx(1.0, -1.0)
+      upper_left: Complex.new(-1.0, 1.0),
+      lower_right: Complex.new(1.0, -1.0)
     }
   end
 
@@ -39,12 +37,12 @@ defmodule Fractals.GridTest do
   describe ".grid" do
     test "generate a grid" do
       assert Grid.grid(params()) == [
-               cmplx(-1.0, 1.0),
-               cmplx(1.0, 1.0),
-               cmplx(-1.0, 0.0),
-               cmplx(1.0, 0.0),
-               cmplx(-1.0, -1.0),
-               cmplx(1.0, -1.0)
+               Complex.new(-1.0, 1.0),
+               Complex.new(1.0, 1.0),
+               Complex.new(-1.0, 0.0),
+               Complex.new(1.0, 0.0),
+               Complex.new(-1.0, -1.0),
+               Complex.new(1.0, -1.0)
              ]
     end
   end

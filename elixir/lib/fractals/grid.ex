@@ -23,14 +23,14 @@ defmodule Fractals.Grid do
   def grid(params) do
     for y <- ys(params),
         x <- xs(params),
-        do: cmplx(x, y)
+        do: Complex.new(x, y)
   end
 
   def xs(params) do
     %Params{
       size: %Fractals.Size{width: width},
-      upper_left: %Complex{real: x0},
-      lower_right: %Complex{real: x1}
+      upper_left: %Complex{re: x0},
+      lower_right: %Complex{re: x1}
     } = params
 
     float_sequence(width, x0, x1)
@@ -39,8 +39,8 @@ defmodule Fractals.Grid do
   def ys(params) do
     %Params{
       size: %Fractals.Size{height: height},
-      upper_left: %Complex{imag: y1},
-      lower_right: %Complex{imag: y0}
+      upper_left: %Complex{im: y1},
+      lower_right: %Complex{im: y0}
     } = params
 
     float_sequence(height, y1, y0)

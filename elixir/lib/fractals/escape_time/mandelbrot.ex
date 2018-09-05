@@ -7,8 +7,10 @@ defmodule Fractals.EscapeTime.Mandelbrot do
 
   use Fractals.EscapeTime
 
+  @zero Complex.new(0.0, 0.0)
+
   def iterate(grid_point, _params) do
-    Stream.iterate(Complex.zero(), &iterator(&1, grid_point))
+    Stream.iterate(@zero, &iterator(&1, grid_point))
   end
 
   def iterator(z, c) do

@@ -1,8 +1,6 @@
 defmodule Fractals.ParamsTest do
   use ExUnit.Case, async: true
 
-  import Complex
-
   alias Fractals.{Params, Size}
 
   describe ".process a full set of params" do
@@ -27,27 +25,27 @@ defmodule Fractals.ParamsTest do
     end
 
     test "parsing the upper-left corner", %{argv: argv} do
-      assert Params.process(argv).upper_left == cmplx(0.0, 55.2)
+      assert Params.process(argv).upper_left == Complex.new(0.0, 55.2)
     end
 
     test "parsing the lower-right corder", %{argv: argv} do
-      assert Params.process(argv).lower_right == cmplx(92.3, 120.3)
+      assert Params.process(argv).lower_right == Complex.new(92.3, 120.3)
     end
 
     test "parsing the c parameter", %{argv: argv} do
-      assert Params.process(argv).c == cmplx(3.14, 4.13)
+      assert Params.process(argv).c == Complex.new(3.14, 4.13)
     end
 
     test "parsing the z parameter", %{argv: argv} do
-      assert Params.process(argv).z == cmplx(4.4, 1.1)
+      assert Params.process(argv).z == Complex.new(4.4, 1.1)
     end
 
     test "parsing the r parameter", %{argv: argv} do
-      assert Params.process(argv).r == cmplx(9.9, 3.3)
+      assert Params.process(argv).r == Complex.new(9.9, 3.3)
     end
 
     test "parsing the p parameter", %{argv: argv} do
-      assert Params.process(argv).p == cmplx(0.3, 0.5)
+      assert Params.process(argv).p == Complex.new(0.3, 0.5)
     end
 
     test "precomputing the output_filename paramter", %{argv: argv} do
@@ -81,27 +79,27 @@ defmodule Fractals.ParamsTest do
     end
 
     test "still parsing the upper-left corner", %{argv: argv} do
-      assert Params.process(argv).upper_left == cmplx(5.0, 6.0)
+      assert Params.process(argv).upper_left == Complex.new(5.0, 6.0)
     end
 
     test "still parsing the lower-right corder", %{argv: argv} do
-      assert Params.process(argv).lower_right == cmplx(6.0, 5.0)
+      assert Params.process(argv).lower_right == Complex.new(6.0, 5.0)
     end
 
     test "defaults the c parameter", %{argv: argv} do
-      assert Params.process(argv).c == cmplx(1.0, 0.0)
+      assert Params.process(argv).c == Complex.new(1.0, 0.0)
     end
 
     test "defaults the z parameter", %{argv: argv} do
-      assert Params.process(argv).z == cmplx(0.0, 0.0)
+      assert Params.process(argv).z == Complex.new(0.0, 0.0)
     end
 
     test "defaults the r parameter", %{argv: argv} do
-      assert Params.process(argv).r == cmplx(0.0, 0.0)
+      assert Params.process(argv).r == Complex.new(0.0, 0.0)
     end
 
     test "defaults the p parameter", %{argv: argv} do
-      assert Params.process(argv).p == cmplx(0.0, 0.0)
+      assert Params.process(argv).p == Complex.new(0.0, 0.0)
     end
 
     test "defaults the chunk size", %{argv: argv} do
@@ -125,7 +123,7 @@ defmodule Fractals.ParamsTest do
     end
 
     test "recognizes the early flag", %{argv: argv} do
-      assert Params.process(argv).c == cmplx(99.0)
+      assert Params.process(argv).c == Complex.new(99.0)
     end
 
     test "recognizes a value from the file", %{argv: argv} do

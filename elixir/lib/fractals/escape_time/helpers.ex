@@ -10,7 +10,7 @@ defmodule Fractals.EscapeTime.Helpers do
 
   defmacro outside?(z, cutoff_squared) do
     quote do
-      Complex.magnitude_squared(unquote(z)) >= unquote(cutoff_squared)
+      Complex.abs_squared(unquote(z)) >= unquote(cutoff_squared)
     end
   end
 
