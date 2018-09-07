@@ -4,9 +4,9 @@ defmodule Fractals.Size do
   """
 
   @type t :: %__MODULE__{
-    width: integer,
-    height: integer
-  }
+          width: integer,
+          height: integer
+        }
 
   defstruct [:width, :height]
 end

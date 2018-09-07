@@ -4,10 +4,10 @@ defmodule Chunk do
   """
 
   @type t :: %__MODULE__{
-    number: integer,
-    data: list,
-    params: Fractals.Params.t()
-  }
+          number: integer,
+          data: list,
+          params: Fractals.Params.t()
+        }
 
   defstruct number: nil, data: [], params: nil
 end
