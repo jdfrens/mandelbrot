@@ -3,6 +3,37 @@ defmodule Fractals.Params do
   Structure for params when generating fractals.
   """
 
+  import Complex, only: :macros
+
+  alias Fractals.{Params, Size}
+
+  @type fractal_type :: :mandelbrot | :julia
+  @type color :: :black_on_white | :white_on_black | :gray | :red | :green | :blue | :random
+  @type t :: %__MODULE__{
+          id: String.t() | nil,
+          seed: integer | nil,
+          chunk_size: integer | nil,
+          chunk_count: integer | nil,
+          max_iterations: integer | nil,
+          cutoff_squared: float | nil,
+          fractal: fractal_type | nil,
+          c: Complex.complex() | nil,
+          z: Complex.complex() | nil,
+          r: Complex.complex() | nil,
+          p: Complex.complex() | nil,
+          size: Size.t() | nil,
+          color: color() | nil,
+          upper_left: Complex.complex() | nil,
+          lower_right: Complex.complex() | nil,
+          max_intensity: integer | nil,
+          params_filename: String.t() | nil,
+          output_directory: String.t() | nil,
+          output_filename: String.t() | nil,
+          ppm_filename: String.t() | nil,
+          output_pid: pid | nil,
+          source_pid: pid | nil
+        }
+
   defstruct [
     # operational
     :id,
@@ -35,10 +66,10 @@ defmodule Fractals.Params do
     :source_pid
   ]
 
-  import Complex, only: :macros
+  @zero Complex.new(0.0)
+  @one Complex.new(1.0)
 
-  alias Fractals.{Params, Size}
-
+  @spec default :: Params.t()
   def default do
     %Params{
       seed: 666,
@@ -46,15 +77,15 @@ defmodule Fractals.Params do
       cutoff_squared: 4.0,
       max_iterations: 256,
       fractal: :mandelbrot,
-      p: Complex.zero(),
-      r: Complex.zero(),
-      z: Complex.zero(),
-      c: cmplx(1.0),
+      p: @zero,
+      r: @zero,
+      z: @zero,
+      c: @one,
       size: %Size{width: 512, height: 384},
       color: :black_on_white,
       max_intensity: 255,
-      upper_left: cmplx(5.0, 6.0),
-      lower_right: cmplx(6.0, 5.0),
+      upper_left: Complex.new(5.0, 6.0),
+      lower_right: Complex.new(6.0, 5.0),
       output_directory: "images"
     }
   end
@@ -67,17 +98,20 @@ defmodule Fractals.Params do
   # IDEA: don't let user set some values (like output_pid)
   # IDEA: add `postcheck` after `compute` to check necessary values
 
+  @spec process(map | keyword, Params.t()) :: Params.t()
   def process(raw_params, params \\ default()) do
     raw_params
     |> parse(params)
     |> compute
   end
 
+  @spec parse(map | keyword, Params.t()) :: Params.t()
   def parse(raw_params, params \\ default()) do
     raw_params
     |> Enum.reduce(params, &parse_attribute/2)
   end
 
+  @spec close(Params.t()) :: Params.t()
   def close(params) do
     :ok = File.close(params.output_pid)
     params
@@ -87,6 +121,7 @@ defmodule Fractals.Params do
   # Parsing
   # *******
 
+  @spec parse_attribute({atom, any}, Params.t()) :: Params.t()
   defp parse_attribute({:params_filename, filename}, params) do
     with {:ok, raw_yaml} <- YamlElixir.read_from_file(filename),
          yaml <- symbolize(raw_yaml),

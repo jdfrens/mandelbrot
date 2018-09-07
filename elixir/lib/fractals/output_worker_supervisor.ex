@@ -5,14 +5,20 @@ defmodule Fractals.OutputWorkerSupervisor do
 
   alias Fractals.{ConversionWorker, OutputWorker, Params}
 
-  def start_link(_) do
+  # Client
+
+  @spec start_link(any) :: Supervisor.on_start()
+  def(start_link(_)) do
     DynamicSupervisor.start_link(__MODULE__, :ok, name: __MODULE__)
   end
+
+  # Server
 
   def init(:ok) do
     DynamicSupervisor.init(strategy: :one_for_one)
   end
 
+  @spec new_worker(keyword) :: Supervisor.on_start_child()
   def new_worker(options \\ []) do
     next_stage =
       Keyword.get(options, :next_stage, fn params ->

@@ -3,5 +3,10 @@ defmodule Fractals.Size do
   Structure to keep track of width and height
   """
 
+  @type t :: %__MODULE__{
+          width: integer,
+          height: integer
+        }
+
   defstruct [:width, :height]
 end

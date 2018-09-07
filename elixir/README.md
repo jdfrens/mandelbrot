@@ -53,13 +53,3 @@ ALL DONE!
 Have a nice day.
 $ open images/burningship-line-blue.png
 ```
-
-## Performance
-
-Each stage records a timestamp when it processes some data.  To graph this performance data, you need [gnuplot](http://www.gnuplot.info/).
-
-```
-$ fractals ../yaml/burningship-line-blue.json blb.png
-$ gnuplot plot.gp
-$ open logs/progress.png
-```

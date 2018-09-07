@@ -12,17 +12,17 @@ defmodule Fractals do
     EscapeTimeWorker,
     GridWorker,
     OutputManager,
-    OutputWorkerSupervisor
+    OutputWorkerSupervisor,
+    Params
   }
 
-  @progress_measures [:generate_chunk, :escape_chunk, :colorize_chunk, :write_chunk]
   @unimplemented Application.get_env(:fractals, :unimplemented)
 
+  @impl Application
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
     staged = [
-      {Progress, scopes: @progress_measures},
       # TODO: start process
       GridWorker,
       EscapeTimeWorker,
@@ -40,6 +40,7 @@ defmodule Fractals do
     Supervisor.start_link(staged ++ unstaged, strategy: :one_for_one)
   end
 
+  @spec fractalize(Fractals.Params.t()) :: :ok
   def fractalize(params) do
     send(params.source_pid, {:starting, self(), params})
 
@@ -49,17 +50,12 @@ defmodule Fractals do
     else
       GridWorker.work(Fractals.GridWorker, params)
     end
+
+    :ok
   end
 
+  @spec unimplemented?(Params.fractal_type()) :: boolean
   defp unimplemented?(fractal) do
     Enum.member?(@unimplemented, fractal)
   end
 end
-
-# TODO: the start process
-# 1. set params.start_timestamp
-# 2. invokes the first real process
-
-# TODO: the end process
-# 1. set params.end_timestamp
-# 2. sends "ALL DONE!" message

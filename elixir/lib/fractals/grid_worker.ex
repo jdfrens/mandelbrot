@@ -5,20 +5,23 @@ defmodule Fractals.GridWorker do
 
   use GenStage
 
-  alias Fractals.Grid
+  alias Fractals.{Grid, Params}
 
   # Client
 
+  @spec start_link(any) :: GenServer.on_start()
   def start_link(_) do
     GenStage.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 
+  @spec work(pid | atom, Params.t()) :: :ok
   def work(pid, params) do
     GenStage.call(pid, {:work, params})
   end
 
   # Callbacks
 
+  @impl GenStage
   def init(:ok) do
     {:producer, {:queue.new(), 0}}
   end
@@ -26,9 +29,8 @@ defmodule Fractals.GridWorker do
   # Server
 
   # TODO: call, not cast?
+  @impl GenStage
   def handle_call({:work, params}, _from, {queue, pending_demand}) do
-    # TODO: measure progress in Grid module itself?
-    # Progress.incr(:generate_chunk)
     new_queue =
       Enum.reduce(Grid.chunked_grid(params), queue, fn chunk, q -> :queue.in(chunk, q) end)
 
@@ -41,6 +43,7 @@ defmodule Fractals.GridWorker do
     {:reply, :ok, :queue.to_list(demanded), {cached, pending_demand - :queue.len(demanded)}}
   end
 
+  @impl GenStage
   def handle_demand(demand, {queue, pending_demand}) when demand > 0 do
     total_demand = demand + pending_demand
 

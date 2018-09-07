@@ -5,11 +5,11 @@ defmodule Fractals.Colorizer do
 
   alias Fractals.Colorizer.{BlackAndWhiteAndGray, Random, WarpPov}
 
-  @spec color_point({Complex.t(), non_neg_integer}, Params) :: String.t()
+  @spec color_point({Complex.complex(), non_neg_integer}, Fractals.Params.t()) :: String.t()
   def color_point({_, iterations}, params) do
     case params.color do
-      :black_on_white -> BlackAndWhiteAndGray.black_on_white(iterations, params.max_iterations)
-      :white_on_black -> BlackAndWhiteAndGray.white_on_black(iterations, params.max_iterations)
+      :black_on_white -> BlackAndWhiteAndGray.black_on_white(iterations, params)
+      :white_on_black -> BlackAndWhiteAndGray.white_on_black(iterations, params)
       :gray -> BlackAndWhiteAndGray.gray(iterations, params)
       :red -> WarpPov.red(iterations, params)
       :green -> WarpPov.green(iterations, params)

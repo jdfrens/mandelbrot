@@ -7,16 +7,21 @@ defmodule Fractals.Colorizer.BlackAndWhiteAndGray do
 
   alias Fractals.Params
 
-  def black_on_white(iterations, max_iterations) when inside?(iterations, max_iterations),
-    do: PPM.black()
+  @spec black_on_white(integer, Params.t()) :: PPM.color()
+  def black_on_white(iterations, %Params{max_iterations: max_iterations})
+      when inside?(iterations, max_iterations),
+      do: PPM.black()
 
   def black_on_white(_, _), do: PPM.white()
 
-  def white_on_black(iterations, max_iterations) when inside?(iterations, max_iterations),
-    do: PPM.white()
+  @spec white_on_black(integer, Params.t()) :: PPM.color()
+  def white_on_black(iterations, %Params{max_iterations: max_iterations})
+      when inside?(iterations, max_iterations),
+      do: PPM.white()
 
   def white_on_black(_, _), do: PPM.black()
 
+  @spec gray(integer, Params.t()) :: PPM.color()
   def gray(iterations, %Params{max_iterations: max_iterations})
       when inside?(iterations, max_iterations),
       do: PPM.black()

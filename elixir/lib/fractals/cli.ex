@@ -5,16 +5,13 @@ defmodule Fractals.CLI do
 
   alias Fractals.Params
 
+  @spec main(OptionParser.argv()) :: :ok
   def main(args) do
-    case OptionParser.parse(args) do
-      {flags, filenames, _} ->
-        go(flags, filenames)
-
-      _ ->
-        usage()
-    end
+    {flags, filenames, _} = OptionParser.parse(args)
+    go(flags, filenames)
   end
 
+  @spec go(OptionParser.parsed(), OptionParser.argv()) :: :ok
   def go(flags, filenames) do
     base_params = flags |> Params.parse()
 
@@ -30,9 +27,11 @@ defmodule Fractals.CLI do
     watch(filenames)
   end
 
+  @spec watch([String.t()]) :: :ok
   def watch([]) do
     IO.puts("ALL DONE!")
     IO.puts("Have a nice day.")
+    :ok
   end
 
   def watch(filenames) do
@@ -53,9 +52,5 @@ defmodule Fractals.CLI do
         IO.puts("finished #{params.output_filename}")
         watch(List.delete(filenames, params.params_filename))
     end
-  end
-
-  defp usage do
-    IO.puts("You used this command wrong.")
   end
 end
