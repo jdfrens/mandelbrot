@@ -37,7 +37,6 @@ defmodule Fractals.Params do
   defstruct [
     # operational
     :id,
-    # TODO: actually use the seed
     :seed,
     :chunk_size,
     :chunk_count,

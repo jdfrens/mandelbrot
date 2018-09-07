@@ -37,7 +37,7 @@
         # set the `excluded_macros` parameter to `[:schema, :setup, :test]`.
         #
         {Credo.Check.Design.DuplicatedCode, excluded_macros: []},
-        {Credo.Check.Design.TagTODO, false},
+        {Credo.Check.Design.TagTODO, exit_status: 2},
         {Credo.Check.Design.TagFIXME},
 
         #
@@ -75,7 +75,8 @@
         {Credo.Check.Refactor.NegatedConditionsWithElse},
         {Credo.Check.Refactor.Nesting},
         {Credo.Check.Refactor.PipeChainStart,
-         excluded_argument_types: [:atom, :binary, :fn, :keyword], excluded_functions: ["Stream.repeatedly"]},
+         excluded_argument_types: [:atom, :binary, :fn, :keyword],
+         excluded_functions: ["Stream.repeatedly"]},
         {Credo.Check.Refactor.UnlessWithElse},
 
         #

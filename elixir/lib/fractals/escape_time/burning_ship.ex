@@ -21,7 +21,6 @@ defmodule Fractals.EscapeTime.BurningShip do
 
   @spec burn(Complex.complex()) :: Complex.complex()
   def burn(%Complex{re: real, im: imag}) do
-    # TODO: not sure why I need to negate imag since Wikipedia doesn't
     Complex.new(Kernel.abs(real), -1 * Kernel.abs(imag))
   end
 end

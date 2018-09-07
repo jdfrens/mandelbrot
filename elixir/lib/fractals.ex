@@ -23,12 +23,10 @@ defmodule Fractals do
     import Supervisor.Spec, warn: false
 
     staged = [
-      # TODO: start process
       GridWorker,
       EscapeTimeWorker,
       ColorizerWorker,
       OutputManager
-      # TODO: end process
     ]
 
     unstaged = [
@@ -45,7 +43,6 @@ defmodule Fractals do
     send(params.source_pid, {:starting, self(), params})
 
     if unimplemented?(params.fractal) do
-      # TODO: extract a common library for these notifications
       send(params.source_pid, {:skipping, self(), params, "not implemented"})
     else
       GridWorker.work(Fractals.GridWorker, params)
