@@ -7,8 +7,8 @@ defmodule Fractals.OutputWorker do
 
   use GenServer
 
-  alias Fractals.Params
   alias Fractals.Output.OutputState
+  alias Fractals.Params
 
   # Client API
 
