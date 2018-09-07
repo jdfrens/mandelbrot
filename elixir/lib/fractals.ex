@@ -15,14 +15,12 @@ defmodule Fractals do
     OutputWorkerSupervisor
   }
 
-  @progress_measures [:generate_chunk, :escape_chunk, :colorize_chunk, :write_chunk]
   @unimplemented Application.get_env(:fractals, :unimplemented)
 
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
     staged = [
-      {Progress, scopes: @progress_measures},
       # TODO: start process
       GridWorker,
       EscapeTimeWorker,
@@ -55,11 +53,3 @@ defmodule Fractals do
     Enum.member?(@unimplemented, fractal)
   end
 end
-
-# TODO: the start process
-# 1. set params.start_timestamp
-# 2. invokes the first real process
-
-# TODO: the end process
-# 1. set params.end_timestamp
-# 2. sends "ALL DONE!" message

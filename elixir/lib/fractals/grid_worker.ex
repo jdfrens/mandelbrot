@@ -27,8 +27,6 @@ defmodule Fractals.GridWorker do
 
   # TODO: call, not cast?
   def handle_call({:work, params}, _from, {queue, pending_demand}) do
-    # TODO: measure progress in Grid module itself?
-    # Progress.incr(:generate_chunk)
     new_queue =
       Enum.reduce(Grid.chunked_grid(params), queue, fn chunk, q -> :queue.in(chunk, q) end)
 

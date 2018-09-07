@@ -22,8 +22,6 @@ defmodule Fractals.ColorizerWorker do
   def handle_events(events, _from, :ok) do
     colorized =
       Enum.map(events, fn chunk ->
-        # TODO: measure progress
-        # Progress.incr(:colorize_chunk)
         %{chunk | data: colorize(chunk.data, chunk.params)}
       end)
 
