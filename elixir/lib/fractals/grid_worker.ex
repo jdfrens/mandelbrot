@@ -28,7 +28,6 @@ defmodule Fractals.GridWorker do
 
   # Server
 
-  # TODO: call, not cast?
   @impl GenStage
   def handle_call({:work, params}, _from, {queue, pending_demand}) do
     new_queue =
