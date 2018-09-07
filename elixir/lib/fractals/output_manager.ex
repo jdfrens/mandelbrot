@@ -10,16 +10,19 @@ defmodule Fractals.OutputManager do
 
   # Client API
 
+  @spec start_link(any) :: GenServer.on_start()
   def start_link(_) do
     GenStage.start_link(__MODULE__, %{}, name: __MODULE__)
   end
 
   # Server API
 
+  @impl GenStage
   def init(process_lookup) do
     {:consumer, process_lookup, subscribe_to: [{Fractals.ColorizerWorker, max_demand: 10}]}
   end
 
+  @impl GenStage
   def handle_events(events, _from, process_lookup) do
     new_lookup =
       Enum.reduce(events, process_lookup, fn chunk, lookup ->
@@ -31,6 +34,7 @@ defmodule Fractals.OutputManager do
     {:noreply, [], new_lookup}
   end
 
+  @spec get_pid(map, String.t()) :: {map, pid}
   def get_pid(lookup, id) do
     case Map.get(lookup, id) do
       nil ->

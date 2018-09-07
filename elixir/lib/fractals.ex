@@ -12,11 +12,13 @@ defmodule Fractals do
     EscapeTimeWorker,
     GridWorker,
     OutputManager,
-    OutputWorkerSupervisor
+    OutputWorkerSupervisor,
+    Params
   }
 
   @unimplemented Application.get_env(:fractals, :unimplemented)
 
+  @impl Application
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
@@ -38,6 +40,7 @@ defmodule Fractals do
     Supervisor.start_link(staged ++ unstaged, strategy: :one_for_one)
   end
 
+  @spec fractalize(Fractals.Params.t()) :: :ok
   def fractalize(params) do
     send(params.source_pid, {:starting, self(), params})
 
@@ -47,8 +50,11 @@ defmodule Fractals do
     else
       GridWorker.work(Fractals.GridWorker, params)
     end
+
+    :ok
   end
 
+  @spec unimplemented?(Params.fractal_type()) :: boolean
   defp unimplemented?(fractal) do
     Enum.member?(@unimplemented, fractal)
   end

@@ -9,16 +9,19 @@ defmodule Fractals.ColorizerWorker do
 
   # Client
 
+  @spec start_link(any) :: GenServer.on_start()
   def start_link(_) do
     GenStage.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 
   # Server
 
+  @impl GenStage
   def init(:ok) do
     {:producer_consumer, :ok, subscribe_to: [{Fractals.EscapeTimeWorker, max_demand: 10}]}
   end
 
+  @impl GenStage
   def handle_events(events, _from, :ok) do
     colorized =
       Enum.map(events, fn chunk ->

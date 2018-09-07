@@ -3,6 +3,7 @@ defmodule Fractals.ImageMagick do
   Calls `convert` in a shell to convert file formats.
   """
 
+  @spec convert(String.t(), String.t()) :: Mogrify.Image.t()
   def convert(input_filename, output_filename) do
     input_filename
     |> Mogrify.open()
