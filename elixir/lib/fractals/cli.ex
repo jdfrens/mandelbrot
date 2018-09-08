@@ -7,7 +7,7 @@ defmodule Fractals.CLI do
 
   @spec main(OptionParser.argv()) :: :ok
   def main(args) do
-    {flags, filenames, _} = OptionParser.parse(args)
+    {flags, filenames, _} = OptionParser.parse(args, switches: [params_filename: :string])
     go(flags, filenames)
   end
 
