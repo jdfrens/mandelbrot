@@ -22,7 +22,6 @@ defmodule Fractals.CLI do
     |> Enum.each(fn params_filename ->
       []
       |> Keyword.put(:params_filename, params_filename)
-      |> Keyword.put(:source_pid, self())
       |> Params.process(base_params)
       |> Fractals.fractalize()
     end)

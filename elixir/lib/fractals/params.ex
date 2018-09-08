@@ -30,8 +30,7 @@ defmodule Fractals.Params do
           output_directory: String.t() | nil,
           output_filename: String.t() | nil,
           ppm_filename: String.t() | nil,
-          output_pid: pid | nil,
-          source_pid: pid | nil
+          output_pid: pid | nil
         }
 
   defstruct [
@@ -60,9 +59,7 @@ defmodule Fractals.Params do
     :output_directory,
     :output_filename,
     :ppm_filename,
-    :output_pid,
-    # processes
-    :source_pid
+    :output_pid
   ]
 
   @zero Complex.new(0.0)
