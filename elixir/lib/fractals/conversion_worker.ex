@@ -56,7 +56,7 @@ defmodule Fractals.ConversionWorker do
 
   @spec done(Params.t()) :: any
   defp done(params) do
-    notify_source_pid(params, {:done, self(), params})
+    notify_source_pid(params, {:done, params, from: self()})
   end
 
   @spec notify_source_pid(Params.t(), {atom, pid, Params.t()}) :: any

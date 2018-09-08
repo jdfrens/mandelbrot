@@ -40,11 +40,13 @@ defmodule Fractals do
 
   @spec fractalize(Fractals.Params.t()) :: :ok
   def fractalize(params) do
-    send(params.source_pid, {:starting, self(), params})
-
     if unimplemented?(params.fractal) do
-      send(params.source_pid, {:skipping, self(), params, "not implemented"})
+      send(
+        params.source_pid,
+        {:skipping, params, reason: "fractal not implemented", from: self()}
+      )
     else
+      send(params.source_pid, {:starting, params, from: self()})
       GridWorker.work(Fractals.GridWorker, params)
     end
 

@@ -93,7 +93,7 @@ defmodule Fractals.OutputWorker do
 
   @spec write_chunk(non_neg_integer, [String.t()], Params.t()) :: :ok
   defp write_chunk(chunk_number, data, params) do
-    notify_source_pid(params, {:writing, chunk_number, params})
+    notify_source_pid(params, {:writing, params, chunk_number: chunk_number})
     lines_to_file(data, params)
   end
 
@@ -102,7 +102,8 @@ defmodule Fractals.OutputWorker do
     IO.write(params.output_pid, add_newlines(lines))
   end
 
-  @spec notify_source_pid(Params.t(), {:writing, non_neg_integer, Params.t()}) :: any
+  @spec notify_source_pid(Params.t(), {:writing, Params.t(), chunk_number: non_neg_integer}) ::
+          any
   defp notify_source_pid(params, message) do
     send(params.source_pid, message)
   end
