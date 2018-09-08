@@ -24,6 +24,7 @@ defmodule Fractals.CLI do
       |> Fractals.fractalize()
     end)
 
+    Fractals.Reports.Stdout.start_link([])
     watch(filenames)
   end
 
@@ -36,22 +37,20 @@ defmodule Fractals.CLI do
 
   def watch(filenames) do
     receive do
-      {:starting, params, _opts} ->
-        IO.puts("starting #{params.output_filename}")
+      {:starting, params, opts} ->
+        Fractals.Reports.Stdout.report(Fractals.Reports.Stdout, {:starting, params, opts})
         watch(filenames)
 
       {:writing, params, opts} ->
-        chunk_number = Keyword.get(opts, :chunk_number)
-        IO.puts("writing #{chunk_number}/#{params.chunk_count} to #{params.ppm_filename}")
+        Fractals.Reports.Stdout.report(Fractals.Reports.Stdout, {:writing, params, opts})
         watch(filenames)
 
       {:skipping, params, opts} ->
-        reason = Keyword.get(opts, :reason)
-        IO.puts("skipping #{params.output_filename}: #{reason}")
+        Fractals.Reports.Stdout.report(Fractals.Reports.Stdout, {:skipping, params, opts})
         watch(List.delete(filenames, params.params_filename))
 
-      {:done, params, _opts} ->
-        IO.puts("finished #{params.output_filename}")
+      {:done, params, opts} ->
+        Fractals.Reports.Stdout.report(Fractals.Reports.Stdout, {:done, params, opts})
         watch(List.delete(filenames, params.params_filename))
     end
   end
