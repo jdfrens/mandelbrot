@@ -24,12 +24,21 @@ defmodule Fractals.CLI do
       |> Fractals.fractalize()
     end)
 
+    Fractals.Reports.FilenameCountdown.start_link(filenames: filenames, for: self())
     Fractals.Reports.Stdout.start_link([])
     watch(filenames)
   end
 
   @spec watch([String.t()]) :: :ok
   def watch([]) do
+    receive do
+      {:filenames_empty, _reason} ->
+        IO.puts("I GOT THE MESSAGE!!!!")
+    after
+      5000 ->
+        IO.puts("NOOOOOO MESSAGE!!!!!")
+    end
+
     IO.puts("ALL DONE!")
     IO.puts("Have a nice day.")
     :ok
@@ -39,18 +48,42 @@ defmodule Fractals.CLI do
     receive do
       {:starting, params, opts} ->
         Fractals.Reports.Stdout.report(Fractals.Reports.Stdout, {:starting, params, opts})
+
+        Fractals.Reports.FilenameCountdown.report(
+          Fractals.Reports.FilenameCountdown,
+          {:starting, params, opts}
+        )
+
         watch(filenames)
 
       {:writing, params, opts} ->
         Fractals.Reports.Stdout.report(Fractals.Reports.Stdout, {:writing, params, opts})
+
+        Fractals.Reports.FilenameCountdown.report(
+          Fractals.Reports.FilenameCountdown,
+          {:writing, params, opts}
+        )
+
         watch(filenames)
 
       {:skipping, params, opts} ->
         Fractals.Reports.Stdout.report(Fractals.Reports.Stdout, {:skipping, params, opts})
+
+        Fractals.Reports.FilenameCountdown.report(
+          Fractals.Reports.FilenameCountdown,
+          {:skipping, params, opts}
+        )
+
         watch(List.delete(filenames, params.params_filename))
 
       {:done, params, opts} ->
         Fractals.Reports.Stdout.report(Fractals.Reports.Stdout, {:done, params, opts})
+
+        Fractals.Reports.FilenameCountdown.report(
+          Fractals.Reports.FilenameCountdown,
+          {:done, params, opts}
+        )
+
         watch(List.delete(filenames, params.params_filename))
     end
   end
