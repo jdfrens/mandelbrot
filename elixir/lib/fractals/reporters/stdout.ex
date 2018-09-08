@@ -1,4 +1,4 @@
-defmodule Fractals.Reports.Stdout do
+defmodule Fractals.Reporters.Stdout do
   @moduledoc """
   Outputs messages to stdout.
   """
@@ -11,11 +11,6 @@ defmodule Fractals.Reports.Stdout do
 
   def start_link(_) do
     GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
-  end
-
-  @spec report(module | pid, {atom, Params.t(), keyword}) :: :ok
-  def report(pid, message) do
-    GenServer.cast(pid, message)
   end
 
   # server

@@ -1,4 +1,4 @@
-defmodule Fractals.Reports.FilenameCountdown do
+defmodule Fractals.Reporters.FilenameCountdown do
   @moduledoc """
   GenServer to keep track of the filenames that have been queued up.
 
@@ -7,18 +7,11 @@ defmodule Fractals.Reports.FilenameCountdown do
 
   use GenServer
 
-  alias Fractals.Params
-
   # client
 
   @spec start_link(keyword | map) :: GenServer.on_start()
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts, name: __MODULE__)
-  end
-
-  @spec report(module | pid, {atom, Params.t(), keyword}) :: :ok
-  def report(pid, message) do
-    GenServer.cast(pid, message)
   end
 
   # server
@@ -30,13 +23,13 @@ defmodule Fractals.Reports.FilenameCountdown do
   end
 
   def handle_cast({:done, params, _opts}, state) do
-    params.filename
+    params.params_filename
     |> file_done(state)
     |> response
   end
 
   def handle_cast({:skipping, params, _opts}, state) do
-    params.filename
+    params.params_filename
     |> file_done(state)
     |> response
   end

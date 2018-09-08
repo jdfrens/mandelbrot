@@ -7,9 +7,16 @@ defmodule Fractals.ConversionWorkerTest do
   setup do
     test_pid = self()
     convert = fn source, destination -> send(test_pid, {source, destination}) end
-    {:ok, pid} = ConversionWorker.start_link(convert: convert, name: :whatever)
+    broadcast = fn tag, params, opts -> send(test_pid, {:test_report, {tag, params, opts}}) end
 
     params = %Params{source_pid: test_pid}
+
+    {:ok, pid} =
+      ConversionWorker.start_link(
+        convert: convert,
+        broadcast: broadcast,
+        name: :conversion_worker_under_test
+      )
 
     [pid: pid, params: params]
   end
@@ -19,7 +26,7 @@ defmodule Fractals.ConversionWorkerTest do
       params = %Params{params | output_filename: "output.ppm"}
       ConversionWorker.convert(pid, params)
 
-      assert_receive {:done, _pid, _params}
+      assert_receive {:test_report, {:done, _pid, _params}}
     end
 
     test "calls converter and reports done for a PNG file", %{pid: pid, params: params} do
@@ -27,7 +34,7 @@ defmodule Fractals.ConversionWorkerTest do
       ConversionWorker.convert(pid, params)
 
       assert_receive {"output.ppm", "output.png"}
-      assert_receive {:done, _pid, _params}
+      assert_receive {:test_report, {:done, _pid, _params}}
     end
   end
 end

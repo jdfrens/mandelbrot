@@ -13,7 +13,8 @@ defmodule Fractals do
     GridWorker,
     OutputManager,
     OutputWorkerSupervisor,
-    Params
+    Params,
+    Reporters.Broadcaster
   }
 
   @unimplemented Application.get_env(:fractals, :unimplemented)
@@ -41,12 +42,9 @@ defmodule Fractals do
   @spec fractalize(Fractals.Params.t()) :: :ok
   def fractalize(params) do
     if unimplemented?(params.fractal) do
-      send(
-        params.source_pid,
-        {:skipping, params, reason: "fractal not implemented", from: self()}
-      )
+      Broadcaster.report(:skipping, params, reason: "fractal not implemented", from: self())
     else
-      send(params.source_pid, {:starting, params, from: self()})
+      Broadcaster.report(:starting, params, from: self())
       GridWorker.work(Fractals.GridWorker, params)
     end
 

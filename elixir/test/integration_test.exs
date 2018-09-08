@@ -28,16 +28,20 @@ defmodule Fractals.IntegrationTest do
   end
 
   test "generates a pretty picture" do
+    Fractals.Reporters.FilenameCountdown.start_link(
+      filenames: @mandelbrot_input_filename,
+      for: self()
+    )
+
     params =
       Fractals.Params.process(
         output_directory: "test/images",
-        params_filename: @mandelbrot_input_filename,
-        source_pid: self()
+        params_filename: @mandelbrot_input_filename
       )
 
     ExUnit.CaptureIO.capture_io(fn ->
       Fractals.fractalize(params)
-      Fractals.CLI.watch([@mandelbrot_input_filename])
+      Fractals.CLI.wait()
     end)
 
     output = File.read!(@mandelbrot_output_filename)

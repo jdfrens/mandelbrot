@@ -15,6 +15,9 @@ defmodule Fractals.CLI do
   def go(flags, filenames) do
     base_params = flags |> Params.parse()
 
+    Fractals.Reporters.FilenameCountdown.start_link(filenames: filenames, for: self())
+    Fractals.Reporters.Stdout.start_link([])
+
     filenames
     |> Enum.each(fn params_filename ->
       []
@@ -24,67 +27,17 @@ defmodule Fractals.CLI do
       |> Fractals.fractalize()
     end)
 
-    Fractals.Reports.FilenameCountdown.start_link(filenames: filenames, for: self())
-    Fractals.Reports.Stdout.start_link([])
-    watch(filenames)
+    wait()
   end
 
-  @spec watch([String.t()]) :: :ok
-  def watch([]) do
+  @spec wait :: :ok
+  def wait do
     receive do
       {:filenames_empty, _reason} ->
-        IO.puts("I GOT THE MESSAGE!!!!")
-    after
-      5000 ->
-        IO.puts("NOOOOOO MESSAGE!!!!!")
+        IO.puts("ALL DONE!")
+        IO.puts("Have a nice day.")
     end
 
-    IO.puts("ALL DONE!")
-    IO.puts("Have a nice day.")
     :ok
-  end
-
-  def watch(filenames) do
-    receive do
-      {:starting, params, opts} ->
-        Fractals.Reports.Stdout.report(Fractals.Reports.Stdout, {:starting, params, opts})
-
-        Fractals.Reports.FilenameCountdown.report(
-          Fractals.Reports.FilenameCountdown,
-          {:starting, params, opts}
-        )
-
-        watch(filenames)
-
-      {:writing, params, opts} ->
-        Fractals.Reports.Stdout.report(Fractals.Reports.Stdout, {:writing, params, opts})
-
-        Fractals.Reports.FilenameCountdown.report(
-          Fractals.Reports.FilenameCountdown,
-          {:writing, params, opts}
-        )
-
-        watch(filenames)
-
-      {:skipping, params, opts} ->
-        Fractals.Reports.Stdout.report(Fractals.Reports.Stdout, {:skipping, params, opts})
-
-        Fractals.Reports.FilenameCountdown.report(
-          Fractals.Reports.FilenameCountdown,
-          {:skipping, params, opts}
-        )
-
-        watch(List.delete(filenames, params.params_filename))
-
-      {:done, params, opts} ->
-        Fractals.Reports.Stdout.report(Fractals.Reports.Stdout, {:done, params, opts})
-
-        Fractals.Reports.FilenameCountdown.report(
-          Fractals.Reports.FilenameCountdown,
-          {:done, params, opts}
-        )
-
-        watch(List.delete(filenames, params.params_filename))
-    end
   end
 end
