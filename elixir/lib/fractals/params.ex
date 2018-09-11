@@ -128,6 +128,7 @@ defmodule Fractals.Params do
     %{params | attribute => parse_value(attribute, value)}
   end
 
+  @spec parse_value(atom, String.t()) :: any
   defp parse_value(:fractal, value) do
     String.to_atom(String.downcase(value))
   end
@@ -155,14 +156,17 @@ defmodule Fractals.Params do
   # Compute
   # **********
 
+  @spec compute(Params.t()) :: Params.t()
   defp compute(params) do
     Enum.reduce(@computed_attributes, params, &compute_attribute/2)
   end
 
+  @spec compute_attribute(atom, Params.t()) :: Params.t()
   defp compute_attribute(attribute, params) do
     %{params | attribute => compute_value(attribute, params)}
   end
 
+  @spec compute_value(atom, Params.t()) :: any
   defp compute_value(:id, _params) do
     UUID.uuid1()
   end
@@ -207,10 +211,12 @@ defmodule Fractals.Params do
     end
   end
 
+  @spec output_basepath(String.t(), Params.t()) :: String.t()
   defp output_basepath(filename, params) do
     Path.join(params.output_directory, basename(filename))
   end
 
+  @spec basename(String.t()) :: String.t()
   defp basename(filename) do
     filename
     |> Path.basename(".yml")
@@ -222,10 +228,12 @@ defmodule Fractals.Params do
   # Helpers
   # *******
 
+  @spec symbolize(Enumerable.t()) :: map
   defp symbolize(params) do
     for {key, val} <- params, into: %{}, do: {to_atom(key), val}
   end
 
+  @spec to_atom(atom | String.t()) :: atom
   defp to_atom(key) when is_atom(key), do: key
   defp to_atom(key), do: String.to_atom(Macro.underscore(key))
 end

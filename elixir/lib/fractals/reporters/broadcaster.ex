@@ -3,6 +3,7 @@ defmodule Fractals.Reporters.Broadcaster do
   Broadcasts messages to reporters.
   """
 
+  alias Fractals.Params
   alias Fractals.Reporters.{FilenameCountdown, Stdout}
 
   @reporters [Stdout, FilenameCountdown]

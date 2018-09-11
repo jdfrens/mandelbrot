@@ -56,7 +56,7 @@ defmodule Fractals.ConversionWorker do
     {:noreply, state}
   end
 
-  @spec done(module, Params.t()) :: any
+  @spec done((atom, Params.t(), keyword -> any), Params.t()) :: any
   defp done(broadcast, params) do
     broadcast.(:done, params, from: self())
   end
