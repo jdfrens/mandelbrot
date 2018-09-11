@@ -4,6 +4,7 @@ defmodule Fractals.CLI do
   """
 
   alias Fractals.Params
+  alias Fractals.Reporters.{FilenameCountdown, Stdout}
 
   @spec main(OptionParser.argv()) :: :ok
   def main(args) do
@@ -15,8 +16,8 @@ defmodule Fractals.CLI do
   def go(flags, filenames) do
     base_params = flags |> Params.parse()
 
-    Fractals.Reporters.FilenameCountdown.start_link(filenames: filenames, for: self())
-    Fractals.Reporters.Stdout.start_link([])
+    FilenameCountdown.start_link(filenames: filenames, for: self())
+    Stdout.start_link([])
 
     filenames
     |> Enum.each(fn params_filename ->
