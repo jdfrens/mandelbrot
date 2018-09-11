@@ -37,23 +37,30 @@ defmodule Fractals.ConversionWorker do
 
   @impl GenServer
   def handle_cast({:convert, params}, %{convert: convert, broadcast: broadcast} = state) do
-    case Path.extname(params.output_filename) do
-      ".ppm" ->
-        # OutputWorker already wrote a PPM file
-        :ok
-
-      ".png" ->
-        root_filename =
-          params.output_filename
-          |> Path.rootname(".png")
-          |> Path.rootname(".ppm")
-
-        ppm_filename = root_filename <> ".ppm"
-        convert.(ppm_filename, params.output_filename)
-    end
+    params.output_filename
+    |> Path.extname()
+    |> convert_to(params, convert)
 
     done(broadcast, params)
     {:noreply, state}
+  end
+
+  @spec convert_to(String.t(), Params.t(), (String.t(), String.t() -> any)) :: Params.t()
+  defp convert_to(".ppm", params, _convert) do
+    # OutputWorker already wrote a PPM file
+    params
+  end
+
+  defp convert_to(".png", params, convert) do
+    root_filename =
+      params.output_filename
+      |> Path.rootname(".png")
+      |> Path.rootname(".ppm")
+
+    ppm_filename = root_filename <> ".ppm"
+    convert.(ppm_filename, params.output_filename)
+
+    params
   end
 
   @spec done((atom, Params.t(), keyword -> any), Params.t()) :: any
