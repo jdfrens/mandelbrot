@@ -28,7 +28,11 @@ defmodule Fractals.Reporters.Stdout do
   @impl GenServer
   def handle_cast({:writing, params, opts}, :ok) do
     chunk_number = Keyword.get(opts, :chunk_number)
-    IO.puts("writing #{chunk_number}/#{params.chunk_count} to #{params.ppm_filename}")
+
+    if Integer.mod(chunk_number, 20) == 0 or chunk_number == params.chunk_count do
+      IO.puts("writing #{chunk_number}/#{params.chunk_count} to #{params.ppm_filename}")
+    end
+
     {:noreply, :ok}
   end
 

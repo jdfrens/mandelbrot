@@ -4,7 +4,8 @@ defmodule Fractals.CLI do
   """
 
   alias Fractals.Params
-  alias Fractals.Reporters.{FilenameCountdown, Stdout}
+  alias Fractals.Reporters.{Broadcaster, FilenameCountdown, Stdout}
+  alias Fractals.Reporters.Supervisor, as: ReporterSupervisor
 
   @spec main(OptionParser.argv()) :: :ok
   def main(args) do
@@ -14,20 +15,30 @@ defmodule Fractals.CLI do
 
   @spec go(OptionParser.parsed(), OptionParser.argv()) :: :ok
   def go(flags, filenames) do
-    base_params = flags |> Params.parse()
+    add_reporters(filenames)
+    spawn_fractals(flags, filenames)
+    wait()
+  end
 
-    FilenameCountdown.start_link(filenames: filenames, for: self())
-    Stdout.start_link([])
-
+  @spec spawn_fractals(keyword, [String.t()]) :: :ok
+  defp spawn_fractals(flags, filenames) do
     filenames
     |> Enum.each(fn params_filename ->
       []
       |> Keyword.put(:params_filename, params_filename)
-      |> Params.process(base_params)
+      |> Params.process(Params.parse(flags))
       |> Fractals.fractalize()
     end)
 
-    wait()
+    :ok
+  end
+
+  @spec add_reporters([String.t()]) :: :ok
+  def add_reporters(filenames) do
+    ReporterSupervisor.add_reporter(Broadcaster)
+    Broadcaster.add_reporter(FilenameCountdown, filenames: filenames, for: self())
+    Broadcaster.add_reporter(Stdout)
+    :ok
   end
 
   @spec wait :: :ok

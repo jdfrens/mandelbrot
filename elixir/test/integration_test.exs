@@ -40,6 +40,13 @@ defmodule Fractals.IntegrationTest do
       )
 
     ExUnit.CaptureIO.capture_io(fn ->
+      Fractals.Reporters.Supervisor.add_reporter(Fractals.Reporters.Broadcaster)
+
+      Fractals.Reporters.Broadcaster.add_reporter(Fractals.Reporters.FilenameCountdown,
+        filenames: [@mandelbrot_input_filename],
+        for: self()
+      )
+
       Fractals.fractalize(params)
       Fractals.CLI.wait()
     end)

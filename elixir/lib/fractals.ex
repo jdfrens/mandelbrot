@@ -17,6 +17,8 @@ defmodule Fractals do
     Reporters.Broadcaster
   }
 
+  alias Fractals.Reporters.Supervisor, as: ReporterSupervisor
+
   @unimplemented Application.get_env(:fractals, :unimplemented)
 
   @impl Application
@@ -33,7 +35,8 @@ defmodule Fractals do
     unstaged = [
       Random,
       OutputWorkerSupervisor,
-      ConversionWorker
+      ConversionWorker,
+      ReporterSupervisor
     ]
 
     Supervisor.start_link(staged ++ unstaged, strategy: :one_for_one)
