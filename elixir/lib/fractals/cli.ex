@@ -5,7 +5,6 @@ defmodule Fractals.CLI do
 
   alias Fractals.Params
   alias Fractals.Reporters.{Broadcaster, FilenameCountdown, Stdout}
-  alias Fractals.Reporters.Supervisor, as: ReporterSupervisor
 
   @spec main(OptionParser.argv()) :: :ok
   def main(args) do
@@ -35,7 +34,6 @@ defmodule Fractals.CLI do
 
   @spec add_reporters([String.t()]) :: :ok
   def add_reporters(filenames) do
-    ReporterSupervisor.add_reporter(Broadcaster)
     Broadcaster.add_reporter(FilenameCountdown, filenames: filenames, for: self())
     Broadcaster.add_reporter(Stdout)
     :ok

@@ -16,7 +16,7 @@ defmodule Fractals.Reporters.Broadcaster do
 
   @spec add_reporter(module, any) :: :ok
   def add_reporter(reporter, args \\ []) do
-    GenServer.cast(__MODULE__, {:add, reporter, args})
+    GenServer.call(__MODULE__, {:add, reporter, args})
   end
 
   @spec report(atom, Params.t(), keyword) :: :ok
@@ -32,9 +32,9 @@ defmodule Fractals.Reporters.Broadcaster do
   end
 
   @impl GenServer
-  def handle_cast({:add, reporter, args}, reporters) do
+  def handle_call({:add, reporter, args}, _from, reporters) do
     Supervisor.add_reporter(reporter, args)
-    {:noreply, [reporter | reporters]}
+    {:reply, :ok, [reporter | reporters]}
   end
 
   @impl GenServer

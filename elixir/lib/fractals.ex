@@ -36,7 +36,8 @@ defmodule Fractals do
       Random,
       OutputWorkerSupervisor,
       ConversionWorker,
-      ReporterSupervisor
+      ReporterSupervisor,
+      Broadcaster
     ]
 
     Supervisor.start_link(staged ++ unstaged, strategy: :one_for_one)
