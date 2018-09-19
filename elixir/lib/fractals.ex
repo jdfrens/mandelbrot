@@ -13,8 +13,11 @@ defmodule Fractals do
     GridWorker,
     OutputManager,
     OutputWorkerSupervisor,
-    Params
+    Params,
+    Reporters.Broadcaster
   }
+
+  alias Fractals.Reporters.Supervisor, as: ReporterSupervisor
 
   @unimplemented Application.get_env(:fractals, :unimplemented)
 
@@ -32,7 +35,9 @@ defmodule Fractals do
     unstaged = [
       Random,
       OutputWorkerSupervisor,
-      ConversionWorker
+      ConversionWorker,
+      ReporterSupervisor,
+      Broadcaster
     ]
 
     Supervisor.start_link(staged ++ unstaged, strategy: :one_for_one)
@@ -40,11 +45,10 @@ defmodule Fractals do
 
   @spec fractalize(Fractals.Params.t()) :: :ok
   def fractalize(params) do
-    send(params.source_pid, {:starting, self(), params})
-
     if unimplemented?(params.fractal) do
-      send(params.source_pid, {:skipping, self(), params, "not implemented"})
+      Broadcaster.report(:skipping, params, reason: "fractal not implemented", from: self())
     else
+      Broadcaster.report(:starting, params, from: self())
       GridWorker.work(Fractals.GridWorker, params)
     end
 

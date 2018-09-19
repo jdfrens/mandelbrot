@@ -4,53 +4,49 @@ defmodule Fractals.CLI do
   """
 
   alias Fractals.Params
+  alias Fractals.Reporters.{Broadcaster, FilenameCountdown, Stdout}
 
   @spec main(OptionParser.argv()) :: :ok
   def main(args) do
-    {flags, filenames, _} = OptionParser.parse(args)
+    {flags, filenames, _} = OptionParser.parse(args, switches: [params_filename: :string])
     go(flags, filenames)
   end
 
   @spec go(OptionParser.parsed(), OptionParser.argv()) :: :ok
   def go(flags, filenames) do
-    base_params = flags |> Params.parse()
+    add_reporters(filenames)
+    spawn_fractals(flags, filenames)
+    wait()
+  end
 
+  @spec spawn_fractals(keyword, [String.t()]) :: :ok
+  defp spawn_fractals(flags, filenames) do
     filenames
     |> Enum.each(fn params_filename ->
       []
       |> Keyword.put(:params_filename, params_filename)
-      |> Keyword.put(:source_pid, self())
-      |> Params.process(base_params)
+      |> Params.process(Params.parse(flags))
       |> Fractals.fractalize()
     end)
 
-    watch(filenames)
-  end
-
-  @spec watch([String.t()]) :: :ok
-  def watch([]) do
-    IO.puts("ALL DONE!")
-    IO.puts("Have a nice day.")
     :ok
   end
 
-  def watch(filenames) do
+  @spec add_reporters([String.t()]) :: :ok
+  def add_reporters(filenames) do
+    Broadcaster.add_reporter(FilenameCountdown, filenames: filenames, for: self())
+    Broadcaster.add_reporter(Stdout)
+    :ok
+  end
+
+  @spec wait :: :ok
+  def wait do
     receive do
-      {:starting, _from, params} ->
-        IO.puts("starting #{params.output_filename}")
-        watch(filenames)
-
-      {:writing, chunk_number, params} ->
-        IO.puts("writing #{chunk_number}/#{params.chunk_count} to #{params.ppm_filename}")
-        watch(filenames)
-
-      {:skipping, _, params, reason} ->
-        IO.puts("skipping #{params.output_filename}: #{reason}")
-        watch(List.delete(filenames, params.params_filename))
-
-      {:done, _, params} ->
-        IO.puts("finished #{params.output_filename}")
-        watch(List.delete(filenames, params.params_filename))
+      {:filenames_empty, _reason} ->
+        IO.puts("ALL DONE!")
+        IO.puts("Have a nice day.")
     end
+
+    :ok
   end
 end

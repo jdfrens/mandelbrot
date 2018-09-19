@@ -14,6 +14,7 @@ defmodule Fractals.OutputWorkerSupervisor do
 
   # Server
 
+  @impl DynamicSupervisor
   def init(:ok) do
     DynamicSupervisor.init(strategy: :one_for_one)
   end

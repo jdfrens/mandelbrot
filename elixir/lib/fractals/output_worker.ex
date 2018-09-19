@@ -7,8 +7,7 @@ defmodule Fractals.OutputWorker do
 
   use GenServer
 
-  alias Fractals.Output.OutputState
-  alias Fractals.Params
+  alias Fractals.{Output.OutputState, Params, Reporters.Broadcaster}
 
   # Client API
 
@@ -93,18 +92,13 @@ defmodule Fractals.OutputWorker do
 
   @spec write_chunk(non_neg_integer, [String.t()], Params.t()) :: :ok
   defp write_chunk(chunk_number, data, params) do
-    notify_source_pid(params, {:writing, chunk_number, params})
+    Broadcaster.report(:writing, params, chunk_number: chunk_number)
     lines_to_file(data, params)
   end
 
   @spec lines_to_file([String.t()], Params.t()) :: :ok
   defp lines_to_file(lines, params) do
     IO.write(params.output_pid, add_newlines(lines))
-  end
-
-  @spec notify_source_pid(Params.t(), {:writing, non_neg_integer, Params.t()}) :: any
-  defp notify_source_pid(params, message) do
-    send(params.source_pid, message)
   end
 
   @spec add_newlines([String.t()]) :: [[String.t()]]
