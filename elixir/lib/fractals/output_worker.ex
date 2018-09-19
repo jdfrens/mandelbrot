@@ -7,9 +7,28 @@ defmodule Fractals.OutputWorker do
 
   use GenServer
 
-  alias Fractals.{Output.OutputState, Params, Reporters.Broadcaster}
+  alias Fractals.{ConversionWorker, Output.OutputState, Params, Reporters.Broadcaster}
 
   # Client API
+
+  @doc """
+  Starts a new worker.
+
+  `write/2` calls this so that it is really the only client function you need to worry about.
+  """
+  @spec new(keyword) :: Supervisor.on_start_child()
+  def new(options \\ []) do
+    next_stage =
+      Keyword.get(options, :next_stage, fn params ->
+        Params.close(params)
+        ConversionWorker.convert(params)
+      end)
+
+    name = Keyword.get(options, :name)
+    child_spec = {__MODULE__, {next_stage, name}}
+
+    DynamicSupervisor.start_child(Fractals.OutputWorkerSupervisor, child_spec)
+  end
 
   # :next_stage is a callback function which is called when an image
   # is all written.  By default, this will close the output file and invoke
@@ -19,8 +38,9 @@ defmodule Fractals.OutputWorker do
     GenServer.start_link(__MODULE__, next_stage, name: name)
   end
 
-  @spec write(pid | atom, Chunk.t()) :: :ok
+  @spec write(GenServer.name(), Chunk.t()) :: :ok
   def write(pid, chunk) do
+    new(name: pid)
     GenServer.cast(pid, {:write, chunk})
   end
 
