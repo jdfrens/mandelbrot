@@ -6,7 +6,7 @@
   "earmark": {:hex, :earmark, "1.2.6", "b6da42b3831458d3ecc57314dff3051b080b9b2be88c2e5aa41cd642a5b044ed", [:mix], [], "hexpm"},
   "ex_doc": {:git, "https://github.com/elixir-lang/ex_doc.git", "a94e537584d3aeb4bc0cc159a5807f709fffbe09", []},
   "exprintf": {:hex, :exprintf, "0.2.1", "b7e895dfb00520cfb7fc1671303b63b37dc3897c59be7cbf1ae62f766a8a0314", [:mix], [], "hexpm"},
-  "gen_stage": {:hex, :gen_stage, "0.14.0", "65ae78509f85b59d360690ce3378d5096c3130a0694bab95b0c4ae66f3008fad", [:mix], [], "hexpm"},
+  "gen_stage": {:hex, :gen_stage, "0.14.1", "9d46723fda072d4f4bb31a102560013f7960f5d80ea44dcb96fd6304ed61e7a4", [:mix], [], "hexpm"},
   "inflex": {:hex, :inflex, "1.10.0", "8366a7696e70e1813aca102e61274addf85d99f4a072b2f9c7984054ea1b9d29", [:mix], [], "hexpm"},
   "jason": {:hex, :jason, "1.1.1", "d3ccb840dfb06f2f90a6d335b536dd074db748b3e7f5b11ab61d239506585eb2", [:mix], [{:decimal, "~> 1.0", [hex: :decimal, repo: "hexpm", optional: true]}], "hexpm"},
   "makeup": {:hex, :makeup, "0.5.1", "966c5c2296da272d42f1de178c1d135e432662eca795d6dc12e5e8787514edf7", [:mix], [{:nimble_parsec, "~> 0.2.2", [hex: :nimble_parsec, repo: "hexpm", optional: false]}], "hexpm"},
