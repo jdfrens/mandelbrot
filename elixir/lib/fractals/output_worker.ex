@@ -18,16 +18,19 @@ defmodule Fractals.OutputWorker do
   """
   @spec new(keyword) :: Supervisor.on_start_child()
   def new(options \\ []) do
-    next_stage =
-      Keyword.get(options, :next_stage, fn params ->
-        Params.close(params)
-        ConversionWorker.convert(params)
-      end)
-
+    next_stage = Keyword.get(options, :next_stage, &default_next_stage/1)
     name = Keyword.get(options, :name)
-    child_spec = {__MODULE__, {next_stage, name}}
 
-    DynamicSupervisor.start_child(Fractals.OutputWorkerSupervisor, child_spec)
+    DynamicSupervisor.start_child(
+      Fractals.OutputWorkerSupervisor,
+      {__MODULE__, {next_stage, name}}
+    )
+  end
+
+  @spec default_next_stage(Params.t()) :: any()
+  def default_next_stage(params) do
+    Params.close(params)
+    ConversionWorker.convert(params)
   end
 
   # :next_stage is a callback function which is called when an image
