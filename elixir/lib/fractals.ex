@@ -12,7 +12,6 @@ defmodule Fractals do
     EscapeTimeWorker,
     GridWorker,
     OutputManager,
-    OutputWorkerSupervisor,
     Params,
     Reporters.Broadcaster
   }
@@ -34,10 +33,11 @@ defmodule Fractals do
 
     unstaged = [
       Random,
-      OutputWorkerSupervisor,
+      {DynamicSupervisor, strategy: :one_for_one, name: Fractals.OutputWorkerSupervisor},
       ConversionWorker,
       ReporterSupervisor,
-      Broadcaster
+      Broadcaster,
+      {Registry, keys: :unique, name: Fractals.OutputWorkerRegistry}
     ]
 
     Supervisor.start_link(staged ++ unstaged, strategy: :one_for_one)
