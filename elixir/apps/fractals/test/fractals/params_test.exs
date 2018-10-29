@@ -49,11 +49,11 @@ defmodule Fractals.ParamsTest do
     end
 
     test "precomputing the output_filename paramter", %{argv: argv} do
-      assert Params.process(argv).output_filename == "images/full_params.png"
+      assert Params.process(argv).output_filename == "test/images/full_params.png"
     end
 
     test "precomputing the ppm_filename paramter", %{argv: argv} do
-      assert Params.process(argv).ppm_filename == "images/full_params.ppm"
+      assert Params.process(argv).ppm_filename == "test/images/full_params.ppm"
     end
   end
 
