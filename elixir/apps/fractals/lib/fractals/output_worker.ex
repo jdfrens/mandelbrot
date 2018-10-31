@@ -7,44 +7,72 @@ defmodule Fractals.OutputWorker do
 
   use GenServer
 
-  alias Fractals.{ConversionWorker, Output.OutputState, Params, Reporters.Broadcaster}
+  alias Fractals.{ConversionWorker, Params}
+  alias Fractals.Output.OutputState
+  alias Fractals.Reporters.Broadcaster
+
+  @type via_tuple :: {:via, Registry, {Fractals.OutputWorkerRegistry, Params.fractal_id()}}
 
   # Client API
 
   @doc """
-  Starts a new worker.
+  Writes a chunk of data to an output worker.
 
-  `write/2` calls this so that it is really the only client function you need to worry about.
+  Use `write/1`.  It will create an output worker for the fractal if one has not already been started.
+
+  Use `write/2` if you want to micromanage which output worker processes the chunk.  Used to test this worker.
   """
-  @spec new(keyword) :: Supervisor.on_start_child()
-  def new(options \\ []) do
-    next_stage = Keyword.get(options, :next_stage, &default_next_stage/1)
-    name = Keyword.get(options, :name)
+  @spec write(GenServer.name(), Chunk.t()) :: :ok
+  def write(pid \\ nil, chunk)
 
-    DynamicSupervisor.start_child(
-      Fractals.OutputWorkerSupervisor,
-      {__MODULE__, {next_stage, name}}
-    )
+  def write(nil, chunk) do
+    write(via_tuple(chunk.params.id), chunk)
   end
 
-  @spec default_next_stage(Params.t()) :: any()
-  def default_next_stage(params) do
-    Params.close(params)
-    ConversionWorker.convert(params)
+  def write(pid, chunk) do
+    maybe_new(name: pid)
+    GenServer.cast(pid, {:write, chunk})
   end
 
-  # :next_stage is a callback function which is called when an image
-  # is all written.  By default, this will close the output file and invoke
-  # the conversion worker (from PPM to PNG).
+  @doc """
+  Starts an output worker.
+
+  Don't use this.  It should be used as part of a `DynamicSupervisor` which is handled by `write/1`.  This function is
+  useful for testing.
+  """
   @spec start_link({(Params.t() -> any), atom}) :: GenServer.on_start()
   def start_link({next_stage, name}) do
     GenServer.start_link(__MODULE__, next_stage, name: name)
   end
 
-  @spec write(GenServer.name(), Chunk.t()) :: :ok
-  def write(pid, chunk) do
-    new(name: pid)
-    GenServer.cast(pid, {:write, chunk})
+  @spec via_tuple(Params.fractal_id()) :: via_tuple()
+  defp(via_tuple(fractal_id)) do
+    {:via, Registry, {Fractals.OutputWorkerRegistry, fractal_id}}
+  end
+
+  # Creates a new worker if needed.
+  @spec maybe_new(keyword) :: Supervisor.on_start_child()
+  defp maybe_new(options) do
+    name = Keyword.get(options, :name)
+    next_stage = Keyword.get(options, :next_stage, &default_next_stage/1)
+
+    case DynamicSupervisor.start_child(
+           Fractals.OutputWorkerSupervisor,
+           {__MODULE__, {next_stage, name}}
+         ) do
+      {:error, {:already_started, pid}} ->
+        {:ok, pid}
+
+      response ->
+        response
+    end
+  end
+
+  # Closes the params (i.e., closes the file).  Triggers the conversion worker.
+  @spec default_next_stage(Params.t()) :: any()
+  defp default_next_stage(params) do
+    Params.close(params)
+    ConversionWorker.convert(params)
   end
 
   # Server API

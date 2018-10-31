@@ -23,14 +23,8 @@ defmodule Fractals.OutputManager do
 
   @impl GenStage
   def handle_events(events, _from, :ok) do
-    Enum.each(events, fn chunk ->
-      OutputWorker.write(via_tuple(chunk.params.id), chunk)
-    end)
+    Enum.each(events, &OutputWorker.write/1)
 
     {:noreply, [], :ok}
-  end
-
-  defp via_tuple(fractal_id) do
-    {:via, Registry, {Fractals.OutputWorkerRegistry, fractal_id}}
   end
 end

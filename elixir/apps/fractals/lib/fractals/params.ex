@@ -7,10 +7,11 @@ defmodule Fractals.Params do
 
   alias Fractals.{Params, Size}
 
+  @type fractal_id :: String.t()
   @type fractal_type :: :mandelbrot | :julia
   @type color :: :black_on_white | :white_on_black | :gray | :red | :green | :blue | :random
   @type t :: %__MODULE__{
-          id: String.t() | nil,
+          id: fractal_id() | nil,
           seed: integer | nil,
           chunk_size: integer | nil,
           chunk_count: integer | nil,
