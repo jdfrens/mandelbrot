@@ -1,1 +1,6 @@
+# ignore the escript
+/fractals
+
+# ignore images (.keep files manually added)
+/images
 /test/images
