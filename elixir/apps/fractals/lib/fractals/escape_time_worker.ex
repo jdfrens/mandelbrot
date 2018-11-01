@@ -5,8 +5,7 @@ defmodule Fractals.EscapeTimeWorker do
 
   use GenStage
 
-  alias Fractals.EscapeTime.{BurningShip, Julia, Mandelbrot}
-  alias Fractals.{GridWorker, Params}
+  alias Fractals.{EscapeTime, GridWorker}
 
   # Client
 
@@ -26,22 +25,9 @@ defmodule Fractals.EscapeTimeWorker do
   def handle_events(events, _from, :ok) do
     escaped =
       Enum.map(events, fn %Chunk{params: params} = chunk ->
-        %{chunk | data: pixels(params.fractal, chunk.data, params)}
+        %{chunk | data: EscapeTime.pixels(params.fractal, chunk.data, params)}
       end)
 
     {:noreply, escaped, :ok}
-  end
-
-  @spec pixels(Params.fractal_type(), list, Params.t()) :: any
-  def pixels(:mandelbrot, data, params) do
-    Mandelbrot.pixels(data, params)
-  end
-
-  def pixels(:julia, data, params) do
-    Julia.pixels(data, params)
-  end
-
-  def pixels(:burningship, data, params) do
-    BurningShip.pixels(data, params)
   end
 end

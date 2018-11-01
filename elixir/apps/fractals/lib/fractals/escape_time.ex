@@ -5,6 +5,7 @@ defmodule Fractals.EscapeTime do
 
   import Fractals.EscapeTime.Helpers
   alias Fractals.{EscapeTime, Params}
+  alias Fractals.EscapeTime.{BurningShip, Julia, Mandelbrot}
 
   defmacro __using__(_options) do
     quote do
@@ -27,5 +28,18 @@ defmodule Fractals.EscapeTime do
     |> Stream.take(1)
     |> Enum.to_list()
     |> List.first()
+  end
+
+  @spec pixels(Params.fractal_type(), list, Params.t()) :: any
+  def pixels(:mandelbrot, data, params) do
+    Mandelbrot.pixels(data, params)
+  end
+
+  def pixels(:julia, data, params) do
+    Julia.pixels(data, params)
+  end
+
+  def pixels(:burningship, data, params) do
+    BurningShip.pixels(data, params)
   end
 end
