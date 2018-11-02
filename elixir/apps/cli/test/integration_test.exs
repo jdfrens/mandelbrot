@@ -45,7 +45,7 @@ defmodule CLI.IntegrationTest do
         for: self()
       )
 
-      Fractals.fractalize(params)
+      Fractals.fractalize(params, StageEngine)
       CLI.wait()
     end)
 

@@ -3,16 +3,9 @@ defmodule StageEngine do
   Documentation for StageEngine.
   """
 
-  @doc """
-  Hello world.
+  alias Fractals.GridWorker
 
-  ## Examples
-
-      iex> StageEngine.hello()
-      :world
-
-  """
-  def hello do
-    :world
+  def generate(params) do
+    GridWorker.work(Fractals.GridWorker, params)
   end
 end

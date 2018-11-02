@@ -5,11 +5,6 @@ defmodule Fractals.Application do
 
   def start(_type, _args) do
     children = [
-      # stage engine
-      Fractals.GridWorker,
-      Fractals.EscapeTimeWorker,
-      Fractals.ColorizerWorker,
-      Fractals.OutputManager,
       # color
       Fractals.Colorizer.Random,
       # image output

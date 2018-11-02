@@ -3,6 +3,9 @@ defmodule CLI do
   The command-line interface for generating fractals.  This also starts up the application itself.
   """
 
+  # eventually determined in Params
+  @engine StageEngine
+
   alias Fractals.Params
   alias Fractals.Reporters.{Broadcaster, FilenameCountdown, Stdout}
 
@@ -26,7 +29,7 @@ defmodule CLI do
       []
       |> Keyword.put(:params_filename, params_filename)
       |> Params.process(Params.parse(flags))
-      |> Fractals.fractalize()
+      |> Fractals.fractalize(@engine)
     end)
 
     :ok
