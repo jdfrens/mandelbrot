@@ -27,7 +27,7 @@ defmodule Fractals.Mixfile do
   defp deps do
     [
       {:complex, github: "jdfrens/elixir-complex", ref: "51e2804"},
-      {:credo, "~> 0.10.0", only: [:dev, :test]},
+      {:credo, "~> 0.10.0", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0.0-rc.2", only: [:dev, :test], runtime: false},
       {:earmark, "~> 1.2", override: true},
       {:gen_stage, "~> 0.14"},
