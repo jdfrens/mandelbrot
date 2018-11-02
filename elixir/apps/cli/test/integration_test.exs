@@ -1,4 +1,4 @@
-defmodule Fractals.IntegrationTest do
+defmodule CLI.IntegrationTest do
   use ExUnit.Case
 
   # credo:disable-for-this-file Credo.Check.Design.AliasUsage
@@ -46,7 +46,7 @@ defmodule Fractals.IntegrationTest do
       )
 
       Fractals.fractalize(params)
-      Fractals.CLI.wait()
+      CLI.wait()
     end)
 
     output = File.read!(@mandelbrot_output_filename)

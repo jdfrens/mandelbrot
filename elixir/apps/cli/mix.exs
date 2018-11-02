@@ -10,6 +10,7 @@ defmodule CLI.MixProject do
       deps_path: "../../deps",
       lockfile: "../../mix.lock",
       elixir: "~> 1.7",
+      escript: [main_module: CLI, name: "fractals"],
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -17,15 +18,15 @@ defmodule CLI.MixProject do
 
   def application do
     [
-      extra_applications: [:logger],
-      mod: {CLI.Application, []}
+      extra_applications: [:logger]
     ]
   end
 
   defp deps do
     [
       {:credo, "~> 0.10.0", only: [:dev, :test]},
-      {:dialyxir, "~> 1.0.0-rc.2", only: [:dev, :test], runtime: false}
+      {:dialyxir, "~> 1.0.0-rc.2", only: [:dev, :test], runtime: false},
+      {:fractals, in_umbrella: true}
     ]
   end
 end

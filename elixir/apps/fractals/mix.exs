@@ -10,7 +10,6 @@ defmodule Fractals.Mixfile do
       deps_path: "../../deps",
       lockfile: "../../mix.lock",
       elixir: "~> 1.7",
-      escript: [main_module: Fractals.CLI],
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -19,7 +18,10 @@ defmodule Fractals.Mixfile do
   end
 
   def application do
-    [applications: [:logger, :yaml_elixir], mod: {Fractals, []}]
+    [
+      extra_applications: [:logger, :yaml_elixir],
+      mod: {Fractals.Application, []}
+    ]
   end
 
   defp deps do

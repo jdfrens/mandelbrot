@@ -3,45 +3,13 @@ defmodule Fractals do
   The application.
   """
 
-  use Application
-
   alias Fractals.{
-    Colorizer.Random,
-    ColorizerWorker,
-    ConversionWorker,
-    EscapeTimeWorker,
     GridWorker,
-    OutputManager,
     Params,
     Reporters.Broadcaster
   }
 
-  alias Fractals.Reporters.Supervisor, as: ReporterSupervisor
-
   @unimplemented Application.get_env(:fractals, :unimplemented)
-
-  @impl Application
-  def start(_type, _args) do
-    import Supervisor.Spec, warn: false
-
-    staged = [
-      GridWorker,
-      EscapeTimeWorker,
-      ColorizerWorker,
-      OutputManager
-    ]
-
-    unstaged = [
-      Random,
-      {DynamicSupervisor, strategy: :one_for_one, name: Fractals.OutputWorkerSupervisor},
-      ConversionWorker,
-      ReporterSupervisor,
-      Broadcaster,
-      {Registry, keys: :unique, name: Fractals.OutputWorkerRegistry}
-    ]
-
-    Supervisor.start_link(staged ++ unstaged, strategy: :one_for_one)
-  end
 
   @spec fractalize(Fractals.Params.t()) :: :ok
   def fractalize(params) do
