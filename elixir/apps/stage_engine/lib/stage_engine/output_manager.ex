@@ -1,4 +1,4 @@
-defmodule Fractals.OutputManager do
+defmodule StageEngine.OutputManager do
   @moduledoc """
   Manages supervisors for outputting files.
   """
@@ -18,7 +18,7 @@ defmodule Fractals.OutputManager do
 
   @impl GenStage
   def init(:ok) do
-    {:consumer, :ok, subscribe_to: [{Fractals.ColorizerWorker, max_demand: 10}]}
+    {:consumer, :ok, subscribe_to: [{StageEngine.ColorizerWorker, max_demand: 10}]}
   end
 
   @impl GenStage

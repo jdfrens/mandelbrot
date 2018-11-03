@@ -3,9 +3,9 @@ defmodule StageEngine do
   Documentation for StageEngine.
   """
 
-  alias Fractals.GridWorker
+  alias StageEngine.GridWorker
 
   def generate(params) do
-    GridWorker.work(Fractals.GridWorker, params)
+    GridWorker.work(StageEngine.GridWorker, params)
   end
 end

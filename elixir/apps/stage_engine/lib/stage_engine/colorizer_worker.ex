@@ -1,4 +1,4 @@
-defmodule Fractals.ColorizerWorker do
+defmodule StageEngine.ColorizerWorker do
   @moduledoc """
   Worker to compute colors on a chunk of pixels
   """
@@ -18,7 +18,7 @@ defmodule Fractals.ColorizerWorker do
 
   @impl GenStage
   def init(:ok) do
-    {:producer_consumer, :ok, subscribe_to: [{Fractals.EscapeTimeWorker, max_demand: 10}]}
+    {:producer_consumer, :ok, subscribe_to: [{StageEngine.EscapeTimeWorker, max_demand: 10}]}
   end
 
   @impl GenStage

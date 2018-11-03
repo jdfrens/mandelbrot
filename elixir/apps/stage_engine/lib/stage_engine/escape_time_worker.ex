@@ -1,11 +1,11 @@
-defmodule Fractals.EscapeTimeWorker do
+defmodule StageEngine.EscapeTimeWorker do
   @moduledoc """
   Process that runs the right escape-time algorithm for the specified fractal.
   """
 
   use GenStage
 
-  alias Fractals.{EscapeTime, GridWorker}
+  alias Fractals.EscapeTime
 
   # Client
 
@@ -18,7 +18,7 @@ defmodule Fractals.EscapeTimeWorker do
 
   @impl GenStage
   def init(:ok) do
-    {:producer_consumer, :ok, subscribe_to: [{GridWorker, max_demand: 10}]}
+    {:producer_consumer, :ok, subscribe_to: [{StageEngine.GridWorker, max_demand: 10}]}
   end
 
   @impl GenStage

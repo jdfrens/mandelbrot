@@ -1,4 +1,4 @@
-defmodule Fractals.GridWorker do
+defmodule StageEngine.GridWorker do
   @moduledoc """
   Producer process in the gen_stage workflow.  It chunks the pixel grid and feeds chunks into the workflow.
   """

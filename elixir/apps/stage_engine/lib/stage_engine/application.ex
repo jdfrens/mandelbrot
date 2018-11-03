@@ -5,10 +5,10 @@ defmodule StageEngine.Application do
 
   def start(_type, _args) do
     children = [
-      Fractals.GridWorker,
-      Fractals.EscapeTimeWorker,
-      Fractals.ColorizerWorker,
-      Fractals.OutputManager
+      StageEngine.GridWorker,
+      StageEngine.EscapeTimeWorker,
+      StageEngine.ColorizerWorker,
+      StageEngine.OutputManager
     ]
 
     opts = [strategy: :one_for_one, name: StageEngine.Supervisor]
