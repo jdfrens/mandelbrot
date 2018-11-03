@@ -10,8 +10,8 @@ defmodule Fractals.Grid do
 
   import Complex, only: :macros
 
-  @spec chunked_grid(Params.t()) :: Grid.t()
-  def(chunked_grid(params)) do
+  @spec chunked_grid(Params.t()) :: [Chunk.t()]
+  def chunked_grid(params) do
     params |> grid |> chunk(params)
   end
 
@@ -25,7 +25,7 @@ defmodule Fractals.Grid do
   end
 
   @spec grid(Params.t()) :: Grid.t()
-  def(grid(params)) do
+  def grid(params) do
     for y <- ys(params),
         x <- xs(params),
         do: Complex.new(x, y)
