@@ -5,6 +5,7 @@ defmodule CLI do
 
   # eventually determined in Params
   @engine StageEngine
+  # @engine UniprocessEngine
 
   alias Fractals.Params
   alias Fractals.Reporters.{Broadcaster, FilenameCountdown, Stdout}
