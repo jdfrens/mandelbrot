@@ -10,7 +10,7 @@ defmodule Fractals.ConversionWorker do
   # Client
 
   @spec start_link(keyword) :: GenServer.on_start()
-  def(start_link(options \\ [])) do
+  def start_link(options \\ []) do
     convert = Keyword.get(options, :convert, &ImageMagick.convert/2)
     broadcast = Keyword.get(options, :broadcast, &Broadcaster.report/3)
     name = Keyword.get(options, :name, __MODULE__)
