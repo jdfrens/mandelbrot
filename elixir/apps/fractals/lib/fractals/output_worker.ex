@@ -8,7 +8,7 @@ defmodule Fractals.OutputWorker do
   use GenServer
 
   alias Fractals.{ConversionWorker, Params}
-  alias Fractals.Output.OutputState
+  alias Fractals.Output.{PPMFile, OutputState}
   alias Fractals.Reporters.Broadcaster
 
   @type via_tuple :: {:via, Registry, {Fractals.OutputWorkerRegistry, Params.fractal_id()}}
@@ -84,8 +84,10 @@ defmodule Fractals.OutputWorker do
 
   @impl GenServer
   def handle_cast({:write, chunk}, {nil, next_stage}) do
+    PPMFile.start_file(chunk.params)
+
     state =
-      %OutputState{next_number: 0, cache: build_initial_cache(chunk.params)}
+      %OutputState{next_number: 1, cache: build_initial_cache(chunk.params)}
       |> process(chunk, next_stage)
 
     {:noreply, {state, next_stage}}
@@ -133,27 +135,12 @@ defmodule Fractals.OutputWorker do
 
   @spec build_initial_cache(Params.t()) :: map
   defp build_initial_cache(params) do
-    %{0 => header(params), (params.chunk_count + 1) => :done}
-  end
-
-  @spec header(Params.t()) :: [String.t()]
-  defp header(params) do
-    PPM.p3_header(params.size.width, params.size.height)
+    %{(params.chunk_count + 1) => :done}
   end
 
   @spec write_chunk(non_neg_integer, [String.t()], Params.t()) :: :ok
   defp write_chunk(chunk_number, data, params) do
     Broadcaster.report(:writing, params, chunk_number: chunk_number)
-    lines_to_file(data, params)
-  end
-
-  @spec lines_to_file([String.t()], Params.t()) :: :ok
-  defp lines_to_file(lines, params) do
-    IO.write(params.output_pid, add_newlines(lines))
-  end
-
-  @spec add_newlines([String.t()]) :: [[String.t()]]
-  defp add_newlines(lines) do
-    Enum.map(lines, &[&1, "\n"])
+    PPMFile.lines_to_file(data, params)
   end
 end
