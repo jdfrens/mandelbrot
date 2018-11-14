@@ -28,7 +28,7 @@ defmodule CLI.IntegrationTest do
   end
 
   test "generates a pretty picture" do
-    alias Fractals.Reporters.{Broadcaster, FilenameCountdown}
+    alias Fractals.Reporters.{Broadcaster, Countdown}
 
     params =
       Fractals.Params.process(
@@ -37,7 +37,7 @@ defmodule CLI.IntegrationTest do
       )
 
     ExUnit.CaptureIO.capture_io(fn ->
-      Broadcaster.add_reporter(FilenameCountdown, %{params_list: [params], for: self()})
+      Broadcaster.add_reporter(Countdown, %{params_list: [params], for: self()})
       Fractals.fractalize(params, StageEngine)
       CLI.wait()
     end)
