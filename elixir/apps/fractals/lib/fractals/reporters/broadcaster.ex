@@ -33,8 +33,9 @@ defmodule Fractals.Reporters.Broadcaster do
 
   @impl GenServer
   def handle_call({:add, reporter, args}, _from, reporters) do
-    Supervisor.add_reporter(reporter, args)
-    {:reply, :ok, [reporter | reporters]}
+    {:ok, pid} = Supervisor.add_reporter(reporter, args)
+    Process.monitor(pid)
+    {:reply, :ok, [pid | reporters]}
   end
 
   @impl GenServer
@@ -44,5 +45,10 @@ defmodule Fractals.Reporters.Broadcaster do
     end)
 
     {:noreply, reporters}
+  end
+
+  @impl GenServer
+  def handle_info({:DOWN, _ref, :process, pid, _reason}, reporters) do
+    {:noreply, List.delete(reporters, pid)}
   end
 end

@@ -8,7 +8,7 @@ defmodule CLI do
   # @engine UniprocessEngine
 
   alias Fractals.Params
-  alias Fractals.Reporters.{Broadcaster, FilenameCountdown, Stdout}
+  alias Fractals.Reporters.{Broadcaster, Countdown, Stdout}
 
   @spec main(OptionParser.argv()) :: :ok
   def main(args) do
@@ -18,7 +18,6 @@ defmodule CLI do
 
   @spec go(OptionParser.parsed(), OptionParser.argv()) :: :ok
   def go(flags, filenames) do
-    add_reporters(filenames)
     spawn_fractals(flags, filenames)
     wait()
   end
@@ -26,21 +25,28 @@ defmodule CLI do
   @spec spawn_fractals(keyword, [String.t()]) :: :ok
   defp spawn_fractals(flags, filenames) do
     filenames
-    |> Enum.each(fn params_filename ->
-      []
-      |> Keyword.put(:params_filename, params_filename)
-      |> Params.process(Params.parse(flags))
-      |> Fractals.fractalize(@engine)
-    end)
+    |> parse_params_files(flags)
+    |> add_reporters()
+    |> fractalize()
 
     :ok
   end
 
-  @spec add_reporters([String.t()]) :: :ok
-  def add_reporters(filenames) do
-    Broadcaster.add_reporter(FilenameCountdown, filenames: filenames, for: self())
+  defp parse_params_files(filenames, flags) do
+    Enum.map(filenames, fn filename ->
+      Params.process([params_filename: filename], Params.parse(flags))
+    end)
+  end
+
+  @spec add_reporters([Params.t()]) :: :ok
+  defp add_reporters(params_list) do
     Broadcaster.add_reporter(Stdout)
-    :ok
+    Broadcaster.add_reporter(Countdown, %{params_list: params_list, for: self()})
+    params_list
+  end
+
+  defp fractalize(params_list) do
+    Enum.each(params_list, &Fractals.fractalize(&1, @engine))
   end
 
   @spec wait :: :ok

@@ -28,10 +28,7 @@ defmodule CLI.IntegrationTest do
   end
 
   test "generates a pretty picture" do
-    Fractals.Reporters.FilenameCountdown.start_link(
-      filenames: @mandelbrot_input_filename,
-      for: self()
-    )
+    alias Fractals.Reporters.{Broadcaster, FilenameCountdown}
 
     params =
       Fractals.Params.process(
@@ -40,11 +37,7 @@ defmodule CLI.IntegrationTest do
       )
 
     ExUnit.CaptureIO.capture_io(fn ->
-      Fractals.Reporters.Broadcaster.add_reporter(Fractals.Reporters.FilenameCountdown,
-        filenames: [@mandelbrot_input_filename],
-        for: self()
-      )
-
+      Broadcaster.add_reporter(FilenameCountdown, %{params_list: [params], for: self()})
       Fractals.fractalize(params, StageEngine)
       CLI.wait()
     end)
