@@ -32,21 +32,24 @@ defmodule CLI do
     :ok
   end
 
+  @spec parse_params_files([String.t()], keyword) :: [Params.t()]
   defp parse_params_files(filenames, flags) do
     Enum.map(filenames, fn filename ->
       Params.process([params_filename: filename], Params.parse(flags))
     end)
   end
 
-  @spec add_reporters([Params.t()]) :: :ok
+  @spec add_reporters([Params.t()]) :: [Params.t()]
   defp add_reporters(params_list) do
     Broadcaster.add_reporter(Stdout)
     Broadcaster.add_reporter(Countdown, %{params_list: params_list, for: self()})
     params_list
   end
 
+  @spec fractalize([Params.t()]) :: [Params.t()]
   defp fractalize(params_list) do
     Enum.each(params_list, &Fractals.fractalize(&1, @engine))
+    params_list
   end
 
   @spec wait :: :ok

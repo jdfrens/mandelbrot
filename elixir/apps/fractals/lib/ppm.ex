@@ -6,7 +6,7 @@ defmodule PPM do
   cf. https://en.wikipedia.org/wiki/Netpbm_format
   """
 
-  @type color :: binary
+  @type color :: String.t()
 
   @format "~3B ~3B ~3B "
 

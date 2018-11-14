@@ -8,7 +8,7 @@ defmodule Fractals.OutputWorker do
   use GenServer
 
   alias Fractals.{ConversionWorker, Params}
-  alias Fractals.Output.{PPMFile, OutputState}
+  alias Fractals.Output.{OutputState, PPMFile}
   alias Fractals.Reporters.Broadcaster
 
   @type via_tuple :: {:via, Registry, {Fractals.OutputWorkerRegistry, Params.fractal_id()}}
@@ -141,6 +141,6 @@ defmodule Fractals.OutputWorker do
   @spec write_chunk(non_neg_integer, [String.t()], Params.t()) :: :ok
   defp write_chunk(chunk_number, data, params) do
     Broadcaster.report(:writing, params, chunk_number: chunk_number)
-    PPMFile.lines_to_file(data, params)
+    PPMFile.write_pixels(params, data)
   end
 end

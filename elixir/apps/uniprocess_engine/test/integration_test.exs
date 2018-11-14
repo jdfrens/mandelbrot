@@ -1,6 +1,8 @@
 defmodule UniprocessEngine.IntegrationTest do
   use ExUnit.Case, async: true
 
+  alias Fractals.Params
+
   def assert_same_images(file1, file2) do
     file_contents1 = File.read!(file1)
     file_contents2 = File.read!(file2)
@@ -11,7 +13,7 @@ defmodule UniprocessEngine.IntegrationTest do
 
   test "small, red Mandelbrot" do
     params =
-      Fractals.Params.process(
+      Params.process(
         output_directory: "test/images",
         params_filename: "test/inputs/small-red-mandelbrot.yml"
       )

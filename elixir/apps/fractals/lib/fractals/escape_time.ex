@@ -3,13 +3,15 @@ defmodule Fractals.EscapeTime do
   Implements the basic escape-time algorithm for fractals.
   """
 
+  @type t :: [Complex.complex()]
+
   import Fractals.EscapeTime.Helpers
   alias Fractals.{EscapeTime, Params}
   alias Fractals.EscapeTime.{BurningShip, Julia, Mandelbrot}
 
   defmacro __using__(_options) do
     quote do
-      @spec pixels([Complex.complex()], Params.t()) :: [Complex.complex()]
+      @spec pixels([Complex.complex()], Params.t()) :: Fractals.EscapeTime.t()
       def pixels(grid_points, params) do
         Enum.map(grid_points, fn grid_point ->
           grid_point
@@ -30,7 +32,7 @@ defmodule Fractals.EscapeTime do
     |> List.first()
   end
 
-  @spec pixels(Params.fractal_type(), list, Params.t()) :: any
+  @spec pixels(Params.fractal_type(), list, Params.t()) :: t()
   def pixels(:mandelbrot, data, params) do
     Mandelbrot.pixels(data, params)
   end

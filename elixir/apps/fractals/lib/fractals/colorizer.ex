@@ -5,7 +5,7 @@ defmodule Fractals.Colorizer do
 
   alias Fractals.Colorizer.{BlackAndWhiteAndGray, Random, WarpPov}
 
-  @spec color_point({Complex.complex(), non_neg_integer}, Fractals.Params.t()) :: String.t()
+  @spec color_point({Complex.complex(), non_neg_integer}, Fractals.Params.t()) :: PPM.color()
   def color_point({_, iterations}, params) do
     case params.color do
       :black_on_white -> BlackAndWhiteAndGray.black_on_white(iterations, params)
