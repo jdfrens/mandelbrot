@@ -5,5 +5,5 @@ erl_crash.dump
 *.ez
 /fractals
 /images
-/logs
 /test/images
+/logs
