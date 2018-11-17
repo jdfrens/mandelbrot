@@ -1,33 +1,19 @@
 # Functional, Concurrent, Parallel Computation of Fractals
 
-I'm a computer hacker.  I love fractals.  I love computing fractals.
-
-I'm a functional programmer.  I love concurrency.  I love parallelism (and wrote a dissertation on it).
-
-I'm a polyglot.  I love Haskell.  I love Scheme.  I want to love Erlang (but I have to get to know it first).
+This is an old, abadoned repo.  All of the interesting code has been moved to other repos.  I leave this one here for historical reasons.
 
 ## Haskell code
 
-The Haskell code (in the `Haskell` directory) was started in the Spring of 2008 for a programming languages course I was teaching at the time.  Check out the [github repository for that class](https://github.com/jdfrens/cs214) for the ancient history of that code.
-
-I've worked on this code more recently to push on the parallelism so that I can compare its performance to my Erlang code.
+This is probably terribly out of date and not a good example of Haskell (if it ever was).  I leave it here for reference.  If I return to it, I will probably create a new repository for it.
 
 ## Erlang code
 
-I'm interested in how concurrent I can make my Haskell algorithm, and Erlang is supposed to be the go-to language for concurrency.
+This was never good code, and I abandoned it long ago.  I'm writing a fractal generator in Elixir instead.
 
-## Versions
+## Elixir code
 
-### 2013-08-30
+Check out the separate (forked) repository for my Elixir solution: https://github.com/jdfrens/fractals_elixir
 
-* Erlang code is horribly out of date and hasn't been touched in years.
-* Haskell code...
-    * Reworked code to read YAML configurations.
-	* Reorganized the code.
-	* GOT PARALLELISM WORKING---this turned out to be picking the right strategy and parallizing at the right level.
+## Rust code
 
-### 2011-02-02
-
-* Both the Haskell and Erlang code read configurations from the same YAML files.
-* Output seems to reasonably the same.
-* Concurrency is for crap, so far.
+I'm going to write a solution in Rust.  No really.  I'm writing this section in this README so that I _have_ to do it!
