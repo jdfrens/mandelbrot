@@ -1,6 +1,0 @@
-fractal: Newton
-seed: 8
-Color: Random
-size: 512x512
-upperLeft: -2.0+2.0i
-lowerRight: 2.0+-2.0i

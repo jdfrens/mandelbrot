@@ -1,5 +1,0 @@
-fractal: Mandelbrot
-color: BlackOnWhite
-size: 10x10
-upperLeft: -2.0+1.2i
-lowerRight: 1.2+-1.2i

@@ -1,4 +1,0 @@
-Mandelbrot
-==========
-
-** TODO: Add description **

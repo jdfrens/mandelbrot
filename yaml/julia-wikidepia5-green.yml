@@ -1,6 +1,0 @@
-fractal: Julia
-c: 0.45+0.1428i
-color: Green
-size: 512x384
-upperLeft: -2.0+1.5i
-lowerRight: 2.0+-1.5i

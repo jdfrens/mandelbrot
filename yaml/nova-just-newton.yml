@@ -1,9 +1,0 @@
-fractal: Nova
-seed: 666
-color: Random
-size: 1024x1024
-r: 1.0+0.0i
-p: 3.0+0.0i
-c: 0.0+0.0i
-upperLeft: -2.0+2.0i
-lowerRight: 2.0+-2.0i

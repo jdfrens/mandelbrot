@@ -1,6 +1,0 @@
-fractal: Mandelbrot
-color: Gray
-size: 1024x768
-upperLeft: -2.0+1.2i
-lowerRight: 1.2+-1.2i
-max_iterations: 256
